@@ -28,7 +28,7 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="index.php">Data Quality Management</a>
+		{{ HTML::link('/', 'Data Quality Management', ['class' => 'navbar-brand']) }}
 	</div>
 
 	<!-- Collect the nav links, forms, and other content for toggling -->
@@ -71,7 +71,20 @@
 		<div class="clear"></div>
 	</div>
 	<!--/.page-header -->
-
+		@section('error')
+			@if (Session::get('error'))
+				<div class="alert alert-danger">
+					@if (is_array(Session::get('error')))
+						{{ head(Session::get('error')) }}
+					@else
+						{{{ Session::get('error') }}}
+					@endif
+				</div>
+			@endif
+			@if (Session::get('notice'))
+				<div class="alert alert-success">{{ Session::get('notice') }}</div>
+			@endif
+		@show
 		@yield('content')
 
 	</div>

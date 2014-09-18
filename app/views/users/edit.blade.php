@@ -4,19 +4,8 @@
         {{ HTML::link('users', 'Back', array('class' => 'btn btn-default')) }}
     </div>
 @stop
+
 @section('content')
-
-@if (Session::get('error'))
-    <div class="alert alert-danger">
-        @if (is_array(Session::get('error')))
-            {{ head(Session::get('error')) }}
-        @endif
-    </div>
-@endif
-
-@if (Session::get('notice'))
-    <div class="alert alert-success">{{ Session::get('notice') }}</div>
-@endif
 {{ Form::model($user, ['action' => ['UsersController@update', $user->id]]) }}
     <fieldset class="form-horizontal">
         @include('users.form')

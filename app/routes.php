@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'HomeController@showWelcome');
+Route::get('/', 'HomeController@showWelcome')->before('auth');
 // Route::get('/', function()
 // {
 // 	return View::make('hello');

@@ -161,7 +161,7 @@ class UsersController extends Controller
 	 */
 	public function resetPassword($token)
 	{
-		return View::make(Config::get('confide::reset_password_form'))
+		return View::make('users.reset_password')
 				->with('token', $token);
 	}
 

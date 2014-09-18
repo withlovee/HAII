@@ -5,9 +5,6 @@
 	</div>
 @stop
 @section('content')
-    @if (Session::get('notice'))
-        <div class="alert alert-success">{{ Session::get('notice') }}</div>
-    @endif
 	<table class="table">
 		<thead>
 			<tr>

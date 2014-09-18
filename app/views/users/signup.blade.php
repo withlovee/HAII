@@ -4,19 +4,8 @@
         {{ HTML::link('users', 'Back', array('class' => 'btn btn-default')) }}
     </div>
 @stop
+
 @section('content')
-
-@if (Session::get('error'))
-    <div class="alert alert-danger">
-        @if (is_array(Session::get('error')))
-            {{ head(Session::get('error')) }}
-        @endif
-    </div>
-@endif
-
-@if (Session::get('notice'))
-    <div class="alert alert-success">{{ Session::get('notice') }}</div>
-@endif
 <form method="POST" action="{{{ URL::to('users') }}}" accept-charset="UTF-8">
     <input type="hidden" name="_token" value="{{{ Session::getToken() }}}">
     <fieldset class="form-horizontal">
