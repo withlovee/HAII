@@ -21,7 +21,10 @@
     <input type="hidden" name="_token" value="{{{ Session::getToken() }}}">
     <fieldset>
         @include('users.form')
-
+        <div class="form-group">
+            <label for="role">Role</label>
+            {{ Form::select('role', array('User' => 'User', 'Admin' => 'Admin'), null, ['class' => 'form-control']) }}
+        </div>
         <div class="form-actions form-group">
           <button type="submit" class="btn btn-primary">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
         </div>

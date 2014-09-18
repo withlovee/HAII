@@ -53,7 +53,7 @@
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello, {{ Auth::user()->username }} <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu">
-					<li><a href="profile.php">Edit Profile</a></li>
+					<li>{{ HTML::link('users/profile', 'Edit Profile') }}</li>
 					<li class="divider"></li>
 					<li>{{ HTML::link('users/logout', 'Logout') }}</li>
 				</ul>

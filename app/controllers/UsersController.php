@@ -227,4 +227,23 @@ class UsersController extends Controller
 		return Redirect::action('UsersController@index')
 			->with('notice', 'The user has been deleted successfully.');
 	}
+
+	public function profile(){
+		$user = Auth::user();
+		return View::make('users.profile', compact('user'));			
+	}
+
+	public function doProfile(){
+		$repo = App::make('UserRepository');
+		$user = $repo->profile(Input::all());
+		$error = $user->errors()->all();
+		if(empty($error)) {
+			return Redirect::action('UsersController@profile')
+				->with('notice', 'The user has been updated successfully.');
+		} else {
+			return Redirect::action('UsersController@profile', array($user->id))
+				->withInput(Input::except('password'))
+				->with('error', $error);
+		}
+	}
 }

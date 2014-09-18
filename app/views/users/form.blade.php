@@ -14,7 +14,3 @@
             <label for="password_confirmation">{{{ Lang::get('confide::confide.password_confirmation') }}}</label>
             {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
         </div>
-        <div class="form-group">
-            <label for="role">Role</label>
-            {{ Form::select('role', array('User' => 'User', 'Admin' => 'Admin'), null, ['class' => 'form-control']) }}
-        </div>
