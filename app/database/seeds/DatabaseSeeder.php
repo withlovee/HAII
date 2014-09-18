@@ -34,5 +34,19 @@ class UsersTableSeeder extends Seeder {
     } else {
       Log::info('Created user "'.$user->username.'" <'.$user->email.'>');
     }
+
+    $user = new User;
+    $user->username = 'test';
+    $user->email = 'test@gmail.com';
+    $user->password = '1234';
+    $user->role = 'User';
+    $user->password_confirmation = '1234';
+    $user->confirmation_code = md5(uniqid(mt_rand(), true));
+
+    if(! $user->save()) {
+      Log::info('Unable to create user '.$user->username, (array)$user->errors());
+    } else {
+      Log::info('Created user "'.$user->username.'" <'.$user->email.'>');
+    }
   }
 }

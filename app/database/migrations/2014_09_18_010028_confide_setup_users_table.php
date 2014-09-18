@@ -19,6 +19,9 @@ class ConfideSetupUsersTable extends Migration
             $table->string('role')->default('User');
             $table->string('remember_token')->nullable();
             $table->boolean('confirmed')->default(false);
+            $table->boolean('report_instantly')->default(false);
+            $table->boolean('report_daily')->default(false);
+            $table->boolean('report_monthly')->default(false);
             $table->timestamps();
         });
 

@@ -1,7 +1,7 @@
 @extends('layouts.master', ['title' => 'All Users'])
 @section('header-buttons')
 	<div class="btn-group right">
-		{{ HTML::link('users/create', 'เพิ่มผู้ใช้ใหม่', array('class' => 'btn btn-primary')) }}
+		{{ HTML::link('users/create', 'Add User', array('class' => 'btn btn-primary')) }}
 	</div>
 @stop
 @section('content')

@@ -14,10 +14,12 @@
     <div class="alert alert-success">{{ Session::get('notice') }}</div>
 @endif
 {{ Form::model($user, array('action' => array('UsersController@doProfile', $user->id))) }}
-    <fieldset>
+    <fieldset class="form-horizontal">
         @include('users.form')
-        <div class="form-actions form-group">
-          <button type="submit" class="btn btn-primary">Update</button>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
         </div>
 
     </fieldset>
