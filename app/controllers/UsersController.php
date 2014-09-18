@@ -11,7 +11,7 @@ class UsersController extends Controller
 {
 
 	public function index(){
-		$users = User::all();
+		$users = User::orderBy('id', 'ASC')->get();
 		return View::make('users.index', compact('users'));
 	}
 
@@ -197,44 +197,28 @@ class UsersController extends Controller
 	 *
 	 * @return  Illuminate\Http\Response
 	 */
-	public function logout()
-	{
+	public function logout(){
 		Confide::logout();
 
 		return Redirect::to('/');
 	}
 
-	public function doEdit($user){
-		if ($user->isValid()) {
-			$oldUser = clone $user;
-			$user->username = Input::get('username');
-			$user->email = Input::get('email');
-			$user->role = Input::get('role');
-			$user->confirmed = Input::get('confirm');
+	public function edit($id){
+		$user = User::find($id);
+		return View::make('users.edit', compact('user'));		
+	}
 
-			$password = Input::get('password');
-			$passwordConfirmation = Input::get('password_confirmation');
-
-			if($user->confirmed == null) {
-				$user->confirmed = $oldUser->confirmed;
-			}
-
-			// Save if valid. Password field will be hashed before save
-			$user->save();
-
-			// Save roles. Handles updating.
-			$user->roles()->attach(Input::get('roles'));
-		} else {
-			return Redirect::to('users/edit/' . $user->id )->with('error', Lang::get('admin/users/messages.edit.error'));
-		}
-
-		// Get validation errors (see Ardent package)
+	public function update($id){
+		$repo = App::make('UserRepository');
+		$user = $repo->update($id, Input::all());
 		$error = $user->errors()->all();
-
 		if(empty($error)) {
-			return Redirect::to('users')->with('success', 'The user has been updated successfully.');
+			return Redirect::action('UsersController@index')
+				->with('notice', 'The user has been updated successfully.');
 		} else {
-			return Redirect::to('users/edit/' . $user->id )->with('error', 'There is an error updating this user.');
+			return Redirect::action('UsersController@edit', array($user->id))
+				->withInput(Input::except('password'))
+				->with('error', $error);
 		}
 	}
 }

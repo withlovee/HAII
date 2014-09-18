@@ -25,7 +25,10 @@
 				<td>{{ $user->username }}</td>
 				<td>{{ $user->email }}</td>
 				<td>{{ $user->role }}</td>
-				<td></td>
+				<td>
+					<a href="{{ action('UsersController@edit', [$user->id]) }}" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+					<a href="{{ action('UsersController@edit', [$user->id]) }}" class="btn btn-xs btn-danger" data-title="Confirm" data-content="Are you sure?"><i class="glyphicon glyphicon-trash"></i> Delete</a>
+				</td>
 			</tr>
 		@endforeach
 		</tbody>
