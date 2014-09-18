@@ -25,6 +25,7 @@ class UsersTableSeeder extends Seeder {
     $user->username = 'vee';
     $user->email = 'vibhavee.t@gmail.com';
     $user->password = '1234';
+    $user->role = 'Admin';
     $user->password_confirmation = '1234';
     $user->confirmation_code = md5(uniqid(mt_rand(), true));
 

@@ -19,10 +19,13 @@ Route::get('/', 'HomeController@showWelcome');
 //
 
 // Confide routes
-Route::get('users/create', 'UsersController@create');
+Route::get('users', 'UsersController@index')->before('auth');
+Route::get('users/create', 'UsersController@create')->before('auth');
 Route::post('users', 'UsersController@store');
-Route::get('users/login', 'UsersController@login');
+Route::get('login', 'UsersController@login');
 Route::post('users/login', 'UsersController@doLogin');
+Route::get('users/edit/{id}', 'UsersController@edit');
+Route::post('users/edit/{id}', 'UsersController@doEdit');
 Route::get('users/confirm/{code}', 'UsersController@confirm');
 Route::get('users/forgot_password', 'UsersController@forgotPassword');
 Route::post('users/forgot_password', 'UsersController@doForgotPassword');

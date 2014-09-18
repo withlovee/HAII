@@ -1,0 +1,290 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,600);
+
+.textshadow (dark, @alpha) {
+	text-shadow: 0px 1px 1px rgba(0, 0, 0, @alpha);
+}
+.textshadow (light, @alpha) {
+	text-shadow: 0px 1px 1px rgba(255, 255, 255, @alpha);
+}
+.textshadowtop (dark, @alpha) {
+	text-shadow: 0px -1px 1px rgba(0, 0, 0, @alpha);
+}
+.textshadowtop (light, @alpha) {
+	text-shadow: 0px -1px 1px rgba(255, 255, 255, @alpha);
+}
+.bgeffect{
+	-webkit-transition: background 0.3s ease;
+	-moz-transition: background 0.3s ease;
+	-ms-transition: background 0.3s ease;
+	-o-transition: background 0.3s ease;
+	transition: background 0.3s ease;
+}
+.noeffect{
+	-webkit-transition: all 0 ease;
+	-moz-transition: all 0 ease;
+	-ms-transition: all 0 ease;
+	-o-transition: all 0 ease;
+	transition: all 0 ease;
+}
+.effect{
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+.effect (@text){
+	-webkit-transition: @text;
+	-moz-transition: @text;
+	-ms-transition: @text;
+	-o-transition: @text;
+	transition: @text;
+}
+.row(@size){
+	.row{
+		margin-left: -@size;
+		margin-right: -@size;
+		&>div{
+			padding-left: @size;
+			padding-right: @size;
+		}
+	}
+}
+.opensans{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+}
+.roboto(@weight: 300){
+	font-family: 'Roboto', sans-serif;
+	font-weight: @weight;
+}
+.coloreffect{
+	.effect(color 0.3s ease);
+}
+.gradient (@color1, @color2, @default){
+	background: @default;
+	background: -moz-linear-gradient(top,  @color1 0%, @color2 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@color1), color-stop(100%,@color2));
+	background: -webkit-linear-gradient(top,  @color1 0%,@color2 100%);
+	background: -o-linear-gradient(top,  @color1 0%,@color2 100%);
+	background: -ms-linear-gradient(top,  @color1 0%,@color2 100%);
+	background: linear-gradient(to bottom,  @color1 0%,@color2 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="@{color1}", endColorstr="@{color2}",GradientType=0 );
+}
+.gradient (@color1, @color2){
+	background: @color1;
+	background: -moz-linear-gradient(top,  @color1 0%, @color2 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@color1), color-stop(100%,@color2));
+	background: -webkit-linear-gradient(top,  @color1 0%,@color2 100%);
+	background: -o-linear-gradient(top,  @color1 0%,@color2 100%);
+	background: -ms-linear-gradient(top,  @color1 0%,@color2 100%);
+	background: linear-gradient(to bottom,  @color1 0%,@color2 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="@{color1}", endColorstr="@{color2}",GradientType=0 );
+}
+.gradientdark (@color1, @color2, @p){
+	@icolor1: darken(@color1, @p);
+	@icolor2: darken(@color2, @p);
+	.gradient (darken(@color1, @p), darken(@color2, @p));
+}
+.innertop (dark, @alpha){
+	-webkit-box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, @alpha);
+	box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, @alpha);
+}
+.innertop (light, @alpha){
+	-webkit-box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, @alpha);
+	box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, @alpha);
+}
+.bdrs(@v){
+	border-radius: @v;
+}
+@w: 30px;
+@green: #62b21c;
+body{
+	font-size: 100%;
+	.opensans;
+}
+h1,h2,h3{
+	font-weight: 300;
+}
+a{
+	color: @green;
+	.coloreffect;
+}
+a:hover{
+	color: #505050;
+	text-decoration: none;
+}
+.clear{
+	display: block;
+	content: '';
+	clear: both;
+}
+.left{
+	float: left;
+}
+.right{
+	float: right;
+}
+.container{
+	max-width: 1062px;
+}
+.green{
+	color: @green;
+}
+/*-------------------------  -------------------------*/
+.navbar{
+	font-size: 1.4em;
+}
+.content-wrapper{
+	padding-top: 50px;
+	font-size: 1.4em;
+}
+.page-header{
+	h1{
+		margin-top: 0;
+	}
+	.btn-group{
+		margin-top: 0;
+	}
+}
+.updates{
+	.wrapper{
+		overflow: hidden;
+	}
+	.status{
+		float: left;
+		padding-right: 10px;
+		padding-top: 5px;
+		i{
+			font-size: 35px;
+			color: #ccc;
+		}
+		.glyphicon-remove-sign{
+			color: #f3989f;
+		}
+		.glyphicon-ok-sign{
+			color: #98c9f3;
+		}
+	}
+	.content{
+		float: left;
+	}
+	.list-group-item{
+		.operations{
+			float: right;
+			font-size: 1.5em;
+			span{
+				margin-left: 5px;
+			}
+			.text{
+				font-size: 0.5em;
+				position: relative;
+				top: -5px;
+			}
+		}
+		.text-wrapper{
+			float: left;
+		}
+		.list-group-item-heading{
+			span{
+				font-size: 1.3em;
+				padding-right: 15px;
+				color: #5f6b72;
+				display: inline-block;
+			}
+			.station{
+				width: 200px;
+			}
+			.problem{
+				width: 120px;
+			}
+		}
+		&:hover{
+			background-color: #ddeef8;
+			cursor: pointer;
+			.operations{
+				display: block;
+			}
+		}
+	}
+	p{
+		font-size: 0.9em;
+		margin-bottom: 3px;
+		color: #999;
+	}
+}
+.dl-space{
+	dt,dd{
+		margin-bottom: 5px;
+	}
+	dt{
+		width: 100px;
+	}
+	dd{
+		margin-left: 115px;
+	}
+}
+.tab-content{
+	padding: 10px 10px 0 10px;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+	border-top: 0;
+	margin-bottom: 20px;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+	background-color: #f5f5f5;
+}
+.filters{
+	margin: 0 0 10px 0;
+}
+
+#gbox_list48{
+}
+.monitor-table{
+	background-color: #fff;
+	th{
+		text-align: center;
+	}
+	.heading{
+		td{
+			background-color: #dff0d8;
+		}
+	}
+	td:nth-child(6) a,
+	td:nth-child(7) a{
+		color: #555;
+		&:hover{
+			color: @green;
+		}
+	}
+}
+.noti-done{
+	.monitor-table{
+		td:nth-child(6) a,
+		td:nth-child(7) a{
+			color: #ccc;
+		}
+		td a.active{
+			color: green;
+			font-weight: bold;
+		}
+	}
+}
+/*-------------------------  -------------------------*/
+@media (min-width: 768px){
+.modal-dialog.large {
+	width: 1000px;
+}
+}
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
+/*-------------------------  -------------------------*/
