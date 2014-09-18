@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => null, 'name' => null),
+	'from' => array('address' => 'postmaster@sandbox5a3ab3adfd794243943b5a79e7436ca5.mailgun.org', 'name' => 'HAII'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return array(
 	|
 	*/
 
-	'username' => null,
+	'username' => 'postmaster@sandbox5a3ab3adfd794243943b5a79e7436ca5.mailgun.org',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return array(
 	|
 	*/
 
-	'password' => null,
+	'password' => 'f246caeb44879ec2e88da2ea3728ed68',
 
 	/*
 	|--------------------------------------------------------------------------

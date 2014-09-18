@@ -17,10 +17,11 @@ class HomeController extends BaseController {
 
 	public function showWelcome()
 	{
-		// return View::make('hello');
-		$results = DB::select('select * from test where id = ?', array(2));
-		var_dump($results);
-		return '';
+		var_dump(Auth::user());
+		return View::make('hello');
+		// $results = DB::select('select * from test where id = ?', array(2));
+		// var_dump($results);
+		// return '';
 	}
 
 }
