@@ -24,6 +24,7 @@ class UserRepository
         $user->username = array_get($input, 'username');
         $user->email    = array_get($input, 'email');
         $user->password = array_get($input, 'password');
+        $user->confirmed = true;
         $user->report_instantly = array_get($input, 'report_instantly') == 1;
         $user->report_daily = array_get($input, 'report_daily') == 1;
         $user->report_monthly = array_get($input, 'report_monthly') == 1;

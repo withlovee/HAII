@@ -36,18 +36,18 @@ class UsersController extends Controller
 		$user = $repo->signup(Input::all());
 
 		if ($user->id) {
-			if (Config::get('confide::signup_email')) {
-				Mail::queueOn(
-					Config::get('confide::email_queue'),
-					Config::get('confide::email_account_confirmation'),
-					compact('user'),
-					function ($message) use ($user) {
-						$message
-							->to($user->email, $user->username)
-							->subject(Lang::get('confide::confide.email.account_confirmation.subject'));
-					}
-				);
-			}
+			// if (Config::get('confide::signup_email')) {
+			// 	Mail::queueOn(
+			// 		Config::get('confide::email_queue'),
+			// 		Config::get('confide::email_account_confirmation'),
+			// 		compact('user'),
+			// 		function ($message) use ($user) {
+			// 			$message
+			// 				->to($user->email, $user->username)
+			// 				->subject(Lang::get('confide::confide.email.account_confirmation.subject'));
+			// 		}
+			// 	);
+			// }
 
 			return Redirect::action('UsersController@index')
 				->with('notice', Lang::get('confide::confide.alerts.account_created'));
@@ -130,7 +130,6 @@ class UsersController extends Controller
 	public function forgotPassword()
 	{
 		return View::make('users.forgot_password');
-		// return View::make(Config::get('confide::forgot_password_form'));
 	}
 
 	/**

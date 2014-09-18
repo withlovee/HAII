@@ -28,6 +28,7 @@ class UsersTableSeeder extends Seeder {
     $user->role = 'Admin';
     $user->password_confirmation = '1234';
     $user->confirmation_code = md5(uniqid(mt_rand(), true));
+    $user->confirmed = true;
 
     if(! $user->save()) {
       Log::info('Unable to create user '.$user->username, (array)$user->errors());
@@ -42,6 +43,7 @@ class UsersTableSeeder extends Seeder {
     $user->role = 'User';
     $user->password_confirmation = '1234';
     $user->confirmation_code = md5(uniqid(mt_rand(), true));
+    $user->confirmed = true;
 
     if(! $user->save()) {
       Log::info('Unable to create user '.$user->username, (array)$user->errors());

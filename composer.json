@@ -7,7 +7,7 @@
 		"laravel/framework": "4.2.*",
 		"zizaco/confide": "~4.0@dev",
 		"twitter/bootstrap": "*",
-		"way/generators": "2.*"
+		"way/generators": "~2.0"
 	},
 	"autoload": {
 		"classmap": [
