@@ -221,4 +221,10 @@ class UsersController extends Controller
 				->with('error', $error);
 		}
 	}
+
+	public function destroy($id){
+		User::destroy($id);
+		return Redirect::action('UsersController@index')
+			->with('notice', 'The user has been deleted successfully.');
+	}
 }
