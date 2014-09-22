@@ -10,6 +10,10 @@ getMaxBank <- function(leftBank, rightBank) {
 }
 
 isOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevelOffset = -1, maxBankOffset = 4) {
+  
+  if( any(is.na(c(waterLevel, groundLevel, maxBank))) ) {
+    return(FALSE)
+  }
   groundLevelOffset < -1
   maxBankOffset <- 4
   isOverGroundLevel <- waterLevel >= groundLevel + groundLevelOffset

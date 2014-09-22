@@ -36,9 +36,13 @@ test.getMaxBank <- function() {
 }
 
 test.isOutOfBound <- function() {
-  waterLevel <- c()
-  groundLevel <- c()
-  maxBank <- c()
+  waterLevel  <- c(10.0, 10.0, 10.0, 10.0, NA , 0.0, 0.0)
+  groundLevel <- c(0.0 , 11.0, 11.5, 10.0, 0.0, NA , 0.0)
+  maxBank     <- c(20.0, 6.0 , 20.0, 5.0 , 0.0, 0.0, NA )
+  
+  expected <- c(FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE)
+  actual <- mapply(isOutOfBound, waterLevel, groundLevel, maxBank)
+  mapply(checkEquals, expected, actual)
   
 }
 
