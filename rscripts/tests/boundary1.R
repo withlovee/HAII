@@ -25,6 +25,23 @@ getDataBD <- function() {
   )
 }
 
+
+test.getMaxBank <- function() {
+  left_bank    <- c(10.0, 20.0, 30.0, NA  , 10.0, NA)
+  right_bank   <- c(10.0, 30.0, 20.0, 10.0, NA  , NA)
+  
+  expected <- c(10.0, 30.0, 30.0, 10.0, 10.0, NA)
+  actual <- mapply(getMaxBank, left_bank, right_bank)
+  mapply(checkEquals, expected, actual)
+}
+
+test.isOutOfBound <- function() {
+  waterLevel <- c()
+  groundLevel <- c()
+  maxBank <- c()
+  
+}
+
 test.searchBoundaryProblem <- function() {
   data <- getDataBD()
   results <- searchBoundaryProblem(data)

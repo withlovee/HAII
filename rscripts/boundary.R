@@ -1,16 +1,12 @@
 source('db_connection.R')
 
 # Calculate max bank of water data by max(leftBank, rightBank)
-# params:
-#   data.frame waterData - Data frame of water level and station detail
-# return:
-#   vector - maximum bank level
-getMaxBank <- function(waterData) {
-  # bind left and right bank level together
-  leftRightBank <- cbind(waterData$left_bank, waterData$right_bank)
-  
-  # return vector of pairwise maximum
-  apply(leftRightBank, 1, max)
+getMaxBank <- function(leftBank, rightBank) {
+  if( is.na(leftBank) & is.na(rightBank)) {
+    NA  
+  } else {
+    max(leftBank, rightBank, na.rm = TRUE)
+  }
 }
 
 isOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevelOffset = -1, maxBankOffset = 4) {
@@ -23,7 +19,7 @@ isOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevelOffset = -
 }
 
 searchBoundaryProblem <- function(data) {
-  data$max_bank <- getMaxBank(data)
+  data$max_bank <- mapply(getMaxBank, data$left_bank, data$right_bank)
   hasBoundaryProblem <- mapply(isOutOfBound, data$water1, data$ground_level, data$max_bank)
   
   data[hasBoundaryProblem,]
