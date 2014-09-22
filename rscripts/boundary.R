@@ -35,19 +35,19 @@ rs <- dbGetQuery(con, "SELECT
   data_log.date,
   data_log.time,
   data_log.water1,
-  tele_wl_detail.code, 
   tele_wl_detail.left_bank, 
   tele_wl_detail.right_bank,
   tele_wl_detail.ground_level
 FROM 
   data_log
 inner join tele_wl_detail on tele_wl_detail.code = data_log.code
-where data_log.water1 is not null and data_log.date = DATE '2013-02-28'
+where data_log.water1 is not null and data_log.date = DATE '2012-02-28'
 and tele_wl_detail.left_bank > tele_wl_detail.right_bank
 limit 20")
 
 rs$max_bank <- getMaxBank(rs)
 rs
+#searchBoundaryProblem(rs)
 
 dbDisconnect(con);
 # dbUnloadDriver(drv);
