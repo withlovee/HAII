@@ -9,7 +9,7 @@ getDataBD <- function() {
   code <- c("CHI001", "CHI002", "KRN001", "KRN002", "KRN003", "KRN004")
   date <- c("2012-06-08", "2012-06-08", "2012-06-08", "2012-06-08", "2012-06-08", "2012-06-08")
   time <- c("17:00:00", "17:10:00", "17:20:00", "00:00:00", "00:10:00", "00:20:00")
-  water1       <- c(166.53, 0, 12.2, 136.06, 185.25, -15.432)
+  water1       <- c(999999, 0, 12.2, 136.06, 185.25, -15.432)
   left_bank    <- c(175.937, 12.778, 175.937, 9.83, 165.7, 15.937)
   right_bank   <- c(152.212, 15.14, 152.212, 15.412, 175.937, 25.23)
   ground_level <- c(128.037, -2.341, 143.435, -2.2, 128.037, -13.512)
@@ -24,6 +24,14 @@ getDataBD <- function() {
     stringsAsFactors=FALSE
   )
 }
+
+test.isWaterLevelHaveMachineError <- function() {
+  checkEquals(TRUE, isWaterLevelHaveMachineError(999999))
+  checkEquals(FALSE, isWaterLevelHaveMachineError(123455))
+  checkEquals(FALSE, isWaterLevelHaveMachineError(123455.5))
+}
+
+
 
 
 test.getMaxBank <- function() {

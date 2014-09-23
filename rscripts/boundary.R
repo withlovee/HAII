@@ -9,8 +9,19 @@ getMaxBank <- function(leftBank, rightBank) {
   }
 }
 
+isWaterLevelHaveMachineError <- function(waterLevel) {
+  if(!is.na(waterLevel) & waterLevel == 999999) {
+    TRUE
+  } else {
+    FALSE
+  }
+}
+
 isOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevelOffset = -1, maxBankOffset = 4) {
   
+  if(isWaterLevelHaveMachineError(waterLevel)) {
+    return(FALSE)
+  }
   if( any(is.na(c(waterLevel, groundLevel, maxBank))) ) {
     return(FALSE)
   }
