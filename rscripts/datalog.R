@@ -39,13 +39,12 @@ getWaterLevelData <- function(startDateTime, endDateTime) {
   
 }
 
-get24HrWaterLevelData <- function (startDateTime = NA) {
+get24HrWaterLevelData <- function (startDateTime = NA, endDateTime = Sys.time()) {
+
+  last24Hr <- endDateTime - 24*60*60
   
-  endDateTime <- Sys.time()
-  yesterday <- endDateTime - 24*60*60
-  
-  if(is.na(startDateTime) | yesterday > startDateTime) {
-    startDateTime <- yesterday
+  if(is.na(startDateTime) | last24Hr > startDateTime) {
+    startDateTime <- last24Hr
   }
   
   getWaterLevelData(startDateTime, endDateTime)
