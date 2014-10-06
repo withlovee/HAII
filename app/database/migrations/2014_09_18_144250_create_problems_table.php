@@ -15,13 +15,18 @@ class CreateProblemsTable extends Migration {
 		Schema::create('problems', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('station_id');
+			$table->string('station_code');
 			$table->string('type', 40);
-			$table->integer('start_log_id');
-			$table->integer('end_log_id');
+			$table->dateTime('start_datetime');
+			$table->dateTime('end_datetime');
 			$table->integer('num');
-			$table->string('status', 20);
+			$table->string('status');
 			$table->timestamps();
+
+			$table->index('station_code');
+			$table->index('start_datetime');
+			$table->index('type');
+			$table->index('status');
 		});
 	}
 

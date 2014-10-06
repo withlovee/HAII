@@ -66,7 +66,7 @@ return array(
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
-			'database' => 'haii',
+			'database' => 'telemetering',
 			'username' => 'postgres',
 			'password' => 'postgres',
 			'charset'  => 'utf8',

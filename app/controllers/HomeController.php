@@ -18,10 +18,20 @@ class HomeController extends BaseController {
 	public function showWelcome()
 	{
 		// var_dump(Auth::user());
-		return View::make('hello');
+		$data = array();
+
+		// $data['problems'] = Problem::where('start_datetime', '>=', date('Y-m-d 00:00'))->with('station')->grouped_by_basin();
+		$data['problems'] = Problem::groupByBasin();
+		// $data['basins'] = TeleStation::recentProblemsByBasin();
+		$data['stations'] = TeleStation::all();
+		// var_dump('<br><br><br><br><br><br><br>');
+		// var_dump($users);
+		return View::make('home/index', $data);
 		// $results = DB::select('select * from test where id = ?', array(2));
 		// var_dump($results);
 		// return '';
 	}
+
+	// public function 
 
 }

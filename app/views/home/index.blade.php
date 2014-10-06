@@ -6,6 +6,18 @@
 	</div>
 	<!-- /.col-md-4 -->
 	<div class="col-md-7">
+	<pre>
+<?php 
+    // $problems->each(function($p)
+    // {
+    //     var_dump($p->station_code);
+    // });
+var_dump($problems) 
+// foreach($problems as $p){
+// 	var_dump($p);
+// }
+?>
+</pre>
 		<h3>Real-time Out-of-Range Value Detection<br><small>(นับตั้งแต่ 7.01 น. ของวันที่ 14 กันยายน 2557 จนถึงปัจจุบัน)</small></h3>
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="#water" role="tab" data-toggle="tab">สถานีน้ำ</a></li>

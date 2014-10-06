@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		$this->call('UsersTableSeeder');
+    $this->call('UsersTableSeeder');
+		$this->call('ProblemsTableSeeder');
 	}
 
 }
@@ -51,4 +52,39 @@ class UsersTableSeeder extends Seeder {
       Log::info('Created user "'.$user->username.'" <'.$user->email.'>');
     }
   }
+}
+class ProblemsTableSeeder extends Seeder {
+
+  function run(){
+
+    $problem = new Problem;
+    $problem->station_code = 'POCG';
+    $problem->type = 'RAIN_BD';
+    $problem->start_datetime = date('Y-m-d 09:00');
+    $problem->end_datetime = date('Y-m-d 10:10');
+    $problem->num = 7;
+    $problem->status = 'Undefined';
+
+    if(! $problem->save()) {
+      Log::info('Unable to create problem '.$problem->station_code, (array)$problem->errors());
+    } else {
+      Log::info('Created problem "'.$problem->station_code.'" <'.$problem->start_datetime.'>');
+    }
+
+    $problem = new Problem;
+    $problem->station_code = 'DGSL';
+    $problem->type = 'RAIN_BD';
+    $problem->start_datetime = date('Y-m-d 19:00');
+    $problem->end_datetime = date('Y-m-d 19:10');
+    $problem->num = 1;
+    $problem->status = 'Undefined';
+
+    if(! $problem->save()) {
+      Log::info('Unable to create problem '.$problem->station_code, (array)$problem->errors());
+    } else {
+      Log::info('Created problem "'.$problem->station_code.'" <'.$problem->start_datetime.'>');
+    }
+
+  }
+
 }
