@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/', 'HomeController@showWelcome')->before('auth');
+Route::get('/', 'HomeController@index')->before('auth');
+Route::get('errorlog', 'ErrorLogController@index')->before('auth');
+Route::get('errorlog/get', 'ErrorLogController@get')->before('auth');
 // Route::get('/', function()
 // {
 // 	return View::make('hello');

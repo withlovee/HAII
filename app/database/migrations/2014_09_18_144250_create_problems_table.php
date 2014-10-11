@@ -16,7 +16,8 @@ class CreateProblemsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('station_code');
-			$table->string('type', 40);
+			$table->string('data_type', 40);
+			$table->string('problem_type', 40);
 			$table->dateTime('start_datetime');
 			$table->dateTime('end_datetime');
 			$table->integer('num');
@@ -25,7 +26,8 @@ class CreateProblemsTable extends Migration {
 
 			$table->index('station_code');
 			$table->index('start_datetime');
-			$table->index('type');
+			$table->index('problem_type');
+			$table->index('data_type');
 			$table->index('status');
 		});
 	}
