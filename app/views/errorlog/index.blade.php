@@ -178,7 +178,13 @@
 		$('.monitor-table').on('click', '.update', function(e){
 			e.preventDefault();
 			id = $(this).data('id');
-			alert(id);
+			error = $(this).data('error');
+			$.post("../api/problems/status", function(data){
+				alert(data);
+			});
+			$(this).parent().parent().find('a[data-id="'+id+'"]').removeClass('active');
+			$(this).addClass('active');
+			// alert(id+" "+error);
 		});
 	});
 	function getFormObj(inputs) {
@@ -189,7 +195,7 @@
 		return formObj;
 	}
 </script>
-
+{{ app_path() }}
 	</div>
 	<div class="tab-pane" id="rain">
 		<form class="form-inline filters" role="form">
