@@ -12,16 +12,25 @@ class Problem extends \Eloquent {
 				'tambon_name', 
 				'amphoe_name', 
 				'province_name', 
+				'part',
 				'basin', 
 				'start_datetime', 
 				'end_datetime', 
-				'num', 
+				'num',
 				'problems.status'
 				)
 			->where('data_type', '=', $type);
 	}
 	public function scopeBasin($query, $basin){
 		if($basin) return $query->where('basin', '=', $basin);
+		return $query;
+	}
+	public function scopeProvince($query, $province){
+		if($province) return $query->where('province_name', '=', $province);
+		return $query;
+	}
+	public function scopePart($query, $part){
+		if($part) return $query->where('part', '=', $part);
 		return $query;
 	}
 	public function scopeCode($query, $code){
@@ -31,6 +40,18 @@ class Problem extends \Eloquent {
 	public function scopeProblem($query, $problem_type){
 		if($problem_type) return $query->where('problem_type', '=', $problem_type);
 		return $query;
+	}
+	public function scopeMarked($query, $marked){
+		if($marked == 'true') return $query->where('problems.status', '!=', 'undefined');
+		else return $query->where('problems.status', '=', 'undefined');
+	}
+	public function scopeStartDatetime($query, $datetime){
+		if($datetime) return $query->where('start_datetime', '>=', $datetime);
+		else return $query;
+	}
+	public function scopeEndDatetime($query, $datetime){
+		if($datetime) return $query->where('start_datetime', '<=', $datetime);
+		else return $query;
 	}
 
 	static function recentByBasin($data_type, $problem_type = 'BD') {
@@ -61,10 +82,29 @@ class Problem extends \Eloquent {
 	}
 
 	static function allForTable($params){
+		$defaults = array(
+			'data_type' => '',
+			'basin' => '',
+			'province' => '',
+			'part' => '',
+			'code' => '',
+			'problem_type' => '',
+			'marked' => 'false',
+			'start_date' => '',
+			'start_time' => '',
+			'end_date' => '',
+			'end_time' => ''
+		);
+		$params = array_merge($defaults, $params);
 		$problems = self::dataType($params['data_type'])
 			->basin($params['basin'])
+			->province($params['province'])
+			->part($params['part'])
 			->code($params['code'])
 			->problem($params['problem_type'])
+			->marked($params['marked'])
+			->startDatetime(self::renderDate($params['start_date'], $params['start_time']))
+			->endDatetime(self::renderDate($params['end_date'], $params['end_time']))
 			->get();
 		foreach($problems as $problem){
 			$problem['station_name'] = self::build_full_station_name($problem);
@@ -72,6 +112,12 @@ class Problem extends \Eloquent {
 			$problem['problem_type'] = self::getTypeName($problem['problem_type']);
 		}
 		return $problems;
+	}
+
+	static private function renderDate($date, $time){
+		if(!$date) return null;
+		if(!$time) $time = '07:00';
+		return $date.' '.str_replace("%3A", ":", $time);
 	}
 
 	static function getTypeName($name){

@@ -36,7 +36,6 @@
 		<ul class="nav navbar-nav">
 			<li>{{ HTML::link('notifications', 'Daily Operations') }}</li>
 			<li>{{ HTML::link('errorlog', 'Error Log') }}</li>
-			<li><a href="history.php">Error Log</a></li>
 			<li><a href="batch.php">Batch Processing</a></li>
 			<li><a href="reports.php">Report Generation</a></li>
 			<li><a href="settings.php">Settings</a></li>

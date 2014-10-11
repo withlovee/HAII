@@ -12,9 +12,13 @@
 */
 
 Route::get('/', 'HomeController@index')->before('auth');
-Route::get('errorlog', 'ErrorLogController@index')->before('auth');
-Route::get('errorlog/get', 'ErrorLogController@get')->before('auth');
-Route::get('api/problems/status', 'APIProblemsController@status')->before('auth');
+Route::get('errorlog', function(){
+	return Redirect::to('errorlog/unmarked');
+})->before('auth');
+Route::get('errorlog/{status}', 'ErrorLogController@index')->before('auth');
+Route::get('api/problems/all', 'APIProblemsController@all')->before('auth');
+Route::get('api/problems/get', 'APIProblemsController@get')->before('auth');
+Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('auth');
 // Route::get('/', function()
 // {
 // 	return View::make('hello');

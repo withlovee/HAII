@@ -1,8 +1,8 @@
 @extends('layouts.master', ['title' => 'Error Log'])
 @section('header-buttons')
 	<div class="btn-group right">
-		<a href="history2.php" class="btn btn-default">ดูปัญหาที่แก้ไขแล้ว</a>
-		<a href="history.php" class="btn btn-default active">ดูปัญหาที่ยังไม่แก้ไข</a>
+		<a href="{{ URL::to('errorlog/marked') }}" class="btn btn-default {{ $marked }}">ดูปัญหาที่แก้ไขแล้ว</a>
+		<a href="{{ URL::to('errorlog/unmarked') }}" class="btn btn-default {{ $unmarked }}">ดูปัญหาที่ยังไม่แก้ไข</a>
 	</div>
 @stop
 
@@ -38,29 +38,77 @@
 				</select>
 			</div>
 			<input type="hidden" name="data_type" value="WATER">
+			<input type="hidden" name="marked" value="{{ $status }}">
 			<p></p>
 			<div class="form-inline">
 				<div class="form-group">
 					<label for="">ตั้งแต่</label>
-					<input type="date" class="form-control">
-					<input type="time" class="form-control">
+					<input name="start_date" type="date" class="form-control">
+					<input name="start_time" type="time" class="form-control">
 				</div>
 				<div class="form-group">
 					<label for="">ถึง</label>
-					<input type="date" class="form-control">
-					<input type="time" class="form-control">
+					<input name="end_date" type="date" class="form-control">
+					<input name="end_time" type="time" class="form-control">
 				</div>
 				<button type="submit" class="query_btn btn btn-primary">Go</button>
 			</div>
 		</form>
 		<div id="div1" class="table-full monitor-table" style="width:100%"></div>
+	</div>
+	<div class="tab-pane" id="rain">
+		<form class="form-inline filters" role="form">
+			<div class="form-group">
+				<label for="">เลือกดูตาม</label>
+			</div>
+			<div class="form-group">
+				{{ Form::select('basin', $basins, null, array('class' => 'form-control')) }}
+			</div>
+			<div class="form-group">
+				{{ Form::select('part', $parts, null, array('class' => 'form-control')) }}
+			</div>
+			<div class="form-group">
+				{{ Form::select('province', $provinces, null, array('class' => 'form-control')) }}
+			</div>
+			<div class="form-group">
+				{{ Form::select('code', $codes, null, array('class' => 'form-control')) }}
+			</div>
+			<div class="form-group">
+				<select name="problem_type" id="problem_type" class="form-control">
+					<option value="">ปัญหาทุกประเภท</option>
+					<option value="BD">Out-of-Range (BD)</option>
+					<option value="FV">Flat Value (FV)</option>
+					<option value="MG">Missing Gap (MG)</option>
+				</select>
+			</div>
+			<input type="hidden" name="data_type" value="RAIN">
+			<input type="hidden" name="marked" value="{{ $status }}">
+			<p></p>
+			<div class="form-inline">
+				<div class="form-group">
+					<label for="">ตั้งแต่</label>
+					<input name="start_date" type="date" class="form-control">
+					<input name="start_time" type="time" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="">ถึง</label>
+					<input name="end_date" type="date" class="form-control">
+					<input name="end_time" type="time" class="form-control">
+				</div>
+				<button type="submit" class="query_btn btn btn-primary">Go</button>
+			</div>
+		</form>
+		<div id="div2" class="table-full monitor-table" style="width:100%"></div>			
+	</div>
+</div>
+
 {{ HTML::style('css/watable.css'); }}
 {{ HTML::script('js/jquery.watable.js'); }}
-<script type="text/javascript">
-	$(document).ready( function() {
-
-		//An example with all options.
-		 var waTable = $('#div1').WATable({
+<script>
+$(document).ready(function() {
+	function HAIIWATable(divName, params){
+		mainElement = $(divName);
+	 	var waTable = mainElement.WATable({
 			debug:true,                 //Prints some debug info to console
 			pageSize: 20,                //Initial pagesize
 			transition: 'fade',       //Type of transition when paging (bounce, fade, flip, rotate, scroll, slide).Requires https://github.com/daneden/animate.css.
@@ -74,13 +122,8 @@
 			checkboxes: false,           //Make rows checkable. (Note. You need a column with the 'unique' property)
 			checkAllToggle:true,        //Show the check-all toggle
 			preFill: true,              //Initially fills the table with empty rows (as many as the pagesize).
-			url: 'errorlog/get',    //Url to a webservice if not setting data manually as we do in this example
-			urlData: {
-				data_type: 'WATER', 
-				basin: '',
-				code: '',
-				problem_type: ''
-			},
+			url: '{{ URL::to('api/problems/all') }}',    //Url to a webservice if not setting data manually as we do in this example
+			urlData: params,
 			urlPost: false,             //Use POST httpmethod to webservice. Default is GET.
 			types: {                    //Following are some specific properties related to the data types
 				string: {
@@ -142,9 +185,9 @@
 		//waTable.setData(data, true); //Sets the data but prevents any previously set columns from being overwritten
 		//waTable.setData(data, false, false); //Sets the data and prevents any previously checked rows from being reset
 
-		var allRows = waTable.getData(false); //Gets the data you previously set.
-		var checkedRows = waTable.getData(true); //Gets the data you previously set, but with checked rows only.
-		var filteredRows = waTable.getData(false, true); //Gets the data you previously set, but with filtered rows only.
+		// var allRows = waTable.getData(false); //Gets the data you previously set.
+		// var checkedRows = waTable.getData(true); //Gets the data you previously set, but with checked rows only.
+		// var filteredRows = waTable.getData(false, true); //Gets the data you previously set, but with filtered rows only.
 
 		// var pageSize = waTable.option("pageSize"); //Get option
 		//waTable.option("pageSize", pageSize); //Set option
@@ -167,7 +210,14 @@
 		// 	console.log(data);
 		// 	alert(data.rows.length + ' rows returned.\nSee console for details.');
 		// });
-		$('.query_btn').click(function(e){
+		function getFormObj(inputs) {
+			var formObj = {};
+			$.each(inputs, function (i, input) {
+				formObj[input.name] = input.value;
+			});
+			return formObj;
+		}
+		mainElement.parent().find('form').on('click', '.query_btn', function(e){
 			e.preventDefault();
 			data = getFormObj($(this).parents('form').serializeArray());
 			console.log(data);
@@ -175,206 +225,35 @@
 			waTable.update();
 		});
 
-		$('.monitor-table').on('click', '.update', function(e){
+		mainElement.on('click', '.update', function(e){
 			e.preventDefault();
-			id = $(this).data('id');
-			error = $(this).data('error');
-			$.post("../api/problems/status", function(data){
-				alert(data);
-			});
-			$(this).parent().parent().find('a[data-id="'+id+'"]').removeClass('active');
-			$(this).addClass('active');
-			// alert(id+" "+error);
+			el = $(this);
+			data = {
+				id: el.data('id'),
+				status: el.data('error')
+			}
+			// data.id = el.data('id');
+			// data.status = el.data('error');
+			$.post("{{ URL::to('api/problems/update_status') }}", data)
+				.done(function(res){
+					console.log(res);
+					if(res.success){
+						el.parent().parent().find('a[data-id="'+data.id+'"]').removeClass('active');
+						el.addClass('active');
+					}
+				});
 		});
-	});
-	function getFormObj(inputs) {
-		var formObj = {};
-		$.each(inputs, function (i, input) {
-			formObj[input.name] = input.value;
-		});
-		return formObj;
 	}
+	new HAIIWATable("#div1", {
+		data_type: 'WATER', 
+		marked: '{{ $status }}'
+	});
+	new HAIIWATable("#div2", {
+		data_type: 'RAIN', 
+		marked: '{{ $status }}'
+	});
+});
 </script>
-{{ app_path() }}
-	</div>
-	<div class="tab-pane" id="rain">
-		<form class="form-inline filters" role="form">
-			<div class="form-group">
-				<label for="">เลือกดูตาม</label>
-			</div>
-			<div class="form-group">
-				<select name="" id="" class="form-control">
-					<option value="">ลุ่มแม่น้ำ</option>
-					<option value="แม่น้ำแม่กลอง">แม่น้ำแม่กลอง</option>
-					<option value="แม่น้ำท่าจีน">แม่น้ำท่าจีน</option>
-					<option value="แม่น้ำเพชรบุรี">แม่น้ำเพชรบุรี</option>
-					<option value="แม่น้ำสาละวิน">แม่น้ำสาละวิน</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="" id="" class="form-control">
-					<option value="">ภูมิภาค</option>
-					<option value="กลาง">ภาคกลาง</option>
-					<option value="ตะวันตก">ภาคตะวันตก</option>
-					<option value="ตะวันออก">ภาคตะวันออก</option>
-					<option value="ตะวันออกเฉียงเหนือ">ภาคตะวันออกเฉียงเหนือ</option>
-					<option value="ใต้">ภาคใต้</option>
-					<option value="เหนือ">ภาคเหนือ</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="" id="" class="form-control">
-					<option value="">จังหวัด</option>
-					<option value="ตะวันตก">กาญจนบุรี</option><option value="ตะวันตก">ตาก</option><option value="ตะวันตก             ">ประจวบคีรีขันธ์</option><option value="ตะวันตก             ">เพชรบุรี</option><option value="ตะวันตก             ">ราชบุรี</option><option value="ตะวันออกเฉียงเหนือ  ">กาฬสินธุ์</option><option value="ตะวันออกเฉียงเหนือ  ">ขอนแก่น</option><option value="ตะวันออกเฉียงเหนือ  ">ชัยภูมิ</option><option value="ตะวันออกเฉียงเหนือ  ">นครพนม</option><option value="ตะวันออกเฉียงเหนือ  ">นครราชสีมา</option><option value="ตะวันออกเฉียงเหนือ  ">บึงกาฬ</option><option value="ตะวันออกเฉียงเหนือ  ">บุรีรัมย์</option><option value="ตะวันออกเฉียงเหนือ  ">มหาสารคาม</option><option value="ตะวันออกเฉียงเหนือ  ">มุกดาหาร</option><option value="ตะวันออกเฉียงเหนือ  ">ยโสธร</option><option value="ตะวันออกเฉียงเหนือ  ">ร้อยเอ็ด</option><option value="ตะวันออกเฉียงเหนือ  ">เลย</option><option value="ตะวันออกเฉียงเหนือ  ">ศรีสะเกษ</option><option value="ตะวันออกเฉียงเหนือ  ">สกลนคร</option><option value="ตะวันออกเฉียงเหนือ  ">สุรินทร์</option><option value="ตะวันออกเฉียงเหนือ  ">หนองคาย</option><option value="ตะวันออกเฉียงเหนือ  ">หนองบัวลำภู</option><option value="ตะวันออกเฉียงเหนือ  ">อำนาจเจริญ</option><option value="ตะวันออกเฉียงเหนือ  ">อุดรธานี</option><option value="ตะวันออกเฉียงเหนือ  ">อุบลราชธานี</option><option value="ใต้                 ">กระบี่</option><option value="ใต้                 ">ชุมพร</option><option value="ใต้                 ">ตรัง</option><option value="ใต้                 ">นครศรีธรรมราช</option><option value="ใต้                 ">นราธิวาส</option><option value="ใต้                 ">ปัตตานี</option><option value="ใต้                 ">พังงา</option><option value="ใต้                 ">พัทลุง</option><option value="ใต้                 ">ภูเก็ต</option><option value="ใต้                 ">ยะลา</option><option value="ใต้                 ">ระนอง</option><option value="ใต้                 ">สงขลา</option><option value="ใต้                 ">สตูล</option><option value="ใต้                 ">สุราษฎร์ธานี</option><option value="กลาง                ">กรุงเทพมหานคร</option><option value="กลาง                ">กำแพงเพชร</option><option value="กลาง                ">ชัยนาท</option><option value="กลาง                ">นครนายก</option><option value="กลาง                ">นครปฐม</option><option value="กลาง                ">นครสวรรค์</option><option value="กลาง                ">นนทบุรี</option><option value="กลาง                ">ปทุมธานี</option><option value="กลาง                ">พระนครศรีอยุธยา</option><option value="กลาง                ">พิจิตร</option><option value="กลาง                ">พิษณุโลก</option><option value="กลาง                ">เพชรบูรณ์</option><option value="กลาง                ">ลพบุรี</option><option value="กลาง                ">สมุทรปราการ</option><option value="กลาง                ">สมุทรสงคราม</option><option value="กลาง                ">สมุทรสาคร</option><option value="กลาง                ">สระบุรี</option><option value="กลาง                ">สิงห์บุรี</option><option value="กลาง                ">สุโขทัย</option><option value="กลาง                ">สุพรรณบุรี</option><option value="กลาง                ">อ่างทอง</option><option value="กลาง                ">อุทัยธานี</option><option value="กลาง                "></option><option value="ตะวันออก            ">จันทบุรี</option><option value="ตะวันออก            ">ฉะเชิงเทรา</option><option value="ตะวันออก            ">ชลบุรี</option><option value="ตะวันออก            ">ตราด</option><option value="ตะวันออก            ">ปราจีนบุรี</option><option value="ตะวันออก            ">ระยอง</option><option value="ตะวันออก            ">สระแก้ว</option><option value="เหนือ               ">เชียงราย</option><option value="เหนือ               ">เชียงใหม่</option><option value="เหนือ               ">น่าน</option><option value="เหนือ               ">พะเยา</option><option value="เหนือ               ">แพร่</option><option value="เหนือ               ">แม่ฮ่องสอน</option><option value="เหนือ               ">ลำปาง</option><option value="เหนือ               ">ลำพูน</option><option value="เหนือ               ">อุตรดิตถ์</option>						</select>
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="" id="" class="form-control">
-					<option value="">รหัสสถานี</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<select name="" id="" class="form-control">
-					<option value="">ปัญหาทุกประเภท</option>
-					<option value="">Out-of-Range (BD)</option>
-					<option value="">Flat Value (FV)</option>
-					<option value="">Missing Gap (MG)</option>
-				</select>
-			</div>
-			<button type="submit" class="btn btn-primary">Go</button>
-		</form>
-		<table class="monitor-table table table-bordered table-condensed">
-			<thead>
-				<tr>
-					<th width="35%">ชื่อสถานี</th>
-					<th>วันที่</th>
-					<th>เวลา</th>
-					<th>ประเภทของปัญหา</th>
-					<th>ค่าที่มีปัญหา</th>
-					<th>ใช่ปัญหา</th>
-					<th>ไม่ใช่ปัญหา</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><a href="" data-toggle="modal" data-target="#detail">เมืองกำแพงเพชร ต. ลานดอกไม้ อ. เมืองกำแพงเพชร จ. กำแพงเพชร</a></td>
-					<td>2014-09-14</td>
-					<td>21:00</td>
-					<td>Missing Gap</td>
-					<td>1.34</td>
-					<td>
-						<a href="#" class="active">
-							<span class="glyphicon glyphicon-ok"></span>
-							<span class="text">Error</span>
-						</a>
-					</td>
-					<td>
-						<a href="#">
-							<span class="glyphicon glyphicon-remove"></span>
-							<span class="text">Not Error</span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td><a href="" data-toggle="modal" data-target="#detail">เก้าเลี้ยว ต. หัวดง อ. เก้าเลี้ยว จ. นครสวรรค์</a></td>
-					<td>2014-09-14</td>
-					<td>21:00</td>
-					<td>Flat Value</td>
-					<td>4.52</td>
-					<td>
-						<a href="#">
-							<span class="glyphicon glyphicon-ok"></span>
-							<span class="text">Error</span>
-						</a>
-					</td>
-					<td>
-						<a href="#" class="active">
-							<span class="glyphicon glyphicon-remove"></span>
-							<span class="text">Not Error</span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td><a href="" data-toggle="modal" data-target="#detail">สวี2 ต.นาสัก อ.สวี จ.ชุมพร</a></td>
-					<td>2014-09-14</td>
-					<td>21:00</td>
-					<td>Out-of-Range</td>
-					<td>0.86</td>
-					<td>
-						<a href="#" class="active">
-							<span class="glyphicon glyphicon-ok"></span>
-							<span class="text">Error</span>
-						</a>
-					</td>
-					<td>
-						<a href="#">
-							<span class="glyphicon glyphicon-remove"></span>
-							<span class="text">Not Error</span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td><a href="" data-toggle="modal" data-target="#detail">สันทราย ต. แม่แฝก อ. สันทราย จ. เชียงใหม่</a></td>
-					<td>2014-09-14</td>
-					<td>20:00</td>
-					<td>Flat Value</td>
-					<td>0.43</td>
-					<td>
-						<a href="#">
-							<span class="glyphicon glyphicon-ok"></span>
-							<span class="text">Error</span>
-						</a>
-					</td>
-					<td>
-						<a href="#" class="active">
-							<span class="glyphicon glyphicon-remove"></span>
-							<span class="text">Not Error</span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td><a href="" data-toggle="modal" data-target="#detail">ฮอด ต. หางดง อ. ฮอด จ. เชียงใหม่</a></td>
-					<td>2014-09-14</td>
-					<td>19:50</td>
-					<td>Missing Gap</td>
-					<td>0.86</td>
-					<td>
-						<a href="#">
-							<span class="glyphicon glyphicon-ok"></span>
-							<span class="text">Error</span>
-						</a>
-					</td>
-					<td>
-						<a href="#" class="active">
-							<span class="glyphicon glyphicon-remove"></span>
-							<span class="text">Not Error</span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td><a href="" data-toggle="modal" data-target="#detail">เมืองลำปาง ต. ต้นธงชัย อ. เมืองลำปาง จ. ลำปาง</a></td>
-					<td>2014-09-14</td>
-					<td>21:00</td>
-					<td>Out-of-Range</td>
-					<td>0.62</td>
-					<td>
-						<a href="#" class="active">
-							<span class="glyphicon glyphicon-ok"></span>
-							<span class="text">Error</span>
-						</a>
-					</td>
-					<td>
-						<a href="#">
-							<span class="glyphicon glyphicon-remove"></span>
-							<span class="text">Not Error</span>
-						</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>				
-	</div>
-</div>
-
 <div class="modal fade" id="detail">
 	<div class="modal-dialog large">
 		<div class="modal-content">

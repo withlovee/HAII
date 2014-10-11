@@ -44,6 +44,26 @@ class TeleStation extends \Eloquent {
 		return $output;
 	}
 
+	public static function parts($form = false){
+		$results = DB::table('tele_station')
+			->select('part')
+			->orderBy('part', 'desc')
+			->groupBy('part')
+			->get();
+		$output = array();
+		if($form){
+			$output[""] = 'ภูมิภาค';
+			foreach($results as $result){
+				if($result->part)
+					$output[$result->part] = $result->part;
+			}
+		}
+		else
+			foreach($results as $result)
+				$output[] = $result->part;			
+		return $output;
+	}
+
 	public static function codes($form = false){
 		$results = DB::table('tele_station')
 			->select('code')
