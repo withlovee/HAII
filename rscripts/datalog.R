@@ -9,29 +9,33 @@ getWaterLevelData <- function(startDateTime, endDateTime) {
   
   startTimeString <- strftime(startDateTime, "%H:%M:%S");
   endTimeString   <- strftime(endDateTime, "%H:%M:%S");
-    
-  data <- dbGetQuery(con,
-    paste("
-      SELECT 
-        data_log.code, 
-        data_log.date,
-        data_log.time,
-        data_log.water1,
-        tele_wl_detail.left_bank, 
-        tele_wl_detail.right_bank,
-        tele_wl_detail.ground_level
-    
-      FROM data_log
-    
-      INNER JOIN tele_wl_detail ON tele_wl_detail.code = data_log.code
-
-      WHERE data_log.date >= DATE '", startDateString ,"'
-      AND   data_log.time >= TIME '", startTimeString ,"'
-      AND   data_log.date <= DATE '", endDateString ,"'
-      AND   data_log.time <= TIME '", endTimeString ,"'
   
-    ", sep="")
-  )
+  data <- dbGetQuery(con,
+                     paste("
+                           SELECT 
+                           data_log.code, 
+                           data_log.date,
+                           data_log.time,
+                           data_log.water1,
+                           tele_wl_detail.left_bank, 
+                           tele_wl_detail.right_bank,
+                           tele_wl_detail.ground_level
+                           
+                           FROM data_log
+                           
+                           INNER JOIN tele_wl_detail ON tele_wl_detail.code = data_log.code
+                           
+                           WHERE 
+                           (data_log.date > DATE '", startDateString ,"'
+                           OR
+                           data_log.date = DATE '", startDateString ,"' AND data_log.time >= TIME '", startTimeString ,"')
+                           AND
+                           (data_log.date < DATE '", endDateString ,"'
+                           OR
+                           data_log.date = DATE '", endDateString ,"' AND data_log.time < TIME '", endTimeString ,"')
+                           
+                           ", sep="")
+                     )
   
   closeDbConnection(con)
   
@@ -39,14 +43,124 @@ getWaterLevelData <- function(startDateTime, endDateTime) {
   
 }
 
-get24HrWaterLevelData <- function (startDateTime = NA, endDateTime = Sys.time()) {
-
+get24HrWaterLevelData <- function (startDateTime = NA, endDateTime = Sys.time(), debug=FALSE) {
+  
   last24Hr <- endDateTime - 24*60*60
   
-  if(is.na(startDateTime) | last24Hr > startDateTime) {
+  if(!debug & (is.na(startDateTime) | last24Hr > startDateTime)) {
     startDateTime <- last24Hr
   }
   
   getWaterLevelData(startDateTime, endDateTime)
   
 }
+
+opDate <- function(d) {
+  
+  d <- as.POSIXct(d)
+  
+  a <- as.POSIXlt(d)
+  a$hour <- 7
+  a$min <- 0
+  a$sec <- 0
+  
+  a <- as.POSIXct(a)
+  
+  if(a > d) {
+    # yesterday
+    a <- a - 86400
+  }
+  
+  return(a)
+}
+
+updateBoundaryProblem <- function(problems) {
+  
+  problems <- problems[order(problems$start_datetime), ]
+  
+  minute <- 60*10
+  
+  
+  con <- openDbConnection()
+  
+  for(i in 1:nrow(problems)) {
+    p <- problems[i,]
+    
+    previousDateTime <- as.POSIXct(p$start_datetime) - minute
+    previousDateTimeString <- strftime(previousDateTime, "%Y-%m-%d %H:%M:%S")
+    
+    
+    currentDateTimeString <- strftime(Sys.time(), "%Y-%m-%d %H:%M:%S")
+    
+    operationDateTimeString <- strftime(opDate(p$start_datetime), "%Y-%m-%d %H:%M:%S")
+    
+    query <- paste("
+                   SELECT *
+                   FROM problems
+                   WHERE station_code = '", p$station_code ,"'
+                   AND end_datetime = timestamp '", previousDateTimeString ,"'
+                   AND start_datetime >= timestamp '", operationDateTimeString ,"'                  
+
+                   AND type = '", p$type ,"'
+                   
+                   ", sep="")
+    
+    print(query)
+    
+    previousProblem <- dbGetQuery(con, query)
+    # print(query)
+    str(previousProblem)
+    
+    if(nrow(previousProblem) > 0) {
+      # merge problem together
+      
+      print("update")
+      
+      query <- paste("
+                     UPDATE problems
+                     SET
+                     end_datetime = timestamp '", p$end_datetime ,"' ,
+                     updated_at = timestamp '", currentDateTimeString ,"' ,
+                     num = ",as.numeric(previousProblem$num) + 1,"
+
+                     WHERE id=", previousProblem$id ,"
+                     ", sep="")
+      
+      print(query)
+      
+      dbSendQuery(con, query)
+      
+      
+    } else {
+      # create new row
+      
+      print("add")
+      
+      query <- paste("
+                     INSERT INTO problems(station_code,type,start_datetime,end_datetime,num,status,created_at,updated_at)
+                     VALUES (
+                     '", p$station_code ,"' ,
+                     '", p$type ,"' ,
+                     timestamp '", p$start_datetime ,"' ,
+                     timestamp '", p$end_datetime ,"' ,
+                     '", p$num ,"' ,
+                     'undefinded' ,
+                     timestamp '", currentDateTimeString ,"' ,
+                     timestamp '", currentDateTimeString ,"' 
+                      )
+                     ", sep="")
+      
+      print(query)
+      
+      dbSendQuery(con, query)
+      
+    }
+  }
+  
+  
+  closeDbConnection(con);
+
+}
+
+
+
