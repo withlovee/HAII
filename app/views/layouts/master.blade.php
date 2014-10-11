@@ -34,7 +34,7 @@
 	<!-- Collect the nav links, forms, and other content for toggling -->
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		<ul class="nav navbar-nav">
-			<li>{{ HTML::link('notifications', 'Daily Operations') }}</li>
+			<li>{{ HTML::link('dailyop', 'Daily Operations') }}</li>
 			<li>{{ HTML::link('errorlog', 'Error Log') }}</li>
 			<li><a href="batch.php">Batch Processing</a></li>
 			<li><a href="reports.php">Report Generation</a></li>
@@ -66,7 +66,9 @@
 <section class="content-wrapper">
 	<div class="container">
 	<div class="page-header">
-		<h1 class="left">{{ $title }}</h1>
+		<h1 class="left">
+			{{ $title }}
+		</h1>
 		@yield('header-buttons')
 		<div class="clear"></div>
 	</div>

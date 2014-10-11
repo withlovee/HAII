@@ -1,8 +1,8 @@
-@extends('layouts.master', ['title' => 'Error Log'])
+@extends('layouts.master', ['title' => $title])
 @section('header-buttons')
 	<div class="btn-group right">
-		<a href="{{ URL::to('errorlog/marked') }}" class="btn btn-default {{ $marked }}">ดูปัญหาที่แก้ไขแล้ว</a>
-		<a href="{{ URL::to('errorlog/unmarked') }}" class="btn btn-default {{ $unmarked }}">ดูปัญหาที่ยังไม่แก้ไข</a>
+		<a href="marked" class="btn btn-default {{ $marked }}">ดูปัญหาที่แก้ไขแล้ว</a>
+		<a href="unmarked" class="btn btn-default {{ $unmarked }}">ดูปัญหาที่ยังไม่แก้ไข</a>
 	</div>
 @stop
 
@@ -39,6 +39,7 @@
 			</div>
 			<input type="hidden" name="data_type" value="WATER">
 			<input type="hidden" name="marked" value="{{ $status }}">
+			@if($selectDate)
 			<p></p>
 			<div class="form-inline">
 				<div class="form-group">
@@ -53,6 +54,9 @@
 				</div>
 				<button type="submit" class="query_btn btn btn-primary">Go</button>
 			</div>
+			@else
+			<button type="submit" class="query_btn btn btn-primary">Go</button>
+			@endif
 		</form>
 		<div id="div1" class="table-full monitor-table" style="width:100%"></div>
 	</div>
@@ -83,6 +87,7 @@
 			</div>
 			<input type="hidden" name="data_type" value="RAIN">
 			<input type="hidden" name="marked" value="{{ $status }}">
+			@if($selectDate)
 			<p></p>
 			<div class="form-inline">
 				<div class="form-group">
@@ -97,6 +102,9 @@
 				</div>
 				<button type="submit" class="query_btn btn btn-primary">Go</button>
 			</div>
+			@else
+			<button type="submit" class="query_btn btn btn-primary">Go</button>
+			@endif
 		</form>
 		<div id="div2" class="table-full monitor-table" style="width:100%"></div>			
 	</div>
@@ -243,7 +251,7 @@ $(document).ready(function() {
 		});
 
 		mainElement.on('click', '.model_btn', function(e){
-			
+
 		});
 	}
 	new HAIIWATable("#div1", {

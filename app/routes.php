@@ -16,6 +16,10 @@ Route::get('errorlog', function(){
 	return Redirect::to('errorlog/unmarked');
 })->before('auth');
 Route::get('errorlog/{status}', 'ErrorLogController@index')->before('auth');
+Route::get('dailyop', function(){
+	return Redirect::to('dailyop/unmarked');
+})->before('auth');
+Route::get('dailyop/{status}', 'DailyOpController@index')->before('auth');
 Route::get('api/problems/all', 'APIProblemsController@all')->before('auth');
 Route::get('api/problems/get', 'APIProblemsController@get')->before('auth');
 Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('auth');

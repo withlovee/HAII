@@ -1,0 +1,1 @@
+@extends('errorlog.index', ['title' => $title])
