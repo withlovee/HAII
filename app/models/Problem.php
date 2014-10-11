@@ -56,26 +56,23 @@ class Problem extends \Eloquent {
 
 	static function recentByBasin($data_type, $problem_type = 'BD') {
 		/*-- Query latest problems with tele_station information --*/
-		$problems = DB::table('problems')
-			->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
-			->select('code', 'name', 'tambon_name', 'amphoe_name', 'province_name', 'basin','start_datetime', 'end_datetime', 'num', 'problems.status')
-			->where('data_type', '=', $data_type)
-			->where('problem_type', '=', $problem_type)
-			->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01'))
-			->where('problems.status', '=', 'undefined')
-			->get();
+		$problems = self::dataType($data_type)
+			->problem($problem_type)
+			->marked('false')
+			->startDatetime(self::getStartDate('Y-m-d 07:01'))
+			->get()->toArray();
 		/*-- Group the data by basins --*/
 		$grouped_problems = array();
 		foreach($problems as $problem){
-			$item = (array) $problem;
-			$item['full_name'] = self::build_full_station_name($item);
-			$item['end_time'] = date('H:i', strtotime($item['end_datetime']));
-			if($item['basin']){
-				$grouped_problems[$item['basin']][] = $item;
+			$item = $problem;
+			$problem['full_name'] = self::build_full_station_name($problem);
+			$problem['end_time'] = date('H:i', strtotime($problem['end_datetime']));
+			if($problem['basin']){
+				$grouped_problems[$problem['basin']][] = $problem;
 			}
-			/*-- If the station has no basin information --*/
+			// If the station has no basin information
 			else{
-				$grouped_problems['none'][] = $item;
+				$grouped_problems['none'][] = $problem;
 			}
 		}
 		return $grouped_problems;

@@ -232,8 +232,6 @@ $(document).ready(function() {
 				id: el.data('id'),
 				status: el.data('error')
 			}
-			// data.id = el.data('id');
-			// data.status = el.data('error');
 			$.post("{{ URL::to('api/problems/update_status') }}", data)
 				.done(function(res){
 					console.log(res);
@@ -242,6 +240,10 @@ $(document).ready(function() {
 						el.addClass('active');
 					}
 				});
+		});
+
+		mainElement.on('click', '.model_btn', function(e){
+			
 		});
 	}
 	new HAIIWATable("#div1", {

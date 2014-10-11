@@ -21,7 +21,7 @@ class APIProblemsController extends BaseController {
 	}
 
 	public function get($station_code) {
-		
+
 	}
 
 	private function getCols() {
@@ -76,7 +76,7 @@ class APIProblemsController extends BaseController {
 
 	private function getRows($problems) {
 		foreach($problems as $problem){
-			$problem['station_name'] = '<a href="" data-toggle="modal" data-target="#detail">'.$problem['station_name'].'</a>';
+			$problem['station_name'] = '<a href="" class="model_btn" data-id="'.$problem['id'].'" data-toggle="modal" data-target="#detail">'.$problem['station_name'].'</a>';
 			$problem['is_error'] = $this->getErrorButton($problem['id'], true, $problem['status'] == 'true');
 			$problem['is_not_error'] = $this->getErrorButton($problem['id'], false, $problem['status'] == 'false');
 		}
