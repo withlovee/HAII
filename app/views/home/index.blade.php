@@ -6,19 +6,7 @@
 	</div>
 	<!-- /.col-md-4 -->
 	<div class="col-md-7">
-	<pre>
-<?php 
-    // $problems->each(function($p)
-    // {
-    //     var_dump($p->station_code);
-    // });
-var_dump($problems) 
-// foreach($problems as $p){
-// 	var_dump($p);
-// }
-?>
-</pre>
-		<h3>Real-time Out-of-Range Value Detection<br><small>(นับตั้งแต่ 7.01 น. ของวันที่ 14 กันยายน 2557 จนถึงปัจจุบัน)</small></h3>
+		<h3>Real-time Out-of-Range Value Detection<br><small>(นับตั้งแต่ 7.01 น. ของวันที่ {{ thai_date(getTime()) }} จนถึงปัจจุบัน)</small></h3>
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="#water" role="tab" data-toggle="tab">สถานีน้ำ</a></li>
 			<li><a href="#rain" role="tab" data-toggle="tab">สถานีฝน</a></li>
@@ -34,47 +22,18 @@ var_dump($problems)
 						</tr>
 					</thead>
 					<tbody>
+					@foreach ($water_problems as $basin_name => $p2)
 						<tr class="heading">
-							<td colspan="4" class="text-center">ลุ่มน้ำปิง</td>
+							<td colspan="4" class="text-center">{{ $basin_name }}</td>
 						</tr>
+						@foreach ($p2 as $problem)
 						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">สามเงา ต. วังหมัน อ. สามเงา จ. ตาก</a></td>
-							<td>21:10</td>
-							<td>19</td>
+							<td><a href="" data-toggle="modal" data-target="#detail" data-code="{{ $problem['code'] }}">{{ $problem['full_name'] }}</a></td>
+							<td>{{ $problem['end_time'] }}</td>
+							<td>{{ $problem['num'] }}</td>
 						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">สันทราย ต. แม่แฝก อ. สันทราย จ. เชียงใหม่</a></td>
-							<td>20:00</td>
-							<td>18</td>
-						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">เมืองลำปาง ต. ต้นธงชัย อ. เมืองลำปาง จ. ลำปาง</a></td>
-							<td>21:00</td>
-							<td>18</td>
-						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">ฮอด ต. หางดง อ. ฮอด จ. เชียงใหม่</a></td>
-							<td>19:50</td>
-							<td>5</td>
-						</tr>
-						<tr class="heading">
-							<td colspan="4" class="text-center">ลุ่มน้ำสาละวิน</td>
-						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">สวี2 ต.นาสัก อ.สวี จ.ชุมพร</a></td>
-							<td>21:00</td>
-							<td>25</td>
-						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">เก้าเลี้ยว ต. หัวดง อ. เก้าเลี้ยว จ. นครสวรรค์</a></td>
-							<td>21:00</td>
-							<td>12</td>
-						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">สามเงา ต. วังหมัน อ. สามเงา จ. ตาก</a></td>
-							<td>21:10</td>
-							<td>2</td>
-						</tr>
+						@endforeach
+					@endforeach
 					</tbody>
 				</table>
 				<ul class="pagination">
@@ -97,27 +56,18 @@ var_dump($problems)
 						</tr>
 					</thead>
 					<tbody>
+					@foreach ($rain_problems as $basin_name => $p2)
 						<tr class="heading">
-							<td colspan="4" class="text-center">ลุ่มน้ำปิง</td>
+							<td colspan="4" class="text-center">{{ $basin_name }}</td>
 						</tr>
+						@foreach ($p2 as $problem)
 						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">เมืองลำปาง ต. ต้นธงชัย อ. เมืองลำปาง จ. ลำปาง</a></td>
-							<td>21:00</td>
-							<td>20</td>
+							<td><a href="" data-toggle="modal" data-target="#detail" data-code="{{ $problem['code'] }}">{{ $problem['full_name'] }}</a></td>
+							<td>{{ $problem['end_time'] }}</td>
+							<td>{{ $problem['num'] }}</td>
 						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">ฮอด ต. หางดง อ. ฮอด จ. เชียงใหม่</a></td>
-							<td>19:50</td>
-							<td>18</td>
-						</tr>
-						<tr class="heading">
-							<td colspan="4" class="text-center">ลุ่มน้ำสาละวิน</td>
-						</tr>
-						<tr>
-							<td><a href="" data-toggle="modal" data-target="#detail">สวี2 ต.นาสัก อ.สวี จ.ชุมพร</a></td>
-							<td>21:00</td>
-							<td>15</td>
-						</tr>
+						@endforeach
+					@endforeach
 					</tbody>
 				</table>
 				<ul class="pagination">
@@ -129,16 +79,16 @@ var_dump($problems)
 			<!-- /.col-md-8 -->
 		</div>
 		<!-- /.tab-content -->
-		<h3>รายงานของวันที่ 14 กันยายน 2557 (เมื่อวาน)</h3>
+		<h3>รายงานของวันที่ {{ thai_date(getTime(-1)) }}</h3>
 		<div class="row">
 			<div class="col-sm-6">
 				<h4>ข้อมูลน้ำ</h4>
-				<img src="img/dashboard2.png" class="img-responsive" alt="">
+				Out-of-value {{ $stats['WATER']['BD'] }}
 			</div>
 			<!-- /.col-sm-6 -->
 			<div class="col-sm-6">
 				<h4>ข้อมูลฝน</h4>
-				<img src="img/dashboard2.png" class="img-responsive" alt="">
+				Out-of-value {{ $stats['RAIN']['BD'] }}
 			</div>
 			<!-- /.col-sm-6 -->
 		</div>
