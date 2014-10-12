@@ -8,6 +8,7 @@ class ErrorLogController extends BaseController {
 		$data['selectDate'] = true;
 		$data['title'] = 'Error Log';
 		if($status == 'marked') $data['status'] = 'true';
+		elseif($status == 'all') $data['status'] = 'all';
 		else $data['status'] = 'false';
 		return View::make('errorlog/index', $data);
 	}
@@ -20,6 +21,7 @@ class ErrorLogController extends BaseController {
 		$data['codes'] = TeleStation::codes(true);
 		$data['marked'] = '';
 		$data['unmarked'] = '';
+		$data['all'] = '';
 		return $data;
 	}
 }

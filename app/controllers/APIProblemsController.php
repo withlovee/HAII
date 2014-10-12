@@ -20,8 +20,60 @@ class APIProblemsController extends BaseController {
 			return Response::make([], 400);
 	}
 
-	public function get($station_code) {
+	public function renderStationInfo() {
+		$station = Input::get('station');
+		return View::make('data_log/station_info', $station);
+	}
 
+	public function getProblem() {
+		$problem = Problem::find(intval(Input::get('id')));
+		$data_log = DataLog::code($problem->station->code)
+			->from($problem->start_datetime)
+			->to($problem->end_datetime)
+			->valid($problem->data_type)
+			->take(1000)
+			->get()
+			->toArray();
+		$data_log_new = array();
+		foreach($data_log as $item){
+			if($problem->data_type == 'WATER')
+				$data_log_new[] = [
+					strtotime($item['date'].' '.$item['time']) * 1000,
+					// $item['date'],
+					// $item['time'],
+					floatval($item['water1'])
+				];
+			else
+				$data_log_new[] = [
+					strtotime($item['date'].' '.$item['time']) * 1000,
+					// date('Y-m-d H:i:s', strtotime($item['date'].' '.$item['time'])),
+					floatval($item['rain10m']),
+					// $item['date'],
+					// $item['time']
+				];
+		}
+		$output = array(
+			'id' => $problem->id,
+			'data_type' => $problem->data_type,
+			'start_datetime' => $problem->start_datetime,
+			'start_datetime_unix' => strtotime($problem->start_datetime),
+			'end_datetime' => $problem->end_datetime,
+			'end_datetime_unix' => strtotime($problem->end_datetime),
+			'num' => $problem->num,
+			'station' => array(
+				'name' => $problem->station->name,
+				'code' => $problem->station->code,
+				'tambon_name' => $problem->station->tambon_name,
+				'amphoe_name' => $problem->station->amphoe_name,
+				'province_name' => $problem->station->province_name,
+				'part' => $problem->station->part,
+				'basin' => $problem->station->basin,
+			),
+			'data' => $data_log_new
+		);
+		// $output['station_html'] = Response::view('errorlog/data_log', $output) ;
+		//View::make('errorlog/data_log', $output);
+		return Response::json($output);
 	}
 
 	private function getCols() {
@@ -57,7 +109,7 @@ class APIProblemsController extends BaseController {
 			'num' => array(
 				'index' => 4,
 				'type' => 'number',
-				'friendly' => 'จำนวนปัญหา'
+				'friendly' => 'จำนวน'
 			),
 			'is_error' => array(
 				'index' => 5,

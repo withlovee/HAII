@@ -43,7 +43,8 @@ class Problem extends \Eloquent {
 	}
 	public function scopeMarked($query, $marked){
 		if($marked == 'true') return $query->where('problems.status', '!=', 'undefined');
-		else return $query->where('problems.status', '=', 'undefined');
+		elseif($marked == 'false') return $query->where('problems.status', '=', 'undefined');
+		return $query;
 	}
 	public function scopeStartDatetime($query, $datetime){
 		if($datetime) return $query->where('start_datetime', '>=', $datetime);

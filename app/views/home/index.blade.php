@@ -6,7 +6,7 @@
 	</div>
 	<!-- /.col-md-4 -->
 	<div class="col-md-7">
-		<h3>Real-time Out-of-Range Value Detection<br><small>(นับตั้งแต่ 7.01 น. ของวันที่ {{ thai_date(getTime()) }} จนถึงปัจจุบัน)</small></h3>
+		<h3>Real-time Out-of-Range Value Detection<br><small>(นับตั้งแต่ 7.01 น. ของวันที่  {{ thai_date() }} {{ date('Y', getTime()) }} จนถึงปัจจุบัน)</small></h3>
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="#water" role="tab" data-toggle="tab">สถานีน้ำ</a></li>
 			<li><a href="#rain" role="tab" data-toggle="tab">สถานีฝน</a></li>
@@ -36,7 +36,7 @@
 					@endforeach
 					</tbody>
 				</table>
-				<ul class="pagination">
+<!-- 				<ul class="pagination">
 					<li><a href="#">&laquo;</a></li>
 					<li><a href="#">1</a></li>
 					<li><a href="#">2</a></li>
@@ -44,7 +44,7 @@
 					<li><a href="#">4</a></li>
 					<li><a href="#">5</a></li>
 					<li><a href="#">&raquo;</a></li>
-				</ul>
+				</ul> -->
 			</div>
 			<div class="tab-pane" id="rain">
 				<table class="monitor-table table table-bordered table-condensed">
@@ -70,25 +70,74 @@
 					@endforeach
 					</tbody>
 				</table>
-				<ul class="pagination">
+<!-- 				<ul class="pagination">
 					<li><a href="#">&laquo;</a></li>
 					<li><a href="#">1</a></li>
 					<li><a href="#">&raquo;</a></li>
-				</ul>
+				</ul> -->
 			</div>
 			<!-- /.col-md-8 -->
 		</div>
 		<!-- /.tab-content -->
-		<h3>รายงานของวันที่ {{ thai_date(getTime(-1)) }}</h3>
+		<h3>รายงานของวันที่ {{ thai_date(getTime(-1)) }} {{ date('Y', getTime(-1)) }}</h3>
 		<div class="row">
 			<div class="col-sm-6">
 				<h4>ข้อมูลน้ำ</h4>
-				Out-of-value {{ $stats['WATER']['BD'] }}
+				<div class="stats">
+					<div class="item">
+						Out-of-value
+						<span class="num">{{ $stats['WATER']['BD'] }}</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Flat Value
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Missing Gap
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Outlier
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Homogeneity
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Missing Pattern
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+				</div>
+				<!-- /.stats -->
 			</div>
 			<!-- /.col-sm-6 -->
 			<div class="col-sm-6">
 				<h4>ข้อมูลฝน</h4>
-				Out-of-value {{ $stats['RAIN']['BD'] }}
+				<div class="stats">
+					<div class="item">
+						Out-of-value
+						<span class="num">{{ $stats['RAIN']['BD'] }}</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Flat Value
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+					<div class="item">
+						Missing Gap
+						<span class="num">0</span>
+					</div>
+					<!-- /.item -->
+				</div>
+				<!-- /.stats -->
 			</div>
 			<!-- /.col-sm-6 -->
 		</div>
