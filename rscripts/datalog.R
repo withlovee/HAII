@@ -1,6 +1,6 @@
 source('db_connection.R')
 
-getWaterLevelData <- function(startDateTime, endDateTime) {
+getWaterLevelData <- function(stationCode, startDateTime, endDateTime) {
   
   con <- openDbConnection()
   
@@ -33,6 +33,7 @@ getWaterLevelData <- function(startDateTime, endDateTime) {
                            (data_log.date < DATE '", endDateString ,"'
                            OR
                            data_log.date = DATE '", endDateString ,"' AND data_log.time < TIME '", endTimeString ,"')
+                           AND data_log.code = '", stationCode ,"'
                            
                            ", sep="")
                      )
@@ -43,7 +44,7 @@ getWaterLevelData <- function(startDateTime, endDateTime) {
   
 }
 
-get24HrWaterLevelData <- function (startDateTime = NA, endDateTime = Sys.time(), debug=FALSE) {
+get24HrWaterLevelData <- function (stationCode, startDateTime = NA, endDateTime = Sys.time(), debug=FALSE) {
   
   last24Hr <- endDateTime - 24*60*60
   
@@ -51,8 +52,70 @@ get24HrWaterLevelData <- function (startDateTime = NA, endDateTime = Sys.time(),
     startDateTime <- last24Hr
   }
   
-  getWaterLevelData(startDateTime, endDateTime)
+  getWaterLevelData(stationCode, startDateTime, endDateTime)
   
+}
+
+getLatestBoundaryProblemRunTime <- function(stationCode, dataType, problemType) {
+  query <- paste("SELECT * FROM problems_boundary
+                 WHERE station_code = '",stationCode,"'
+                  AND problem_type = '", problemType ,"'
+                  AND data_type = '", dataType ,"'
+                 ",sep="")
+  con <- openDbConnection()
+  
+  data <- dbGetQuery(con, query)
+  
+  closeDbConnection(con)
+  if(nrow(data) > 0) {
+    return(data[1,]$latest_datetime)
+  } else {
+    return(NA)
+  }
+}
+
+updateLatestBoundaryProblemRunTime <- function(stationCode, dataType, problemType, latestDateTime) {
+  
+  query <- NA
+  
+  latestDateTimeString <- strftime(latestDateTime, "%Y-%m-%d %H:%M:%S")
+  
+  if(is.na(getLatestBoundaryProblemRunTime(stationCode, dataType, problemType))) {
+    # insert
+    query <- paste("
+                    INSERT INTO problems_boundary(station_code, latest_datetime, data_type, problem_type)
+                    VALUES ('", stationCode ,"','", latestDateTimeString, "', '", dataType,"'  ,'", problemType,"')
+                   ", sep="")
+  } else {
+    # update
+    query <- paste("
+                    UPDATE problems_boundary
+                    SET latest_datetime = '", latestDateTimeString ,"'
+                    WHERE station_id = '",stationCode,"'
+                    AND data_type = '", dataType ,"'
+                    AND problem_type = '", problemType ,"'
+                   ", sep="")
+  }
+  
+  con <- openDbConnection()
+  
+  dbSendQuery(con, query)
+  
+  closeDbConnection(con)
+  
+  TRUE
+}
+
+getStationCodeList <- function() {
+  query <- paste("SELECT tele_wl_detail.code FROM tele_wl_detail", sep="")
+  
+  con <- openDbConnection()
+  
+  data <- dbGetQuery(con, query)
+  
+  closeDbConnection(con)
+  
+  return(data$code)
 }
 
 opDate <- function(d) {
@@ -101,20 +164,20 @@ updateBoundaryProblem <- function(problems) {
                    AND end_datetime = timestamp '", previousDateTimeString ,"'
                    AND start_datetime >= timestamp '", operationDateTimeString ,"'                  
 
-                   AND type = '", p$type ,"'
+                   AND data_type = '", p$data_type ,"'
+                  AND problem_type = '", p$problem_type ,"'
                    
                    ", sep="")
     
-    print(query)
     
     previousProblem <- dbGetQuery(con, query)
     # print(query)
-    str(previousProblem)
+    # str(previousProblem)
     
     if(nrow(previousProblem) > 0) {
       # merge problem together
       
-      print("update")
+      # print("update")
       
       query <- paste("
                      UPDATE problems
@@ -126,7 +189,6 @@ updateBoundaryProblem <- function(problems) {
                      WHERE id=", previousProblem$id ,"
                      ", sep="")
       
-      print(query)
       
       dbSendQuery(con, query)
       
@@ -134,13 +196,14 @@ updateBoundaryProblem <- function(problems) {
     } else {
       # create new row
       
-      print("add")
+      # print("add")
       
       query <- paste("
-                     INSERT INTO problems(station_code,type,start_datetime,end_datetime,num,status,created_at,updated_at)
+                     INSERT INTO problems(station_code,data_type,problem_type,start_datetime,end_datetime,num,status,created_at,updated_at)
                      VALUES (
                      '", p$station_code ,"' ,
-                     '", p$type ,"' ,
+                     '", p$data_type ,"' ,
+                     '", p$problem_type ,"' ,
                      timestamp '", p$start_datetime ,"' ,
                      timestamp '", p$end_datetime ,"' ,
                      '", p$num ,"' ,
@@ -150,7 +213,6 @@ updateBoundaryProblem <- function(problems) {
                       )
                      ", sep="")
       
-      print(query)
       
       dbSendQuery(con, query)
       

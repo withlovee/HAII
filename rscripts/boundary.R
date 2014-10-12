@@ -34,14 +34,24 @@ isOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevelOffset = -
 }
 
 searchBoundaryProblem <- function(data) {
+  
+  if(nrow(data) <= 0) {
+    return(NA)
+  }
+  
   data$max_bank <- mapply(getMaxBank, data$left_bank, data$right_bank)
   hasBoundaryProblem <- mapply(isOutOfBound, data$water1, data$ground_level, data$max_bank)
   
   bd <- data[hasBoundaryProblem,]
   
+  if(nrow(bd) <= 0) {
+    return(NA)
+  }
+
   bd$datetime <- mapply(paste, bd$date, bd$time)
   bdProblem <- data.frame(station_code = bd$code,
-                          type = "WATER_BD",
+                          problem_type = "BD",
+                          data_type = "WATER"
                           start_datetime = bd$datetime,
                           end_datetime = bd$datetime,
                           num = 1
