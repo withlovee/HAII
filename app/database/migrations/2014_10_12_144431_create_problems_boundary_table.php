@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateProblemsBoundaryTable extends Migration {
 
@@ -22,7 +22,6 @@ class CreateProblemsBoundaryTable extends Migration {
 			$table->primary(array('station_code', 'data_type', 'problem_type'));
 		});
 	}
-
 
 	/**
 	 * Reverse the migrations.
