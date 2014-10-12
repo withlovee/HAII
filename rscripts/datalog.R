@@ -2,6 +2,13 @@ source('db_connection.R')
 
 getWaterLevelData <- function(stationCode, startDateTime, endDateTime) {
   
+  cat("Actual start time: ")
+  cat(startDateTime)
+  cat("\n")
+  cat("Actual end time: ")
+  cat(endDateTime)
+  cat("\n")
+  
   con <- openDbConnection()
   
   startDateString <- strftime(startDateTime, "%Y-%m-%d");
