@@ -51,7 +51,7 @@ searchBoundaryProblem <- function(data) {
   bd$datetime <- mapply(paste, bd$date, bd$time)
   bdProblem <- data.frame(station_code = bd$code,
                           problem_type = "BD",
-                          data_type = "WATER"
+                          data_type = "WATER",
                           start_datetime = bd$datetime,
                           end_datetime = bd$datetime,
                           num = 1
