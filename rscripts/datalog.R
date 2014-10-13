@@ -114,7 +114,7 @@ updateLatestProblemCheckedTime <- function(stationCode, dataType, problemType, l
     query <- paste("
                     UPDATE ", problemTableName ,"
                     SET latest_datetime = '", latestDateTimeString ,"'
-                    WHERE station_id = '",stationCode,"'
+                    WHERE station_code = '",stationCode,"'
                     AND data_type = '", dataType ,"'
                     AND problem_type = '", problemType ,"'
                    ", sep="")
@@ -158,6 +158,40 @@ opDate <- function(d) {
   }
   
   return(a)
+}
+
+getNewProblemStationList <- function(dataType, problemType, time, problems) {
+  
+  allStationList <- levels(problems$station_code)
+  oldStationList <- getAlreadyCheckedStationList(dataType, problemType, time)
+  
+ return(allStationList[!(allStationList %in% oldStationList)])
+}
+
+getAlreadyCheckedStationList <- function(dataType, problemType, time) {
+  operationDateTime <- opDate(time)
+  endOfOperationDateTime <- operationDateTime + 86400
+  
+  operationDateTimeString <- strftime(operationDateTime, "%Y-%m-%d %H:%M:%S")
+  endOfOperationDateTimeString <- strftime(endOfOperationDateTime, "%Y-%m-%d %H:%M:%S")
+  
+  query <- paste0("
+                   SELECT problems.station_code
+                   FROM problems
+                   WHERE start_datetime >= timestamp '", operationDateTimeString ,"'
+                   AND end_datetime < timestamp '", endOfOperationDateTimeString ,"'                  
+                   AND data_type = '", dataType ,"'
+                   AND problem_type = '", problemType ,"'
+                   ")
+  
+  con <- openDbConnection()
+  
+  data <- dbGetQuery(con, query)
+  
+  closeDbConnection(con)
+  
+  return(data$station_code)
+  
 }
 
 updateProblemLog <- function(problems, intervalSecond) {

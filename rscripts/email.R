@@ -7,9 +7,8 @@ emailApiUrl <- "http://localhost:8888"
 ## end of global email config
 
 
-sendProblemMailNotification <- function(dataType, problemType, problems) {
+sendProblemMailNotification <- function(dataType, problemType, time, problemStation) {
   
-  stations <- levels(problem$station_code)
   
   body <- ""
   body <- paste0(body, "{")
@@ -19,7 +18,7 @@ sendProblemMailNotification <- function(dataType, problemType, problems) {
   
   body <- paste0(body, '"stations":', '[')
   
-  stationsStr <- mapply(function(x) paste0('"',x,'"'),stations)
+  stationsStr <- mapply(function(x) paste0('"',x,'"'),problemStation)
   stationsStr <- paste(stationsStr, collapse=",")
   body <- paste0(body, stationsStr)
   
