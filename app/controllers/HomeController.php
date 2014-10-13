@@ -20,7 +20,6 @@ class HomeController extends BaseController {
 		$data['rain_problems'] = Problem::recentByBasin('RAIN', 'BD');
 		$data['water_problems'] = Problem::recentByBasin('WATER', 'BD');
 		$data['stats'] = Problem::yesterdayStat();
-		$data['stations'] = TeleStation::all();
 		return View::make('home/index', $data);
 	}
 

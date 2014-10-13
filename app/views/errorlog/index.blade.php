@@ -149,7 +149,6 @@ $(document).ready(function() {
 				},
 				date: {
 				  utc: true,            //Show time as universal time, ie without timezones.
-				  //format: 'yy/dd/MM',   //The format. See all possible formats here http://arshaw.com/xdate/#Formatting.
 				  datePicker: true      //Requires "Datepicker for Bootstrap" plugin (http://www.eyecon.ro/bootstrap-datepicker).
 				}
 			},
