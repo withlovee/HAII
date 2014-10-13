@@ -4,8 +4,7 @@ class Problem extends \Eloquent {
 	protected $fillable = [];
 
 	public function scopeDataType($query, $type){
-		return $query
-			->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
+		$query->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
 			->select('problems.id', 'code', 
 				'name', 
 				'problem_type',
@@ -18,8 +17,17 @@ class Problem extends \Eloquent {
 				'end_datetime', 
 				'num',
 				'problems.status'
-				)
-			->where('data_type', '=', $type);
+				);
+		if($type) return $query->where('data_type', '=', $type);
+		return $query;
+	}
+
+	public function scopeMap($query){
+		$attrs = ['code', 'name', 'lat', 'lng', 'tambon_name', 'amphoe_name', 'province_name', 'part', 'basin'];
+		$query->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
+			->selectRaw(implode(", ",$attrs).', sum(num) as num')
+			->groupBy($attrs);
+		return $query;
 	}
 	public function scopeBasin($query, $basin){
 		if($basin) return $query->where('basin', '=', $basin);
@@ -65,8 +73,7 @@ class Problem extends \Eloquent {
 		/*-- Group the data by basins --*/
 		$grouped_problems = array();
 		foreach($problems as $problem){
-			$item = $problem;
-			$problem['full_name'] = self::build_full_station_name($problem);
+			$problem['full_name'] = self::buildFullStationName($problem);
 			$problem['end_time'] = date('H:i', strtotime($problem['end_datetime']));
 			if($problem['basin']){
 				$grouped_problems[$problem['basin']][] = $problem;
@@ -77,6 +84,19 @@ class Problem extends \Eloquent {
 			}
 		}
 		return $grouped_problems;
+	}
+
+	static function recentMap(){
+		/*-- Query telestations that has recent problems --*/
+		$problems = self::map()->startDatetime(self::getStartDate('Y-m-d 07:01'))->get()->toArray();
+		foreach($problems as $i => $problem){
+			$problems[$i]['full_name'] = self::buildFullStationName($problem);
+			unset($problems[$i]['tambon_name']);
+			unset($problems[$i]['amphoe_name']);
+			unset($problems[$i]['province_name']);
+			unset($problems[$i]['name']);
+		}
+		return $problems;
 	}
 
 	static function allForTable($params){
@@ -103,9 +123,10 @@ class Problem extends \Eloquent {
 			->marked($params['marked'])
 			->startDatetime(self::renderDate($params['start_date'], $params['start_time']))
 			->endDatetime(self::renderDate($params['end_date'], $params['end_time']))
+			->orderBy('start_datetime', 'desc')
 			->get();
 		foreach($problems as $problem){
-			$problem['station_name'] = self::build_full_station_name($problem);
+			$problem['station_name'] = self::buildFullStationName($problem);
 			unset($problem['station']);
 			$problem['problem_type'] = self::getTypeName($problem['problem_type']);
 		}
@@ -157,20 +178,20 @@ class Problem extends \Eloquent {
 		return $this->hasOne('TeleStation', 'code', 'station_code');
 	}
 
-	private static function build_full_station_name($data){
+	private static function buildFullStationName($data){
 		return $data['name'].' ต.'.$data['tambon_name'].' อ.'.$data['amphoe_name'].' จ.'.$data['province_name'];
 	}
 
-	function full_station_name(){
+	function fullStationName(){
 		$station = $this->station;
-		return self::build_full_station_name((array) $station);
+		return self::buildFullStationName((array) $station);
 	}
 
-	private static function build_end_time($end_datetime){
+	private static function buildEndTime($end_datetime){
 		return date('H:i', strtotime($end_datetime));
 	}
 
-	function get_end_time(){
-		return self::build_end_time($this->end_datetime);
+	function getEndTime(){
+		return self::buildEndTime($this->end_datetime);
 	}
 }

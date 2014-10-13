@@ -25,6 +25,11 @@ class APIProblemsController extends BaseController {
 		return View::make('data_log/station_info', $station);
 	}
 
+	public function getMap() {
+		$output = Problem::recentMap();
+		return Response::json($output);
+	}
+
 	public function getProblem() {
 		$problem = Problem::find(intval(Input::get('id')));
 		$data_log = DataLog::code($problem->station->code)
