@@ -29,7 +29,7 @@ for(station in stationList) {
   cat("Getting latest run time...\n")
   flush.console()
   
-  startDateTime <- getLatestBoundaryProblemRunTime(station, dataType, problemType)
+  startDateTime <- getLatestProblemCheckedTime(station, dataType, problemType)
   
   if(!is.na(startDateTime)) {
     startDateTime <- startDateTime + 1
@@ -40,40 +40,40 @@ for(station in stationList) {
   cat("Loading 24hr data...\n")
   flush.console()
   
-  data <- get24HrWaterLevelData(station, startDateTime, currentTime)
-  # data <- get24HrWaterLevelData(station, endDateTime = as.POSIXct("2012-02-28"))
+  # data <- get24HrWaterLevelData(station, startDateTime, currentTime)
+  data <- get24HrWaterLevelData(station, endDateTime = as.POSIXct("2012-02-28"))
   
   str(data)
   
   if(nrow(data) > 0) {
   
-  cat("Detecting BD Problem...\n")
-  flush.console()
-  
-  bdProblem <- searchBoundaryProblem(data)
-  
-  str(bdProblem)
-  
-  
-  if(is.data.frame(bdProblem)) {
+    cat("Detecting BD Problem...\n")
+    flush.console()
     
-  cat("Writing Logs...\n")
-  flush.console()
-  
-  
-  updateBoundaryProblem(bdProblem)
-  
-  } else {
-    cat("Problem not found...\n")
-  }
-  
-  cat("Update latest runtime...\n")
-  flush.console()
-  
-  end_datetime <- mapply(paste, data$date, data$time)
-  latestTime <- max(as.POSIXct(end_datetime))
-  
-  updateLatestBoundaryProblemRunTime(station, dataType, problemType, latestTime)
+    bdProblem <- searchBoundaryProblem(data)
+    
+    str(bdProblem)
+    
+    
+    if(is.data.frame(bdProblem)) {
+      
+    cat("Writing Logs...\n")
+    flush.console()
+    
+    
+    updateProblemLog(bdProblem, 60*10)
+    
+    } else {
+      cat("Problem not found...\n")
+    }
+    
+    cat("Update latest runtime...\n")
+    flush.console()
+    
+    end_datetime <- mapply(paste, data$date, data$time)
+    latestTime <- max(as.POSIXct(end_datetime))
+    
+    updateLatestProblemCheckedTime(station, dataType, problemType, latestTime)
   
   } else {
     cat("No data...\n")

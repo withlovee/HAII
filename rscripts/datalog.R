@@ -63,8 +63,23 @@ get24HrWaterLevelData <- function (stationCode, startDateTime = NA, endDateTime 
   
 }
 
-getLatestBoundaryProblemRunTime <- function(stationCode, dataType, problemType) {
-  query <- paste("SELECT * FROM problems_boundary
+getProblemTableName <- function(problemType) {
+  
+  tableName <- NA
+  
+  if(problemType == "BD") {
+    tableName <- "problems_boundary"
+  }
+  
+  return(tableName)
+  
+}
+
+getLatestProblemCheckedTime <- function(stationCode, dataType, problemType) {
+  
+  problemTableName <- getProblemTableName(problemType)
+  
+  query <- paste("SELECT * FROM ", problemTableName ,"
                  WHERE station_code = '",stationCode,"'
                   AND problem_type = '", problemType ,"'
                   AND data_type = '", dataType ,"'
@@ -81,22 +96,23 @@ getLatestBoundaryProblemRunTime <- function(stationCode, dataType, problemType) 
   }
 }
 
-updateLatestBoundaryProblemRunTime <- function(stationCode, dataType, problemType, latestDateTime) {
+updateLatestProblemCheckedTime <- function(stationCode, dataType, problemType, latestDateTime) {
   
   query <- NA
+  problemTableName <- getProblemTableName(problemType)
   
   latestDateTimeString <- strftime(latestDateTime, "%Y-%m-%d %H:%M:%S")
   
-  if(is.na(getLatestBoundaryProblemRunTime(stationCode, dataType, problemType))) {
+  if(is.na(getLatestProblemCheckedTime(stationCode, dataType, problemType))) {
     # insert
     query <- paste("
-                    INSERT INTO problems_boundary(station_code, latest_datetime, data_type, problem_type)
+                    INSERT INTO ", problemTableName ,"(station_code, latest_datetime, data_type, problem_type)
                     VALUES ('", stationCode ,"','", latestDateTimeString, "', '", dataType,"'  ,'", problemType,"')
                    ", sep="")
   } else {
     # update
     query <- paste("
-                    UPDATE problems_boundary
+                    UPDATE ", problemTableName ,"
                     SET latest_datetime = '", latestDateTimeString ,"'
                     WHERE station_id = '",stationCode,"'
                     AND data_type = '", dataType ,"'
@@ -144,11 +160,9 @@ opDate <- function(d) {
   return(a)
 }
 
-updateBoundaryProblem <- function(problems) {
+updateProblemLog <- function(problems, intervalSecond) {
   
   problems <- problems[order(problems$start_datetime), ]
-  
-  minute <- 60*10
   
   
   con <- openDbConnection()
@@ -156,7 +170,7 @@ updateBoundaryProblem <- function(problems) {
   for(i in 1:nrow(problems)) {
     p <- problems[i,]
     
-    previousDateTime <- as.POSIXct(p$start_datetime) - minute
+    previousDateTime <- as.POSIXct(p$start_datetime) - intervalSecond
     previousDateTimeString <- strftime(previousDateTime, "%Y-%m-%d %H:%M:%S")
     
     
