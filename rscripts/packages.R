@@ -1,0 +1,5 @@
+install.packages('RPostgreSQL')
+install.packages('RUnit')
+install.packages('httr')
+install.packages('DBI')
+install.packages('jsonlite')
