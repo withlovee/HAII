@@ -47,7 +47,7 @@ for(station in stationList) {
   str(data)
   
   if(nrow(data) > 0) {
-  
+    
     cat("Detecting BD Problem...\n")
     flush.console()
     
@@ -55,23 +55,23 @@ for(station in stationList) {
     
     str(bdProblem)
     
-    if(is.na(allBdProblem)) {
-      allBdProblem <- bdProblem
-    } else {
-      allBdProblem <- rbind(allBdProblem, bdProblem)
-    }
-    
     
     if(is.data.frame(bdProblem)) {
       
-    cat("Writing Logs...\n")
-    flush.console()
-    
-    
-    updateProblemLog(bdProblem, 60*10)
-    
-    
-    
+      if(is.na(allBdProblem)) {
+        allBdProblem <- bdProblem
+      } else {
+        allBdProblem <- rbind(allBdProblem, bdProblem)
+      }
+      
+      cat("Writing Logs...\n")
+      flush.console()
+      
+      
+      updateProblemLog(bdProblem, 60*10)
+      
+      
+      
     } else {
       cat("Problem not found...\n")
     }
@@ -86,7 +86,7 @@ for(station in stationList) {
     
     
     updateLatestProblemCheckedTime(station, dataType, problemType, latestTime)
-  
+    
   } else {
     cat("No data...\n")
   }
@@ -97,10 +97,18 @@ for(station in stationList) {
   
 }
 
-cat("=================\n")
-cat("Sending Emails...\n")
-cat("=================\n")
-flush.console()
-
-newProblemStation <- getNewProblemStationList(dataType, problemType, currentTime, allBdProblem)
-sendProblemMailNotification(dataType, problemType, currentTime, newProblemStation)
+if(!is.na(allBdProblem)) {
+  
+  cat("====================\n")
+  cat("Sending Emails...\n")
+  cat("====================\n")
+  flush.console()
+  
+  newProblemStation <- getNewProblemStationList(dataType, problemType, currentTime, allBdProblem)
+  sendProblemMailNotification(dataType, problemType, currentTime, newProblemStation)
+} else {
+  cat("====================\n")
+  cat("No problem found...\n")
+  cat("====================\n")
+  flush.console()
+}
