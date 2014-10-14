@@ -17,7 +17,7 @@ class DataLog extends \Eloquent {
 
 	public function scopeFrom($query, $datetime){
 		if($datetime) {
-			$unix_timestamp = strtotime($datetime) - (24*365*2*60*60);
+			$unix_timestamp = strtotime($datetime) - (2*60*60);
 			$date = date('Y-m-d', $unix_timestamp);
 			$time = date('H:i:s', $unix_timestamp);
 			return $query->whereRaw("

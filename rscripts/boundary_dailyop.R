@@ -51,7 +51,7 @@ for(station in stationList) {
     cat("Detecting BD Problem...\n")
     flush.console()
     
-    bdProblem <- searchBoundaryProblem(data)
+    bdProblem <- searchBoundaryProblem(dataType, data)
     
     str(bdProblem)
     

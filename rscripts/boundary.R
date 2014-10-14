@@ -33,7 +33,7 @@ isWaterLevelOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevel
   !(isOverGroundLevel & isUnderMaxBank)
 }
 
-searchBoundaryProblem <- function(data) {
+searchBoundaryProblem <- function(dataType, data) {
   
   if(nrow(data) <= 0) {
     return(NA)
@@ -51,7 +51,7 @@ searchBoundaryProblem <- function(data) {
   bd$datetime <- mapply(paste, bd$date, bd$time)
   bdProblem <- data.frame(station_code = bd$code,
                           problem_type = "BD",
-                          data_type = "WATER",
+                          data_type = dataType,
                           start_datetime = bd$datetime,
                           end_datetime = bd$datetime,
                           num = 1
@@ -60,61 +60,4 @@ searchBoundaryProblem <- function(data) {
   bdProblem <- bdProblem[order(bdProblem$start_datetime), ]
   
   return(bdProblem)
-}
-
-groupProblem <- function(data) {
-  
-  # split by station
-  problemByStation <- split(data, data$code)
-  
-  for(code_i in seq_along(problemByStation)) {
-    
-    stationName <- names(problemByStation)[[code_i]]
-    
-  }
-  
-}
-
-
-group <- function(data) {
-  
-  # sort by datetime ascending
-  dataRow <- dataRow[order(dataRow$date, dataRow$time), ]
-  
-  startTime <- c()
-  endTime <- c()
-  num <- c()
-  
-  dataRow <- nrow(data)
-  i <- 1
-  
-  while(i <= dataRow) {
-    
-    j <- i + 1
-    
-    while(j <= dataRow) {
-      
-      curr_time_str <- paste(data$date[j], data$time[j])
-      prev_time_str <- paste(data$date[j-1], data$time[j-1])
-      curr_time <- as.POSIXct(curr_time_str)
-      prev_time <- as.POSIXct(prev_time_str)
-      
-      if(difftime(curr_time, prev_time, units="mins") <= 10) {
-        j <- j + 1
-      } else {
-        break
-      }
-      
-    }
-    
-    startTimeStr <- as.POSIXct( paste(data[i,"date"], data[i,"time"]))
-    endTimeStr <- as.POSIXct( paste(data[j-1,"date"], data[j-1,"time"]))
-    startTime <- c(startTime, strftime(startTimeStr))
-    endTime <- c(endTime, strftime(endTimeStr))
-    num <- c(num, j-i)
-    
-    i <- j
-  }
-  
-  data.frame(startTime = startTime, endTime = endTime, num=num)
 }

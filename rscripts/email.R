@@ -3,12 +3,16 @@ library("httr")
 ## global email config
 
 emailApiUrl <- "http://localhost:8888"
+useEmailNotification <- FALSE
 
 ## end of global email config
 
 
 sendProblemMailNotification <- function(dataType, problemType, time, problemStation) {
   
+  if(!useEmailNotification) {
+    return(FALSE)
+  }
   
   body <- ""
   body <- paste0(body, "{")
