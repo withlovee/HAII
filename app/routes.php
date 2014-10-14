@@ -12,10 +12,12 @@
 */
 
 Route::get('/', 'HomeController@index')->before('auth');
+
 Route::get('errorlog', function(){
 	return Redirect::to('errorlog/unmarked');
 })->before('auth');
 Route::get('errorlog/{status}', 'ErrorLogController@index')->before('auth');
+
 Route::get('dailyop', function(){
 	return Redirect::to('dailyop/unmarked');
 })->before('auth');
@@ -27,6 +29,9 @@ Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')-
 Route::get('api/problems/get_problem', 'APIProblemsController@getProblem')->before('auth');
 Route::get('api/problems/get_map', 'APIProblemsController@getMap')->before('auth');
 Route::get('api/problems/render_station_info', 'APIProblemsController@renderStationInfo')->before('auth');
+
+Route::post('api/email/send_alert/{type}', 'APIEmailController@sendAlert')->before('auth');
+
 // Route::get('/', function()
 // {
 // 	return View::make('hello');

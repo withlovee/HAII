@@ -51,7 +51,7 @@
 
 		var markers = [];
 
-		var infowindow = new google.maps.InfoWindow();
+		var openedInfoWindow;
 
 		$.get("{{ URL::to('api/problems/get_map') }}", function(stations){
 			for(i in stations){
@@ -67,8 +67,22 @@
 				});
 				markers.push(marker);
 				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(this.html);
-					infowindow.open(map, marker);
+					if (openedInfoWindow != null) openedInfoWindow.close();
+					var infoWindow = new google.maps.InfoWindow({
+						position: this.position,
+						content: this.html,
+					});
+					
+					// Open infoWindow
+					infoWindow.open(map,this);
+					// Remember the opened window
+					openedInfoWindow = infoWindow;
+
+					// Close it if X box clicked
+					google.maps.event.addListener(infoWindow, 'closeclick', function() {
+						openedInfoWindow = null; 
+					});
+
 				});
 			}
 		});
