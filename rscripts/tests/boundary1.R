@@ -61,6 +61,14 @@ test.isWaterLevelOutOfBound <- function() {
   
 }
 
+test.isRainLevelOutOfBound <- function() {
+  rainLevel <- c(-10, 0, 100, 150, 170)
+  expected <- c(TRUE, FALSE, FALSE, FALSE, TRUE)
+  actual <- mapply(isRainLevelOutOfBound, waterLevel, groundLevel, maxBank)
+  mapply(checkEquals, expected, actual)
+  
+}
+
 test.searchBoundaryProblemWithNoProblem <- function() {
   
   data <-  data.frame(
