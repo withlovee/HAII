@@ -41,8 +41,8 @@ for(station in stationList) {
   cat("Loading 24hr data...\n")
   flush.console()
   
-  data <- get24HrWaterLevelData(station, startDateTime, currentTime)
-  # data <- get24HrWaterLevelData(station, startDateTime = as.POSIXct("2012-02-20"), endDateTime = as.POSIXct("2012-02-28"), debug=TRUE)
+  # data <- get24HrWaterLevelData(station, startDateTime, currentTime)
+  data <- get24HrWaterLevelData(station, startDateTime = as.POSIXct("2012-02-20"), endDateTime = as.POSIXct("2012-02-28"), debug=TRUE)
   
   str(data)
   
