@@ -1,35 +1,64 @@
 library("httr")
+library("jsonlite")
 
 ## global email config
+BASE_URL <- "http://localhost:8888"
+EMAIL_API_URL <- paste0(BASE_URL, "/api/email/send_alert/instantly")
+USE_EMAIL_NOTIFICATION <- TRUE
+EMAIL_KEY <- "HAIIEMAILKEY"
 
-emailApiUrl <- "http://localhost:8888"
-useEmailNotification <- FALSE
-
-## end of global email config
-
-
-sendProblemMailNotification <- function(dataType, problemType, time, problemStation) {
+convertAbbrToFullProblemName <- function(abbr) {
   
-  if(!useEmailNotification) {
-    return(FALSE)
+  fullName <- NA
+  
+  if(abbr == "BD") {
+    fullName <- "Out of Range"
+  } else if(abbr == "FV") {
+    fullName <- "Flat Value"
+  } else if(abbr == "MV") {
+    fullName <- "Missing Value"
+  } else if(abbr == "OL") {
+    fullName <- "Outliers"
+  } else if(abbr == "IH") {
+    fullName <- "Inhomogenity"
+  } else if(abbr == "MP") {
+    fullName <- "Missing Pattern"
   }
   
-  body <- ""
-  body <- paste0(body, "{")
+  return(fullName)
+}
+
+sendProblemMailNotification <- function(dataType, problemType, dateTime, problemStation,
+                                        sendEmail=TRUE, returnJson=FALSE,key=EMAIL_KEY) {
   
-  body <- paste0(body, '"data_type":', '"',dataType,'",')
-  body <- paste0(body, '"problem_type":', '"',problemType,'",')
-  body <- paste0(body, '"time":', '"',strftime(time, "%Y-%m-%d %H:%M:%S"),'",')
-  body <- paste0(body, '"stations":', '[')
+  rain <- list()
+  water <- list()
   
-  stationsStr <- mapply(function(x) paste0('"',x,'"'),problemStation)
-  stationsStr <- paste(stationsStr, collapse=",")
-  body <- paste0(body, stationsStr)
+  problemName <- convertAbbrToFullProblemName(problemType)
   
-  body <- paste0(body, ']')
+  if(dataType == "RAIN") {
+    rain <- list(list(name=unbox(problemName),
+                 stations=problemStation))
+  } else if (dataType == "WATER") {
+    water <- list(list(name=unbox(problemName),
+                     stations=problemStation))
+  }
   
-  body <- paste0(body, "}")
+  body <- list(key=unbox(key),
+               num=unbox(length(problemStation)),
+               date=unbox(strftime(dateTime, "%Y-%m-%d %H:%M:%S")),
+               rain=rain,
+               water=water)
   
-  POST(emailApiUrl, body = list(x=body), encode = "json") 
+  json <- toJSON(body)
+  json <- as.character(json)
+
+  if(USE_EMAIL_NOTIFICATION & sendEmail){
+    POST(EMAIL_API_URL, body = json, encode = "json")   
+  }
+  
+  if(returnJson) {
+    return(json)    
+  } 
   
 }

@@ -14,50 +14,52 @@ $(function(){
 		.done(function(res){
 			/* Render Station Name/Code in Modal Header */
 			modalTitle.html('ข้อมูลระดับน้ำของสถานี'+res.station.name+' ('+res.station.code+')');
-			modalBody.show();
+			modalBody.show(0, function(){
+				/* Render Station Information in Modal */
+				$.get("{{ URL::to('api/problems/render_station_info') }}", {station: res.station})
+				.done(function(html){
+					stationInfo.html(html).show(100);
+					// modalBody.css('height', 'auto');
+				});
 
-			/* Render Station Information in Modal */
-			$.get("{{ URL::to('api/problems/render_station_info') }}", {station: res.station})
-			.done(function(html){
-				stationInfo.html(html).show(100);
-				// modalBody.css('height', 'auto');
-			});
-
-			/* Render Charts */
-			$('#highcharts').highcharts('StockChart', {
-				global: {
-					useUTC: false
-				},
-				rangeSelector : {
-					selected : 1
-				},
-				title : {
-					text : res.station.name
-				},
-				series : [{
-					name : "Value",
-					data : res.data,
-					step: true,
-					tooltip: {
-						valueDecimals: 2
+				/* Render Charts */
+				$('#highcharts').highcharts('StockChart', {
+					global: {
+						useUTC: false
+					},
+					rangeSelector : {
+						selected : 1
+					},
+					title : {
+						text : res.station.name
+					},
+					series : [{
+						name : "Value",
+						id : "dataseries",
+						data : res.data,
+						step: true,
+						tooltip: {
+							valueDecimals: 2
+						}
+					},
+					{
+						type: 'flags',
+						name: 'Flags on series',
+						data: [{
+							x: res.start_datetime_unix*1000,
+							title: 'เริ่ม'
+						}, {
+							x: res.end_datetime_unix*1000,
+							title: 'สิ้นสุด'
+						}],
+						onSeries: 'dataseries',
+						shape: 'squarepin'
 					}
-				},
-				{
-					type: 'flags',
-					name: 'Flags on series',
-					data: [{
-						x: res.start_datetime_unix*1000,
-						title: 'เริ่ม'
-					}, {
-						x: res.end_datetime_unix*1000,
-						title: 'สิ้นสุด'
-					}],
-					onSeries: 'dataseries',
-					shape: 'squarepin'
-				}
-				]
-			});
+					]
+				});
 
+
+			});
 		});
 	});
 });
@@ -79,7 +81,7 @@ $(function(){
 					</div>
 					<!-- /.col-md-6 -->
 					<div class="col-md-9">
-						<div id="highcharts" style="height: 400px; min-width: 310px"></div>
+						<div id="highcharts" style="height: 400px; min-width: 710px"></div>
 						
 					</div>
 					<!-- /.col-md-9 -->

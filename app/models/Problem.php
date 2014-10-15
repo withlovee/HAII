@@ -162,7 +162,13 @@ class Problem extends \Eloquent {
 			->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
 			->groupBy('problem_type')
 			->get();
-		$output = array();
+		$output = array(
+			'RAIN' => array(
+				'BD' => 0,
+			),
+			'WATER' => array(
+				'BD' => 0,)
+		);
 		foreach($results as $type => $r)
 			foreach($r as $result)
 				$output[$type][$result->problem_type] = $result->count;

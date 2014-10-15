@@ -262,7 +262,7 @@ updateProblemLog <- function(problems, intervalSecond) {
                      timestamp '", p$start_datetime ,"' ,
                      timestamp '", p$end_datetime ,"' ,
                      '", p$num ,"' ,
-                     'undefinded' ,
+                     'undefined' ,
                      timestamp '", currentDateTimeString ,"' ,
                      timestamp '", currentDateTimeString ,"' 
                       )
