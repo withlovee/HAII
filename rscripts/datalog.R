@@ -51,6 +51,52 @@ getWaterLevelData <- function(stationCode, startDateTime, endDateTime) {
   
 }
 
+getRainLevelData <- function(stationCode, startDateTime, endDateTime) {
+  
+  cat("Actual start time: ")
+  cat(strftime(startDateTime))
+  cat("\n")
+  cat("Actual end time: ")
+  cat(strftime(endDateTime))
+  cat("\n")
+  
+  con <- openDbConnection()
+  
+  startDateString <- strftime(startDateTime, "%Y-%m-%d");
+  endDateString   <- strftime(endDateTime, "%Y-%m-%d");
+  
+  startTimeString <- strftime(startDateTime, "%H:%M:%S");
+  endTimeString   <- strftime(endDateTime, "%H:%M:%S");
+  
+  data <- dbGetQuery(con,
+                     paste("
+                           SELECT 
+                           data_log.code, 
+                           data_log.date,
+                           data_log.time,
+                           data_log.rain1h
+                           
+                           FROM data_log
+                           
+                           WHERE 
+                           (data_log.date > DATE '", startDateString ,"'
+                           OR
+                           data_log.date = DATE '", startDateString ,"' AND data_log.time >= TIME '", startTimeString ,"')
+                           AND
+                           (data_log.date < DATE '", endDateString ,"'
+                           OR
+                           data_log.date = DATE '", endDateString ,"' AND data_log.time < TIME '", endTimeString ,"')
+                           AND data_log.code = '", stationCode ,"'
+                           
+                           ", sep="")
+                     )
+  
+  closeDbConnection(con)
+  
+  return(data)
+  
+}
+
 get24HrWaterLevelData <- function (stationCode, startDateTime = NA, endDateTime = Sys.time(), debug=FALSE) {
   
   last24Hr <- endDateTime - 24*60*60
@@ -60,6 +106,18 @@ get24HrWaterLevelData <- function (stationCode, startDateTime = NA, endDateTime 
   }
   
   getWaterLevelData(stationCode, startDateTime, endDateTime)
+  
+}
+
+get24HrRainLevelData <- function (stationCode, startDateTime = NA, endDateTime = Sys.time(), debug=FALSE) {
+  
+  last24Hr <- endDateTime - 24*60*60
+  
+  if(!debug & (is.na(startDateTime) | last24Hr > startDateTime)) {
+    startDateTime <- last24Hr
+  }
+  
+  getRainLevelData(stationCode, startDateTime, endDateTime)
   
 }
 
