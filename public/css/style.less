@@ -371,12 +371,20 @@ a:hover{
 			color: #000;
 		}
 	}
+	td:nth-child(4) a{
+		color: #555;
+		&.active{
+			color: #2ebd9e;
+		}
+		&:hover{
+			color: @green;
+		}
+	}	
 }
 .yesterday-report{
 	padding: 10px 30px 30px 30px;
 	.bdrs(5px);
 	background-color: #efefef;
-
 }
 /*-------------------------  -------------------------*/
 @media (min-width: 768px){

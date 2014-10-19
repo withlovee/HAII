@@ -30,6 +30,9 @@ $(function(){
 					rangeSelector : {
 						selected : 1
 					},
+				legend : {
+					enabled: true
+				},
 					title : {
 						text : res.station.name
 					},

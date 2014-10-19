@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
 	<div class="col-md-5">
-		<!-- @include('home/map') -->
+		@include('home/map')
 	</div>
 	<!-- /.col-md-4 -->
 	<div class="col-md-7">

@@ -36,10 +36,10 @@
 		<ul class="nav navbar-nav">
 			<li>{{ HTML::link('dailyop', 'Daily Operations') }}</li>
 			<li>{{ HTML::link('errorlog', 'Error Log') }}</li>
-			<li><a href="batch.php">Batch Processing</a></li>
+			<!--li><a href="batch.php">Batch Processing</a></li>
 			<li><a href="reports.php">Report Generation</a></li>
 			<li><a href="settings.php">Settings</a></li>
-			<li><a href="export.php">Export</a></li>
+			<li><a href="export.php">Export</a></li-->
 		</ul>
 		@if(!Auth::check())
 		<ul class="nav navbar-nav navbar-right">
