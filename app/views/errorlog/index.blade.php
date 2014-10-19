@@ -258,11 +258,15 @@ $(document).ready(function() {
 	}
 	new HAIIWATable("#div1", {
 		data_type: 'WATER', 
-		marked: '{{ $status }}'
+		marked: '{{ $status }}',
+		start_date: '{{ $start_date }}',
+		start_time: '{{ $start_time }}'
 	});
 	new HAIIWATable("#div2", {
 		data_type: 'RAIN', 
-		marked: '{{ $status }}'
+		marked: '{{ $status }}',
+		start_date: '{{ $start_date }}',
+		start_time: '{{ $start_time }}'
 	});
 });
 </script>

@@ -44,17 +44,12 @@ class APIProblemsController extends BaseController {
 			if($problem->data_type == 'WATER')
 				$data_log_new[] = [
 					strtotime($item['date'].' '.$item['time']) * 1000,
-					// $item['date'],
-					// $item['time'],
 					floatval($item['water1'])
 				];
 			else
 				$data_log_new[] = [
 					strtotime($item['date'].' '.$item['time']) * 1000,
-					// date('Y-m-d H:i:s', strtotime($item['date'].' '.$item['time'])),
 					floatval($item['rain10m']),
-					// $item['date'],
-					// $item['time']
 				];
 		}
 		$output = array(
@@ -76,8 +71,6 @@ class APIProblemsController extends BaseController {
 			),
 			'data' => $data_log_new
 		);
-		// $output['station_html'] = Response::view('errorlog/data_log', $output) ;
-		//View::make('errorlog/data_log', $output);
 		return Response::json($output);
 	}
 

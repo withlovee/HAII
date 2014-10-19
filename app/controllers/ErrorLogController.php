@@ -21,6 +21,8 @@ class ErrorLogController extends BaseController {
 		$data['codes'] = TeleStation::codes(true);
 		$data['marked'] = '';
 		$data['unmarked'] = '';
+		$data['start_date'] = '';
+		$data['start_time'] = '';
 		$data['all'] = '';
 		return $data;
 	}
