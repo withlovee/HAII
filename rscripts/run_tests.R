@@ -10,7 +10,7 @@ boundary.test.suite <- defineTestSuite("boundary",
 
 boundary.test.result <- runTestSuite(boundary.test.suite)
 
-printTextProtocol(boundary.test.result)
+
 
 
 ##### Testing email.R
@@ -22,4 +22,7 @@ email.test.suite <- defineTestSuite("email",
 
 email.test.result <- runTestSuite(email.test.suite)
 
+
+### print result
+printTextProtocol(boundary.test.result)
 printTextProtocol(email.test.result)

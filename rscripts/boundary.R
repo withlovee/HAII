@@ -34,7 +34,10 @@ isWaterLevelOutOfBound <- function(waterLevel, groundLevel, maxBank, groundLevel
 }
 
 isRainLevelOutOfBound <- function(rainLevel) {
-  if(rainLevel < 0 | rainLevel > 150) {
+  
+  if(is.na(rainLevel)) {
+    return(FALSE)
+  } else if(rainLevel < 0 | rainLevel > 150) {
     return(TRUE)
   } else {
     return(FALSE)
@@ -47,12 +50,13 @@ searchBoundaryProblem <- function(dataType, data) {
     return(NA)
   }
   
-  data$max_bank <- mapply(getMaxBank, data$left_bank, data$right_bank)
+  hasBoundaryProblem <- FALSE
   
   if(dataType == "WATER") {
+    data$max_bank <- mapply(getMaxBank, data$left_bank, data$right_bank)
     hasBoundaryProblem <- mapply(isWaterLevelOutOfBound, data$water1, data$ground_level, data$max_bank)
   } else if(dataType == "RAIN") {
-    hasBoundaryProblem <- mapply(isRainLevelOutOfBound, data$rain1)
+    hasBoundaryProblem <- mapply(isRainLevelOutOfBound, data$rain1h)
   } else {
     return(NA)
   }
