@@ -2,19 +2,14 @@
 
 class DailyOpController extends ErrorLogController {
 
-	public function index($status) {
-		
-		$data = parent::dataForForm();
-		$data['start_date'] = date('Y-m-d', getTime());
-		$data['start_time'] = '07:01';
-		$data[$status] = 'active';
+	public function index($status, $data_type) {
+		$params = $this->getParams($status, $data_type);
+		$data = $this->dataForForm($status, $data_type);
+		$params['start_date'] = date('Y-m-d', getTime());
+		$params['start_time'] = '07:01';
 		$data['selectDate'] = false;
-		$data['title'] = 'Daily Operations<br><small>แสดงปัญหาที่เกิดขึ้นตั้งแต่วันที่ '.thai_date(getTime()).date('Y', getTime()).' เวลา 7.01 น.</small>';
-
-		if($status == 'marked') $data['status'] = 'true';
-		elseif($status == 'all') $data['status'] = 'all';
-		else $data['status'] = 'false';
-
+		$data['title'] = 'Daily Operations';
+		$data['problems'] = Problem::allForTable($params);
 		return View::make('dailyop/index', $data);
 	}
 

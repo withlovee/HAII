@@ -67,7 +67,9 @@
 	<div class="container">
 	<div class="page-header">
 		<h1 class="left">
+			@section('page-title')
 			{{ $title }}
+			@show
 		</h1>
 		@yield('header-buttons')
 		<div class="clear"></div>

@@ -107,11 +107,11 @@ class Problem extends \Eloquent {
 			'part' => '',
 			'code' => '',
 			'problem_type' => '',
-			'marked' => 'false',
+			'marked' => '',
 			'start_date' => '',
 			'start_time' => '',
 			'end_date' => '',
-			'end_time' => ''
+			'end_time' => '',
 		);
 		$params = array_merge($defaults, $params);
 		$problems = self::dataType($params['data_type'])
@@ -124,12 +124,13 @@ class Problem extends \Eloquent {
 			->startDatetime(self::renderDate($params['start_date'], $params['start_time']))
 			->endDatetime(self::renderDate($params['end_date'], $params['end_time']))
 			->orderBy('start_datetime', 'desc')
-			->get();
-		foreach($problems as $problem){
-			$problem['station_name'] = self::buildFullStationName($problem);
-			unset($problem['station']);
-			$problem['problem_type'] = self::getTypeName($problem['problem_type']);
-		}
+			->paginate(5);
+			// ->get();
+		// foreach($problems as $problem){
+		// 	$problem['station_name'] = self::buildFullStationName($problem);
+		// 	unset($problem['station']);
+		// 	$problem['problem_type'] = self::getTypeName($problem['problem_type']);
+		// }
 		return $problems;
 	}
 

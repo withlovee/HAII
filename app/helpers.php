@@ -16,3 +16,21 @@ function getTime($offset = 0) {
 	if(intval(date('G')) < 7 || (intval(date('G')) == 7) && intval(date('i')) == 0) $offset -= 1;
 	return time()+($offset*24*60*60);
 }
+function getProblemName($name) {
+	switch($name){
+		case 'BD':
+			return 'Out-of-Range';
+		default:
+	}	
+}
+function getErrorButton($id, $is_error, $default = '') {
+	if($default == 'true' && $is_error ||
+		$default == 'false' && !$is_error)
+		$class = ' active';
+	else
+		$class = '';
+	if($is_error)
+		return '<a href="#" data-error="true" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-ok"></span> <span class="text">Error</span></a>';
+	else
+		return '<a href="#" data-error="false" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-remove"></span> <span class="text">Not Error</span></a>';
+}

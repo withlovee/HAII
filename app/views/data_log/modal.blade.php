@@ -5,11 +5,13 @@ $(function(){
 	var modalTitle = $('.modal-title');
 	var modalBody = $('.modal-body');
 	var stationInfo = $('#station_info');
+	var errorButtons = $('.modal-buttons');
 	$('body').on('click', '.model_btn', function(e){
 		id = $(this).data('id');
 		modalTitle.html('กำลังโหลด');
 		stationInfo.hide();
 		modalBody.hide();
+		errorButtons.hide();
 		$.get("{{ URL::to('api/problems/get_problem') }}", {id: id})
 		.done(function(res){
 			/* Render Station Name/Code in Modal Header */
@@ -19,6 +21,11 @@ $(function(){
 				$.get("{{ URL::to('api/problems/render_station_info') }}", {station: res.station})
 				.done(function(html){
 					stationInfo.html(html).show(100);
+					// modalBody.css('height', 'auto');
+				});
+				$.get("{{ URL::to('api/problems/get_buttons') }}", {id: id})
+				.done(function(html){
+					errorButtons.html(html).show(100);
 					// modalBody.css('height', 'auto');
 				});
 
@@ -81,6 +88,9 @@ $(function(){
 						<p>&nbsp;</p>
 						<dl class="dl-horizontal dl-space" id="station_info">
 						</dl>
+						<p>&nbsp;</p>
+						<h4>สถานะของปัญหา</h4>
+						<div class="modal-buttons"></div>
 					</div>
 					<!-- /.col-md-6 -->
 					<div class="col-md-9">
