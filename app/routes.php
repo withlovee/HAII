@@ -14,20 +14,22 @@
 Route::get('/', 'HomeController@index')->before('auth');
 
 Route::get('errorlog', function(){
-	return Redirect::to('errorlog/unmarked');
+	return Redirect::to('errorlog/unmarked/water');
 })->before('auth');
-Route::get('errorlog/{status}', 'ErrorLogController@index')->before('auth');
+Route::get('errorlog/{status}/{data_type}', 'ErrorLogController@index')->before('auth');
+Route::get('api/problems/get_table', 'ErrorLogController@getData')->before('auth');
 
 Route::get('dailyop', function(){
-	return Redirect::to('dailyop/unmarked');
+	return Redirect::to('dailyop/unmarked/water');
 })->before('auth');
-Route::get('dailyop/{status}', 'DailyOpController@index')->before('auth');
+Route::get('dailyop/{status}/{data_type}', 'DailyOpController@index')->before('auth');
 
 Route::get('api/problems/all', 'APIProblemsController@all')->before('auth');
 Route::get('api/problems/get', 'APIProblemsController@get')->before('auth');
 Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('auth');
 Route::get('api/problems/get_problem', 'APIProblemsController@getProblem')->before('auth');
 Route::get('api/problems/get_map', 'APIProblemsController@getMap')->before('auth');
+Route::get('api/problems/get_buttons', 'APIProblemsController@getButtons')->before('auth');
 Route::get('api/problems/render_station_info', 'APIProblemsController@renderStationInfo')->before('auth');
 
 Route::post('api/email/send_alert/{type}', 'APIEmailController@sendAlert');

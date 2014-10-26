@@ -31,7 +31,7 @@
 					<h4>ข้อมูลน้ำ</h4>
 					<div class="stats">
 						<div class="item">
-							Out-of-value
+							Out-of-Range
 							<span class="num">{{ $stats['WATER']['BD'] }}</span>
 						</div>
 						<!-- /.item -->
@@ -68,7 +68,7 @@
 					<h4>ข้อมูลฝน</h4>
 					<div class="stats">
 						<div class="item">
-							Out-of-value
+							Out-of-Range
 							<span class="num">{{ $stats['RAIN']['BD'] }}</span>
 						</div>
 						<!-- /.item -->

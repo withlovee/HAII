@@ -74,6 +74,19 @@ class APIProblemsController extends BaseController {
 		return Response::json($output);
 	}
 
+	public function getButtons() {
+		$problem = Problem::find(intval(Input::get('id')));
+		$status = $problem->status;
+		$html = '';
+		// 'Error' Button
+		$html .= $this->getErrorButton($problem->id, true, $status == 'true', 'btn btn-default');
+		$html .= ' &nbsp; ';
+		// 'Not Error' Button
+		$html .= $this->getErrorButton($problem->id, false, $status == 'false', 'btn btn-default');
+		return $html;
+		// return Response::json($output);
+	}
+
 	private function getCols() {
 		return array(
 			// 'id' => array(
@@ -133,11 +146,10 @@ class APIProblemsController extends BaseController {
 		return $problems;
 	}
 
-	private function getErrorButton($id, $is_error, $default = false) {
+	private function getErrorButton($id, $is_error, $default = false, $classes) {
+		$class = ' '.$classes;
 		if($default)
-			$class = ' active';
-		else
-			$class = '';
+			$class .= ' active';
 		if($is_error)
 			return '<a href="#" data-error="true" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-ok"></span> <span class="text">Error</span></a>';
 		else
