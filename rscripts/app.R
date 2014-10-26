@@ -12,7 +12,8 @@ path <- '/Applications/XAMPP/xamppfiles/htdocs/HAII/rscripts'
 
 setwd(path)
 
-args <- commandArgs(trailingOnly = TRUE)
+appArgs <- commandArgs(trailingOnly = TRUE)
 
-print(args)
-source(args[1])
+args <- appArgs[-1]
+
+source(appArgs[1])

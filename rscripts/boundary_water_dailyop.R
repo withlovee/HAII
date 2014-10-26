@@ -1,3 +1,9 @@
+cat("###########################################\n")
+cat(" Execute start at: ")
+cat(strftime(Sys.time()))
+cat("\n")
+cat("###########################################\n")
+
 
 
 source('datalog.R')
@@ -10,11 +16,6 @@ problemType <- "BD"
 stationList <- getStationCodeList();
 allBdProblem <- NA
 
-cat("###########################################\n")
-cat(" Date Executed: ")
-cat(strftime(Sys.time()))
-cat("\n")
-cat("###########################################\n")
 
 flush.console()
 
@@ -114,4 +115,11 @@ if(!is.na(allBdProblem)) {
   cat("====================\n")
   flush.console()
 }
+
+
+cat("###########################################\n")
+cat(" Execute fininsh at: ")
+cat(strftime(Sys.time()))
+cat("\n")
+cat("###########################################\n")
 

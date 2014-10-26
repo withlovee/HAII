@@ -2,12 +2,12 @@ source('db_connection.R')
 
 getWaterLevelData <- function(stationCode, startDateTime, endDateTime) {
   
-  cat("Actual start time: ")
-  cat(strftime(startDateTime))
-  cat("\n")
-  cat("Actual end time: ")
-  cat(strftime(endDateTime))
-  cat("\n")
+  # cat("Actual start time: ")
+  # cat(strftime(startDateTime))
+  # cat("\n")
+  # cat("Actual end time: ")
+  # cat(strftime(endDateTime))
+  # cat("\n")
   
   con <- openDbConnection()
   
@@ -218,6 +218,12 @@ opDate <- function(d) {
   return(a)
 }
 
+getStartOfDayOperationDateTime <- function(date) {
+  
+  dateStr <- strftime(date, "%Y-%m-%d");
+  return( as.POSIXct(paste(dateStr, "07:00:00")) )
+}
+
 getNewProblemStationList <- function(dataType, problemType, time, problems) {
   
   allStationList <- levels(problems$station_code)
@@ -254,6 +260,12 @@ getAlreadyCheckedStationList <- function(dataType, problemType, time) {
 
 updateProblemLog <- function(problems, intervalSecond) {
   
+  if(!is.data.frame(problems)) {
+    return(NA)
+  } else if(nrow(problems) <= 0) {
+    return(NA)
+  }
+  
   problems <- problems[order(problems$start_datetime), ]
   
   
@@ -274,7 +286,7 @@ updateProblemLog <- function(problems, intervalSecond) {
                    SELECT *
                    FROM problems
                    WHERE station_code = '", p$station_code ,"'
-                   AND end_datetime = timestamp '", previousDateTimeString ,"'
+                   AND (start_datetime - interval '11 minutes', end_datetime + interval '11 minutes') overlaps ('",p$start_datetime,"','",p$end_datetime,"')
                    AND start_datetime >= timestamp '", operationDateTimeString ,"'                  
 
                    AND data_type = '", p$data_type ,"'
