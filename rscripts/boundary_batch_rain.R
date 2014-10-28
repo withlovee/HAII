@@ -66,7 +66,7 @@ main <- function() {
   # endDateTime <- getStartOfDayOperationDateTime(as.POSIXct("2014-10-01"))
 
   # boundaryBatch(startDateTime, endDateTime, "WATER")
-  boundaryBatch(startDateTime, endDateTime, "WATER")
+  boundaryBatch(startDateTime, endDateTime, "RAIN")
   
   cat("\nExecution end: ")
   cat(strftime(Sys.time()))
