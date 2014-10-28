@@ -229,6 +229,14 @@ getNewProblemStationList <- function(dataType, problemType, time, problems) {
   allStationList <- levels(problems$station_code)
   oldStationList <- getAlreadyCheckedStationList(dataType, problemType, time)
   
+  cat("allStationList: ")
+  cat(allStationList)
+  cat("\n")
+  
+  cat("oldStationList: ")
+  cat(oldStationList)
+  cat("\n")
+  
  return(allStationList[!(allStationList %in% oldStationList)])
 }
 

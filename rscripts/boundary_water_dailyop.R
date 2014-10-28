@@ -21,6 +21,9 @@ flush.console()
 
 currentTime <- Sys.time()
 
+# for email purpose
+oldProblemStationList <- getAlreadyCheckedStationList(dataType, problemType, currentTime)
+
 data <- NA
 
 for(station in stationList) {
@@ -107,7 +110,10 @@ if(!is.na(allBdProblem)) {
   cat("====================\n")
   flush.console()
   
-  newProblemStation <- getNewProblemStationList(dataType, problemType, currentTime, allBdProblem)
+  allStationList <- levels(allBdProblem$station_code)
+  
+  newProblemStation <- allStationList[!(allStationList %in% oldProblemStationList)]
+  
   sendProblemMailNotification(dataType, problemType, currentTime, newProblemStation)
 } else {
   cat("====================\n")
