@@ -21,25 +21,25 @@ $(function(){
 				$.get("{{ URL::to('api/problems/render_station_info') }}", {station: res.station})
 				.done(function(html){
 					stationInfo.html(html).show(100);
-					// modalBody.css('height', 'auto');
 				});
 				$.get("{{ URL::to('api/problems/get_buttons') }}", {id: id})
 				.done(function(html){
 					errorButtons.html(html).show(100);
-					// modalBody.css('height', 'auto');
 				});
-
+				console.log(res.start_datetime_unix);
 				/* Render Charts */
-				$('#highcharts').highcharts('StockChart', {
+				Highcharts.setOptions({
 					global: {
-						useUTC: false
-					},
+						timezoneOffset: -7 * 60
+					}
+				});
+				$('#highcharts2').highcharts('StockChart', {
 					rangeSelector : {
 						selected : 1
 					},
-				legend : {
-					enabled: true
-				},
+					legend : {
+						enabled: true
+					},
 					title : {
 						text : res.station.name
 					},
@@ -50,6 +50,9 @@ $(function(){
 						step: true,
 						tooltip: {
 							valueDecimals: 2
+						},
+						marker: {
+							enabled: true
 						}
 					},
 					{
@@ -94,7 +97,7 @@ $(function(){
 					</div>
 					<!-- /.col-md-6 -->
 					<div class="col-md-9">
-						<div id="highcharts" style="height: 400px; min-width: 710px"></div>
+						<div id="highcharts2" style="height: 400px; min-width: 710px"></div>
 						
 					</div>
 					<!-- /.col-md-9 -->

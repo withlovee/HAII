@@ -124,7 +124,8 @@ class Problem extends \Eloquent {
 			->startDatetime(self::renderDate($params['start_date'], $params['start_time']))
 			->endDatetime(self::renderDate($params['end_date'], $params['end_time']))
 			->orderBy('start_datetime', 'desc')
-			->paginate(5);
+			->orderBy('id', 'desc')
+			->paginate(25);
 			// ->get();
 		// foreach($problems as $problem){
 		// 	$problem['station_name'] = self::buildFullStationName($problem);
