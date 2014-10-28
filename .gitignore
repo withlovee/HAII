@@ -3,6 +3,7 @@
 /app/config/app.php
 /rscripts/db_connection.R
 /rscripts/app.R
+/rscripts/email.R
 /vendor
 composer.phar
 composer.lock
