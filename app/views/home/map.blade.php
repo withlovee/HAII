@@ -55,7 +55,7 @@
 
 		$.get("{{ URL::to('api/problems/get_map') }}", function(stations){
 			for(i in stations){
-				console.log(stations[i]);
+				//console.log(stations[i]);
 				status = get_status(stations[i].num);
 				var marker = new google.maps.Marker({
 					map: map, 
@@ -109,5 +109,3 @@
 	google.maps.event.addDomListener(window, 'load', initialize);
 
 </script>
-
-<div id="map-canvas" style="height: 700px"></div>

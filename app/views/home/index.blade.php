@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
 	<div class="col-md-5">
-		@include('home/map')
+		<div id="map-canvas" style="height: 700px"></div>
 	</div>
 	<!-- /.col-md-4 -->
 	<div class="col-md-7">
@@ -97,6 +97,6 @@
 <p>&nbsp;</p>
 
 @include('data_log/modal')
-
+@include('home/map')
 
 @stop

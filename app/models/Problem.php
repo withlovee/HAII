@@ -68,8 +68,9 @@ class Problem extends \Eloquent {
 		$problems = self::dataType($data_type)
 			->problem($problem_type)
 			->marked('false')
-			->startDatetime(self::getStartDate('Y-m-d 07:01'))
+			->startDatetime(self::getStartDate('Y-m-d 07:00'))
 			->get()->toArray();
+		// return self::getStartDate('Y-m-d 07:01');
 		/*-- Group the data by basins --*/
 		$grouped_problems = array();
 		foreach($problems as $problem){

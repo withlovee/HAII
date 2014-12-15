@@ -36,7 +36,6 @@ class APIProblemsController extends BaseController {
 			->from($problem->start_datetime)
 			->to($problem->end_datetime)
 			->valid($problem->data_type)
-			->take(1000)
 			->get()
 			->toArray();
 		$data_log_new = array();

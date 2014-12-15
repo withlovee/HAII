@@ -26,7 +26,7 @@ $(function(){
 				.done(function(html){
 					errorButtons.html(html).show(100);
 				});
-				console.log(res.start_datetime_unix);
+				console.log(res.data);
 				/* Render Charts */
 				Highcharts.setOptions({
 					global: {
