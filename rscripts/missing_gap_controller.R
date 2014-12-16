@@ -6,19 +6,8 @@ MissingGap.Controller.FindMissingGap <- function(
   stationCode, dataType, startDateTime, endDateTime) {
 
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
-
-  # cat("\n====", stationCode , "====\n")
-  # str(data)
-
-  if(is.null(data)) {
-    # skip
-    return(NULL)
-  }
-
   missingGap <- MissingGap.FindMissingGap(data, startDateTime, endDateTime)
-
   return(missingGap)
-
 }
 
 MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, endDateTime) {
@@ -26,15 +15,17 @@ MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, end
                                 startDateTime = c(),
                                 endDateTime = c())
 
-
   stations <- DataLog.GetStationCodeList()
 
   for (station in stations) {
+
     result <- MissingGap.Controller.FindMissingGap(station, dataType, startDateTime, endDateTime)
 
-    if(!is.null(result)) {
-      result$stationCode <- station
-      resultAllStation <-rbind(resultAllStation, result)
+    if(is.data.frame(result)) {
+      if(nrow(result) > 0) {
+        result$stationCode <- station
+        resultAllStation <-rbind(resultAllStation, result)
+      }
     }
   }
 
@@ -55,16 +46,15 @@ MissingGap.Controller.HourlyOperation <- function(dataType,
   # set default interval
   if (is.null(interval)) {
     if (Config.MissingGap.defaultInterval > 60*60) {
-      interval <- Config.MissingGap.defaultInterval + (4 * Config.defaultDataInterval)
+      interval <- Config.MissingGap.defaultInterval + (2 * Config.defaultDataInterval)
     } else {
-      interval <- 60 * 60 + (4 * Config.defaultDataInterval)
+      interval <- 60 * 60 + (2 * Config.defaultDataInterval)
     }
   }
 
   startTime = currentTime - interval
 
-  MissingGap.Controller.FindAllMissingGap(dataType, startTime, currentTime)
+  missingGap <- MissingGap.Controller.FindAllMissingGap(dataType, startTime, currentTime)
 
-
-
+  return(missingGap)
 }

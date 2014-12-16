@@ -5,6 +5,19 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   missingInterval    = Config.MissingGap.defaultInterval,
   verbose = FALSE) {
 
+  # null
+  if (is.null(data)) {
+    diff <- as.numeric(endDateTime - startDateTime, units="secs")
+    
+    if (diff > dataInterval & diff > missingInterval) {
+      result <- data.frame(start = c(startDateTime + 1), end = c(endDateTime - 1))
+      return(result)
+    } else {
+      return(NULL)
+    }
+  }
+
+
   # Error Handling
   if (!("data.frame" %in% class(data))) {
     stop("Data must be dataframe")
@@ -33,11 +46,11 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   dt1 <- c(startDateTime, dt)
   dt2 <- c(dt, endDateTime)
 
-  diff <- dt2 - dt1
+  diff <- as.numeric(dt2 - dt1, units="secs")
 
   missingIdx <- which(diff > dataInterval & diff > missingInterval)
 
-  result = data.frame(start = dt1[missingIdx] + 1, end = dt2[missingIdx] - 1)
+  result <- data.frame(start = dt1[missingIdx] + 1, end = dt2[missingIdx] - 1)
 
   return(result)
 
