@@ -1,7 +1,8 @@
 source('db_connection.R')
 
 
-DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime, verbose = FALSE) {
+DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
+                             verbose = FALSE) {
   # Get raw data from databases in interval [startTime, endTime].
   #
   # Args:
@@ -31,10 +32,12 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime, 
 
   # verbose
   if (verbose) {
-    cat("Getting", dataType, "data of", stationCode, "station from", strftime(startDateTime), "to", strftime(endDateTime), "\n")
+    cat("Getting", dataType, "data of", stationCode, "station from",
+        strftime(startDateTime), "to", strftime(endDateTime), "\n")
   }
 
-  # because datalog store data and time seperately, so we need to split and convert to string
+  # because datalog store data and time seperately
+  # so we need to split and convert to string
   startDateString <- strftime(startDateTime, "%Y-%m-%d")
   endDateString   <- strftime(endDateTime, "%Y-%m-%d")
   
@@ -55,24 +58,30 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime, 
   fieldsString <- paste0(fields, collapse=", ")
 
   # generate query string
-  queryString <- paste0("SELECT ", fieldsString,"
-                       FROM data_log
-                       INNER JOIN tele_wl_detail ON tele_wl_detail.code = data_log.code
-                       WHERE 
-                           (data_log.date > DATE '", startDateString ,"'
-                           OR
-                           data_log.date = DATE '", startDateString ,"' AND data_log.time >= TIME '", startTimeString ,"')
-                         AND
-                           (data_log.date < DATE '", endDateString ,"'
-                           OR
-                           data_log.date = DATE '", endDateString ,"' AND data_log.time <= TIME '", endTimeString ,"')
-                         AND data_log.code = '", stationCode ,"'
-                       ")
+  queryString <- paste0(
+    "SELECT ", fieldsString,"
+     FROM data_log
+     INNER JOIN tele_wl_detail ON tele_wl_detail.code = data_log.code
+     WHERE 
+         (data_log.date > DATE '", startDateString ,"'
+         OR
+         data_log.date = DATE '", startDateString ,"' AND data_log.time >= TIME '", startTimeString ,"')
+       AND
+         (data_log.date < DATE '", endDateString ,"'
+         OR
+         data_log.date = DATE '", endDateString ,"' AND data_log.time <= TIME '", endTimeString ,"')
+       AND data_log.code = '", stationCode ,"'
+     ")
 
   # query from database
   dbConnection <- DBConnection.OpenDBConnection(verbose=verbose)
   data <- dbGetQuery(dbConnection, queryString)
   DBConnection.CloseDBConnection(dbConnection, verbose=verbose)
+
+  # if there is no data, return null
+  if (nrow(data) == 0) {
+    return(NULL)
+  }
 
   # add datetime fields
   data$datetime = as.POSIXct(paste(data$date, data$time))
@@ -105,7 +114,7 @@ DataLog.GetStationCodeList <- function (verbose = FALSE) {
   queryString <- "SELECT tele_wl_detail.code FROM tele_wl_detail"
   dbConnection <- DBConnection.OpenDBConnection(verbose=verbose)
   data <- dbGetQuery(dbConnection, queryString)
-  DBConnection.CloseDBConnection(con, verbose=verbose)
+  DBConnection.CloseDBConnection(dbConnection, verbose=verbose)
   return(data$code)
 
 }
