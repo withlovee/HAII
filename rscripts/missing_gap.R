@@ -1,3 +1,4 @@
+library('xts')
 source('config.R')
 
 MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
@@ -5,12 +6,27 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   missingInterval    = Config.MissingGap.defaultInterval,
   verbose = FALSE) {
 
+  roundedStartDateTime <- align.time(startDateTime, dataInterval)
+  if (roundedStartDateTime  - dataInterval == startDateTime) {
+    roundedStartDateTime <- roundedStartDateTime - dataInterval
+  }
+
+  roundedEndDateTime <- align.time(endDateTime, dataInterval) - dataInterval
+  if (roundedEndDateTime  + dataInterval == endDateTime) {
+    roundedEndDateTime <- roundedEndDateTime + dataInterval
+  }
+
+  print(startDateTime)
+  print(endDateTime)
+  print(roundedStartDateTime)
+  print(roundedEndDateTime)
+
   # null
   if (is.null(data)) {
-    diff <- as.numeric(endDateTime - startDateTime, units="secs")
+    diff <- as.numeric(roundedEndDateTime - roundedStartDateTime, units="secs")
     
     if (diff > dataInterval & diff > missingInterval) {
-      result <- data.frame(start = c(startDateTime + 1), end = c(endDateTime - 1))
+      result <- data.frame(startDateTime = c(roundedStartDateTime), endDateTime = c(roundedEndDateTime))
       return(result)
     } else {
       return(NULL)
@@ -43,18 +59,74 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   missingStart <- c()
   missingEnd <- c()
   
-  dt1 <- c(startDateTime, dt)
-  dt2 <- c(dt, endDateTime)
+  dt1 <- c(roundedStartDateTime - dataInterval, dt)
+  dt2 <- c(dt, roundedEndDateTime + dataInterval)
 
   diff <- as.numeric(dt2 - dt1, units="secs")
 
   missingIdx <- which(diff > dataInterval & diff > missingInterval)
 
-  result <- data.frame(start = dt1[missingIdx] + 1, end = dt2[missingIdx] - 1)
+  result <- data.frame(startDateTime = dt1[missingIdx] + dataInterval, endDateTime = dt2[missingIdx] - dataInterval)
 
   return(result)
 
 }
+
+# MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
+#   dataInterval = Config.defaultDataInterval,
+#   missingInterval    = Config.MissingGap.defaultInterval,
+#   verbose = FALSE) {
+
+#   # null
+#   if (is.null(data)) {
+#     diff <- as.numeric(endDateTime - startDateTime, units="secs")
+    
+#     if (diff > dataInterval & diff > missingInterval) {
+#       result <- data.frame(start = c(startDateTime + 1), end = c(endDateTime - 1))
+#       return(result)
+#     } else {
+#       return(NULL)
+#     }
+#   }
+
+
+#   # Error Handling
+#   if (!("data.frame" %in% class(data))) {
+#     stop("Data must be dataframe")
+#   }
+#   if (nrow(data) == 0) {
+#     return(data.frame(startDateTime=c(), endDateTime=c()))
+#   }
+
+#   dt <- data$datetime
+#   dt <- dt[order(dt)]
+
+#   # More Error Handling
+#   if (dt[1] < startDateTime) {
+#     stop("Data must be in range of startDateTime, endDateTime")
+#   }
+#   if (tail(dt, n = 1) > endDateTime) {
+#     stop("Data must be in range of startDateTime, endDateTime")
+#   }
+
+#   # start
+#   dt <- dt[!is.na(dt)]
+
+#   missingStart <- c()
+#   missingEnd <- c()
+  
+#   dt1 <- c(startDateTime, dt)
+#   dt2 <- c(dt, endDateTime)
+
+#   diff <- as.numeric(dt2 - dt1, units="secs")
+
+#   missingIdx <- which(diff > dataInterval & diff > missingInterval)
+
+#   result <- data.frame(startDateTime = dt1[missingIdx] + 1, endDateTime = dt2[missingIdx] - 1)
+
+#   return(result)
+
+# }
 
 #####################
 #   Old Algorithm   #

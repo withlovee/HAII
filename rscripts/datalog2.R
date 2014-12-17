@@ -6,7 +6,7 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
   # Get raw data from databases in interval [startTime, endTime].
   #
   # Args:
-  #   stationCode: (String) code of telemetering station (ex. CHI001)
+  #   stationCode: (String) code  of telemetering station (ex. CHI001)
   #   dataType: (String) "WATER" or "RAIN"
   #   startDateTime: (POSIXct) start time of data
   #   endDateTime: (String) end time of data

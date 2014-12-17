@@ -1,5 +1,5 @@
 
-packages <- c('RPostgreSQL', 'RUnit', 'httr', 'DBI', 'jsonlite')
+packages <- c('RPostgreSQL', 'RUnit', 'httr', 'DBI', 'jsonlite', 'xts')
 
 
 ################################
