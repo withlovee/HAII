@@ -15,12 +15,7 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   if (roundedEndDateTime  + dataInterval == endDateTime) {
     roundedEndDateTime <- roundedEndDateTime + dataInterval
   }
-
-  print(startDateTime)
-  print(endDateTime)
-  print(roundedStartDateTime)
-  print(roundedEndDateTime)
-
+  
   # null
   if (is.null(data)) {
     diff <- as.numeric(roundedEndDateTime - roundedStartDateTime, units="secs")

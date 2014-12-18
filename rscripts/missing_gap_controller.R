@@ -1,9 +1,12 @@
 source('datalog2.R')
 source('config.R')
+source('problems.R')
 source('missing_gap.R')
 
 MissingGap.Controller.FindMissingGap <- function(
   stationCode, dataType, startDateTime, endDateTime) {
+
+  cat("Missing Gap: ", stationCode , "\n")
 
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
   missingGap <- MissingGap.FindMissingGap(data, startDateTime, endDateTime)
@@ -42,6 +45,7 @@ MissingGap.Controller.HourlyOperation <- function(dataType,
   interval = NULL) {
 
   currentTime <- Sys.time()
+  problemType <- "MV"
 
   # set default interval
   if (is.null(interval)) {
@@ -54,7 +58,19 @@ MissingGap.Controller.HourlyOperation <- function(dataType,
 
   startTime = currentTime - interval
 
+  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentTime)
+
   missingGap <- MissingGap.Controller.FindAllMissingGap(dataType, startTime, currentTime)
 
+  # update problem
+  problemsStationCode <- unique(missingGap$stationCode)
+
+  newStation <- setdiff(problemsStationCode, alreadySentStationCode)
+  
+  Problems.AddProblems(missingGap, dataType, problemType)
+
+  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentTime)
+
+  # send email
   return(missingGap)
 }

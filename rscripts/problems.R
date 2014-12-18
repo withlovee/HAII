@@ -1,9 +1,10 @@
 source('db_connection.R')
 source('helper.R')
 source('config.R')
+source('email.R')
 
 
-Problems.GetProblemStationCodeList <- function(dataType, problemType, ,startDateTime, endDateTime) {
+Problems.GetProblemStationCodeList <- function(dataType, problemType ,startDateTime, endDateTime) {
 
   startDateTimeString <- Helper.POSIXctToString(startDateTime)
   endDateTimeString <- Helper.POSIXctToString(endDateTime)
@@ -17,8 +18,6 @@ Problems.GetProblemStationCodeList <- function(dataType, problemType, ,startDate
     GROUP BY station_code
     ")
 
-  print(queryString)
-
   data <- DBConnection.Query(queryString)
 
   return(data$station_code)
@@ -29,6 +28,32 @@ Problems.GetLatestProblemStationCodeList <- function(dataType, problemType, endD
   stationCode <- Problems.GetProblemStationCodeList(dataType, problemType, startDateTime, endDateTime)
 
   return(stationCode)
+}
+
+Problems.GetNewProblemStationCodeList <- function(problems, dataType, problemType, dateTime = Sys.time()) {
+  problemsStationCode <- unique(problems$stationCode)
+  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, dateTime)
+
+  newStation <- setdiff(problemsStationCode, alreadySentStationCode)
+
+  cat("problemsStationCode: ")
+  print(problemsStationCode)
+
+  cat("alreadySentStationCode: ")
+  print(alreadySentStationCode)
+
+  cat("newStation: ")
+  print(newStation)
+
+  return(newStation)
+}
+
+Problems.SendNewProblemNotification <- function(stationCode, dataType, problemType, dateTime = Sys.time()) {
+
+  # stationCode <- Problems.GetNewProblemStationCodeList(problems, dataType, problemType, dateTime)
+
+  Email.sendMailNotification(dataType, problemType, dateTime, stationCode)
+
 }
 
 Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTime, endDateTime) {
@@ -61,6 +86,9 @@ Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTim
       newStartDateTimeString <- Helper.POSIXctToString(newDateTime$startDateTime)
       newEndDateTimeString <- Helper.POSIXctToString(newDateTime$endDateTime)
 
+
+      cat("Problems: Update to ", problemType, " ", stationCode, " ",  newStartDateTimeString, " ", newEndDateTimeString, " ", num, "\n")
+
       # calculate 
       queryString <- paste0("
         UPDATE problems
@@ -81,14 +109,16 @@ Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTim
     # insert
     num <- Helper.CountDataNum(startDateTime, endDateTime)
 
+    cat("Problems: Insert ", problemType, " ", stationCode, " ",  startDateTimeString, " ", endDateTimeString, " ", num, "\n")
+
     queryString <- paste0("
-      INSERT INTO problems(station_code,data_type,problem_type,start_datetime,end_datetime,num,status,created_at,updated_at)
+      INSERT INTO problems(station_code, data_type, problem_type, start_datetime, end_datetime, num, status, created_at, updated_at)
       VALUES (
         '", stationCode ,"' ,
         '", dataType ,"' ,
         '", problemType ,"' ,
-        timestamp '", startDateTime ,"' ,
-        timestamp '", endDateTime ,"' ,
+        timestamp '", startDateTimeString ,"' ,
+        timestamp '", endDateTimeString ,"' ,
         '", num ,"' ,
         'undefined' ,
         timestamp '", currentDateTimeString ,"' ,
@@ -103,6 +133,23 @@ Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTim
   }
 }
 
-Problems.AddProblems <- function() {
+Problems.AddProblems <- function(problems, dataType, problemType) {
+  newStationCode <- c()
+
+  for (i in 1:nrow(problems)) {
+    p <- problems[i,]
+
+    cat("Problems: Adding ")
+    str(p)
+    cat("\n")
+
+    isNewProblem <- Problems.AddProblem(p$stationCode, dataType, problemType, p$startDateTime, p$endDateTime)
+
+    if (isNewProblem) {
+      newStationCode <- c(newStationCode, p$stationCode)
+    }
+  }
+
+  return(newStationCode)
 
 }
