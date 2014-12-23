@@ -42,10 +42,21 @@ FlatValue.Controller.FindAllFlatValue() <- function (dataType, startDateTime, en
   return(resultAllStation)
 }
 
-FlatValue.Controller.DailyOperation() <- function (dataType) {
+FlatValue.Controller.DailyOperation() <- function (dataType, interval=NULL) {
+
+  currentTime <- Sys.time()
   problemType <- "FV"
-  currentDateTime <- Sys.time()
-  startDateTime <- currentDateTime - Config.OutOfRange.backwardThreshold
+
+  # set default interval
+  if (is.null(interval)) {
+    if (Config.FlatValue.defaultThreshold > 60*60) {
+      interval <- Config.FlatValue.defaultThreshold + (3 * Config.defaultDataInterval)
+    } else {
+      interval <- 60 * 60 + (3 * Config.defaultDataInterval)
+    }
+  }
+
+  startDateTime = currentTime - interval
 
   flatValue <- FlatValue.Controller.FindFlatValue(dataType, startDateTime, endDateTime)
 

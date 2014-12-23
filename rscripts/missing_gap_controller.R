@@ -50,9 +50,9 @@ MissingGap.Controller.DailyOperation <- function(dataType,
   # set default interval
   if (is.null(interval)) {
     if (Config.MissingGap.defaultInterval > 60*60) {
-      interval <- Config.MissingGap.defaultInterval + (2 * Config.defaultDataInterval)
+      interval <- Config.MissingGap.defaultInterval + (3 * Config.defaultDataInterval)
     } else {
-      interval <- 60 * 60 + (2 * Config.defaultDataInterval)
+      interval <- 60 * 60 + (3 * Config.defaultDataInterval)
     }
   }
 
