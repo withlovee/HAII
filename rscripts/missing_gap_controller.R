@@ -41,7 +41,7 @@ MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, end
 } 
 
 
-MissingGap.Controller.HourlyOperation <- function(dataType,
+MissingGap.Controller.DailyOperation <- function(dataType,
   interval = NULL) {
 
   currentTime <- Sys.time()
