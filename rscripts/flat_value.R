@@ -3,7 +3,7 @@ source('helper.R')
 
 FlatValue.findFlatValue <- function(data, dataType,
                                     dataInterval = Config.defaultDataInterval,
-                                    flatInterval = Config.FlatValue.defaultInterval) {
+                                    flatThreshold = Config.FlatValue.defaultThreshold) {
 
   Helper.CheckDataType(dataType)
 
@@ -33,14 +33,19 @@ FlatValue.findFlatValue <- function(data, dataType,
   
   print(data)
   
+  # find consecutive data [i,j) which have same value
   while (i <= len) {
 
     if (is.na(value[i])) {
+      # null cannot be in sequence
       i <- i + 1
     } else {
       j <- i + 1
+
+      # sliding j until out of sequence
       while (j <= len) {
         
+        # null cannot be in sequence
         if (is.na(value[j])) {
           break;
         }
@@ -48,6 +53,7 @@ FlatValue.findFlatValue <- function(data, dataType,
         diffTime <- as.numeric(data$datetime[j] - data$datetime[j-1], units="secs")
 
         if (diffTime != dataInterval | value[j] != value[j-1]) {
+          # j is not consecutive (either temporal or value)
           break;
         } else {
           j <- j + 1
@@ -55,20 +61,24 @@ FlatValue.findFlatValue <- function(data, dataType,
 
       }
       
+      # total time of sequence
       diffTime <- as.numeric((data$datetime[j - 1]) - data$datetime[i], units="secs")
 
-      if(diffTime  >= flatInterval) {
+
+      if(diffTime  >= flatThreshold) {
         # add to list
         startDateTime  <- c(startDateTime, data$datetime[i])
         endDateTime <- c(endDateTime, data$datetime[j-1])
       }
 
+      # find new consecutive sequence
       i <- j
 
     }
 
   }
 
+  # change class to POSIXct
   if (length(startDateTime) > 0 & length(endDateTime) > 0) {
     class(startDateTime) <- "POSIXct"
     class(endDateTime) <- "POSIXct"

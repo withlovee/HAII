@@ -31,4 +31,4 @@ Config.MissingGap.defaultInterval <- 0
 
 # Flat Value Config
 # Config.FlatValue.defaultIntervall <- 3 * 24 * 60 * 60 # 3 days
-Config.FlatValue.defaultInterval <- 10 * 60 # 3 days
+Config.FlatValue.defaultThreshold <- 10 * 60 # 3 days
