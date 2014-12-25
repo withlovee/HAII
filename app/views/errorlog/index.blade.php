@@ -90,6 +90,82 @@ $(document).ready(function() {
 		start_date: '{{ $start_date }}',
 		start_time: '{{ $start_time }}'
 	});
+
+
+	/*----- Update provice, stationcode dropdown -----*/
+
+	var updateProvince = function(basin) {
+		var url = "{{ URL::to('api/telestation/basin/province') }}";
+		var data = {basin: basin};
+
+		var province = [];
+		$.post(url, data).done(function(res){
+			province = res;
+
+			console.log(res);
+			setProvince(province);
+			updateStation(province);
+		});
+
+		
+	}
+
+	var setProvince = function(province) {
+
+		console.log(province);
+
+		dropdown = $('select[name="province"]');
+		dropdown.html("");
+		dropdown.append('<option value="" selected="selected">จังหวัด</option>');
+
+		for(i = 0; i < province.length;i++) {
+			dropdown.append('<option value="'+province[i]+'">'+province[i]+'</option>');
+		}
+
+	}
+
+	var updateStation = function(province) {
+		var url = "{{ URL::to('api/telestation/province/station') }}";
+		var data = {province: province};
+
+		var station = [];
+		$.post(url, data).done(function(res){
+			station = res;
+
+			console.log(res);
+			setStation(station);
+		});
+	}
+
+	var setStation = function(station) {
+		dropdown = $('select[name="code"]');
+		dropdown.html("");
+		dropdown.append('<option value="" selected="selected">รหัสสถานี</option>');
+
+		for(i = 0; i < station.length;i++) {
+			dropdown.append('<option value="'+station[i]+'">'+station[i]+'</option>');
+		}
+	}
+
+	$('select[name="basin"]').change(function(){
+		var basin = this.value;
+		if(!basin) {
+			basin = "all"
+		}
+		updateProvince(basin);
+	});
+
+	$('select[name="province"]').change(function(){
+		var province = this.value;
+		if(!province) {
+			province = "all"
+		}
+		updateStation(province);
+	});
+
+
+
+
 });
 </script>
 @include('data_log/modal')

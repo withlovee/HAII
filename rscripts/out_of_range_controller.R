@@ -47,15 +47,17 @@ OutOfRange.Controller.FindAllOutOfRange <- function (dataType, startDateTime, en
 
 }
 
-OutOfRange.Controller.Batch <- function (dataType, startDateTime, endDateTime) {
+OutOfRange.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE) {
 
   problemType <- "OR"
   outOfRange <- OutOfRange.Controller.FindAllOutOfRange(dataType, startDateTime, endDateTime)
 
-  # update problem
-  print("Adding Problems")
-  # str(outOfRange)
-  Problems.AddProblems(outOfRange, dataType, problemType)
+  if (addToDB) {
+    # update problem
+    print("Adding Problems")
+    # str(outOfRange)
+    Problems.AddProblems(outOfRange, dataType, problemType)
+  }
 
   return(outOfRange)
 

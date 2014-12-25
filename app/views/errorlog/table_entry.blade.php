@@ -3,6 +3,7 @@
 		<tr>
 			<td>{{ $problem->id }}</td>
 			<td>{{ $problem->start_datetime }}</td>
+			<td>{{ $problem->end_datetime }}</td>
 			<td>{{ $problem->code }}</td>
 			<td>
 				<a href="" class="model_btn" data-id="{{ $problem->id }}" data-toggle="modal" data-target="#detail">

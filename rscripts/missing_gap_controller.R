@@ -40,6 +40,21 @@ MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, end
 
 } 
 
+MissingGap.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE) {
+
+  problemType <- "MG"
+  missingGap <- MissingGap.Controller.FindAllMissingGap(dataType, startDateTime, endDateTime)
+
+  if (addToDB) {
+    # update problem
+    print("Adding Problems")
+    # str(outOfRange)
+    Problems.AddProblems(missingGap, dataType, problemType)
+  }
+
+  return(missingGap)
+}
+
 
 MissingGap.Controller.DailyOperation <- function(dataType,
   interval = NULL) {
@@ -60,15 +75,11 @@ MissingGap.Controller.DailyOperation <- function(dataType,
 
   alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentTime)
 
-  missingGap <- MissingGap.Controller.FindAllMissingGap(dataType, startTime, currentTime)
+  missingGap <- MissingGap.Controller.Batch(dataType, startDateTime, currentTime)
 
   # update problem
   problemsStationCode <- unique(missingGap$stationCode)
-
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
-  
-  Problems.AddProblems(missingGap, dataType, problemType)
-
   Problems.SendNewProblemNotification(newStation, dataType, problemType, currentTime)
 
   # send email

@@ -191,12 +191,28 @@ class Problem extends \Eloquent {
 			->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
 			->groupBy('problem_type')
 			->get();
+
+		var_dump($results);
+		var_dump(self::getStartDate('Y-m-d 07:01', -1));
+		var_dump(self::getStartDate('Y-m-d 07:00'));
+
 		$output = array(
 			'RAIN' => array(
 				'OR' => 0,
+				'MG' => 0,
+				'FV' => 0,
+				'OL' => 0,
+				'HM' => 0,
+				'MP' => 0
 			),
 			'WATER' => array(
-				'OR' => 0,)
+				'OR' => 0,
+				'MG' => 0,
+				'FV' => 0,
+				'OL' => 0,
+				'HM' => 0,
+				'MP' => 0
+			)
 		);
 		foreach($results as $type => $r)
 			foreach($r as $result)

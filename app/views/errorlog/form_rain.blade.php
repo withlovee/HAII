@@ -6,7 +6,7 @@
 	<div class="form-group">
 		{{ Form::select('basin', $basins, $params_rain['basin'], array('class' => 'form-control chosen')) }}
 	</div>
-	<div class="form-group">
+	<div class="form-group" style="display:none;">
 		{{ Form::select('part', $parts, $params_rain['part'], array('class' => 'form-control chosen')) }}
 	</div>
 	<div class="form-group">

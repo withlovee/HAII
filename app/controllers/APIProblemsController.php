@@ -32,6 +32,12 @@ class APIProblemsController extends BaseController {
 
 	public function getProblem() {
 		$problem = Problem::find(intval(Input::get('id')));
+
+		//return Response::json($problem);
+
+		// $start_datetime = (new Carbon($problem->start_datetime))->subHour(1);
+		// $end_datetime = (new Carbon($problem->end_datetime))->addHour(1);
+
 		$data_log = DataLog::code($problem->station->code)
 			->from($problem->start_datetime)
 			->to($problem->end_datetime)

@@ -44,6 +44,56 @@ class TeleStation extends \Eloquent {
 		return $output;
 	}
 
+	public static function provincesByBasin($basin) {
+
+		$result = null;
+		if($basin == "all") {
+			$results = DB::table('tele_station')
+				->select('province_name')
+				->orderBy('province_name', 'asc')
+				->groupBy('province_name')
+				->get();
+		} else {
+			$results = DB::table('tele_station')
+				->select('province_name')
+				->where('basin', $basin)
+				->orderBy('province_name', 'asc')
+				->groupBy('province_name')
+				->get();
+		}
+
+		$output = array();
+
+		foreach($results as $result)
+				$output[] = $result->province_name;			
+		return $output;
+	}
+
+		public static function stationCodeByProvince($province) {
+
+		$result = null;
+		if($province == "all") {
+			$results = DB::table('tele_station')
+				->select('code')
+				->orderBy('code', 'asc')
+				->groupBy('code')
+				->get();
+		} else {
+			$results = DB::table('tele_station')
+				->select('code')
+				->where('province_name', $province)
+				->orderBy('code', 'asc')
+				->groupBy('code')
+				->get();
+		}
+
+		$output = array();
+
+		foreach($results as $result)
+				$output[] = $result->code;			
+		return $output;
+	}
+
 	public static function parts($form = false){
 		$results = DB::table('tele_station')
 			->select('part')

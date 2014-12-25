@@ -24,6 +24,9 @@
 			<!-- /.tab-content -->
 		</div>
 		<!-- /.today-report -->
+		<pre>
+			{{{ print_r($stats) }}}
+		</pre>
 		<div class="yesterday-report">
 			<h3>รายงานของวันที่ {{ thai_date(getTime(-1)) }} {{ date('Y', getTime(-1)) }} (เมื่อวาน)</h3>
 			<div class="row">
@@ -37,27 +40,27 @@
 						<!-- /.item -->
 						<div class="item">
 							Flat Value
-							<span class="num">0</span>
+							<span class="num">{{ $stats['WATER']['FV'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">
 							Missing Gap
-							<span class="num">0</span>
+							<span class="num">{{ $stats['WATER']['MG'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">
 							Outlier
-							<span class="num">0</span>
+							<span class="num">{{ $stats['WATER']['OL'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">
 							Homogeneity
-							<span class="num">0</span>
+							<span class="num">{{ $stats['WATER']['HM'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">
 							Missing Pattern
-							<span class="num">0</span>
+							<span class="num">{{ $stats['WATER']['MP'] }}</span>
 						</div>
 						<!-- /.item -->
 					</div>
@@ -74,12 +77,12 @@
 						<!-- /.item -->
 						<div class="item">
 							Flat Value
-							<span class="num">0</span>
+							<span class="num">{{ $stats['RAIN']['FV'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">
 							Missing Gap
-							<span class="num">0</span>
+							<span class="num">{{ $stats['RAIN']['MG'] }}</span>
 						</div>
 						<!-- /.item -->
 					</div>

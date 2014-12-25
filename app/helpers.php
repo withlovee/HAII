@@ -17,11 +17,17 @@ function getTime($offset = 0) {
 	return time()+($offset*24*60*60);
 }
 function getProblemName($name) {
-	switch($name){
-		case 'OR':
-			return 'Out-of-Range';
-		default:
-	}	
+
+	$map = array(
+			'OR' => 'Out of Range',
+			'MG' => 'Missing Gap',
+			'FV' => 'Flat Value',
+			'OL' => 'Outliers',
+			'HM' => 'Inhomogenity',
+			'MP' => 'Missing Pattern'
+		);
+	
+	return $map[$name];
 }
 function getErrorButton($id, $error, $default = '') {
 

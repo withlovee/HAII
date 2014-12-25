@@ -28,8 +28,8 @@ Config.OutOfRange.backwardThreshold <- 3600 * 24 * 30 * 5
 
 # Missing Gap config
 # Config.MissingGap.defaultInterval <- 7 * 24 * 60 * 60    # 7 days
-Config.MissingGap.defaultInterval <- 0
+Config.MissingGap.defaultInterval <- 5 * 60 * 60 # 5 hours
 
 # Flat Value Config
 # Config.FlatValue.defaultIntervall <- 3 * 24 * 60 * 60 # 3 days
-Config.FlatValue.defaultThreshold <- 5 * 60 * 60 # 3 days
+Config.FlatValue.defaultThreshold <- 5 * 60 * 60 # 5 hours
