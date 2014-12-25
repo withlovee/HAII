@@ -27,8 +27,6 @@
 	<input type="hidden" name="data_type" value="RAIN">
 	<input type="hidden" name="marked" value="{{ $status }}">
 	<p></p>
-	<pre>
-	</pre>
 	<div class="form-inline">
 		<div class="form-group">
 			<label for="">เรียงตาม</label>

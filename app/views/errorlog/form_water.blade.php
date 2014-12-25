@@ -25,6 +25,24 @@
 	</div>
 	<input type="hidden" name="data_type" value="WATER">
 	<input type="hidden" name="marked" value="{{ $status }}">
+	<p></p>
+	<div class="form-inline">
+		<div class="form-group">
+			<label for="">เรียงตาม</label>
+			<div class="radio">
+			  <label>
+			  	{{ Form::radio('orderby', 'start_datetime', $params_water['orderby'] == 'start_datetime')}}
+			    <!-- <input type="radio" name="orderby" id="orderbyRadio1" value="datetime"> -->
+			    เวลาที่เกิดปัญหา
+			  </label>
+			  <label>
+			  	{{ Form::radio('orderby', 'station_code', $params_water['orderby'] == 'station_code')}}
+			    <!-- <input type="radio" name="orderby" id="orderbyRadio2" value="stationcode"> -->
+			    รหัสสถานี
+			  </label>
+			</div>
+		</div>
+	</div>
 	@if($selectDate)
 	<p></p>
 	<div class="form-inline">
