@@ -32,7 +32,7 @@
 					<div class="stats">
 						<div class="item">
 							Out-of-Range
-							<span class="num">{{ $stats['WATER']['BD'] }}</span>
+							<span class="num">{{ $stats['WATER']['OR'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">
@@ -69,7 +69,7 @@
 					<div class="stats">
 						<div class="item">
 							Out-of-Range
-							<span class="num">{{ $stats['RAIN']['BD'] }}</span>
+							<span class="num">{{ $stats['RAIN']['OR'] }}</span>
 						</div>
 						<!-- /.item -->
 						<div class="item">

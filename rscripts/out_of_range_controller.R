@@ -47,23 +47,32 @@ OutOfRange.Controller.FindAllOutOfRange <- function (dataType, startDateTime, en
 
 }
 
-OutOfRange.Controller.DailyOperation <- function (dataType) {
+OutOfRange.Controller.Batch <- function (dataType, startDateTime, endDateTime) {
 
   problemType <- "OR"
-
-  currentDateTime <- Sys.time()
-
-  startDateTime <- currentDateTime - Config.OutOfRange.backwardThreshold
-
   outOfRange <- OutOfRange.Controller.FindAllOutOfRange(dataType, startDateTime, endDateTime)
 
   # update problem
-  problemsStationCode <- unique(outOfRange$stationCode)
-
-  newStation <- setdiff(problemsStationCode, alreadySentStationCode)
-  
+  print("Adding Problems")
+  # str(outOfRange)
   Problems.AddProblems(outOfRange, dataType, problemType)
 
+  return(outOfRange)
+
+}
+
+OutOfRange.Controller.DailyOperation <- function (dataType) {
+  problemType <- "OR"
+
+  currentDateTime <- Sys.time()
+  startDateTime <- currentDateTime - Config.OutOfRange.backwardThreshold
+
+  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentTime)
+
+  outOfRange <- OutOfRange.Controller.Batch(dataType, startDateTime, currentTime)
+
+  problemsStationCode <- unique(outOfRange$stationCode)
+  newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   Problems.SendNewProblemNotification(newStation, dataType, problemType, currentTime)
 
   # send email

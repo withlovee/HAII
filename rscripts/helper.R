@@ -41,8 +41,8 @@ Helper.FullProblemNameFromAbbr <- function(abbr) {
     fullName <- "Out of Range"
   } else if (abbr == "FV") {
     fullName <- "Flat Value"
-  } else if (abbr == "MV") {
-    fullName <- "Missing Value"
+  } else if (abbr == "MG") {
+    fullName <- "Missing Gap"
   } else if (abbr == "OL") {
     fullName <- "Outliers"
   } else if (abbr == "HM") {
@@ -54,7 +54,8 @@ Helper.FullProblemNameFromAbbr <- function(abbr) {
   return(fullName)
 }
 
-Helper.MergeConsecutiveDateTime <- function(dateTimeList, dataInterval = Config.defaultDataInterval) {
+Helper.MergeConsecutiveDateTime <- function(dateTimeList, dataInterval = Config.defaultDataInterval,
+                                            consecutiveThreshold = Config.consecutiveProblemGapThreshold) {
 
   l <- length(dateTimeList)
 
@@ -73,12 +74,14 @@ Helper.MergeConsecutiveDateTime <- function(dateTimeList, dataInterval = Config.
   
   if (l >= 2) {
     for (j in 2:l) {
-      if (dateTimeList[j] - dateTimeList[j-1] > dataInterval) {
+      # cat("checking", dateTimeList[j-1], ":", dateTimeList[j], "\n")
+      if (as.numeric(dateTimeList[j] - dateTimeList[j-1], unit="secs") > dataInterval * consecutiveThreshold) {
         # i to j-1 is consecutive
+        # cat("cut\n")
         startDateTime <- c(startDateTime, dateTimeList[i])
         endDateTime <- c(endDateTime, dateTimeList[j-1])
         
-        cat(i, " ", j-1, "\n")
+        # cat(i, " ", j-1, "\n")
         i <- j
       }
     }

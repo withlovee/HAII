@@ -40,20 +40,23 @@ class APIProblemsController extends BaseController {
 			->toArray();
 		$data_log_new = array();
 		foreach($data_log as $item){
-			if($problem->data_type == 'WATER')
+			if($problem->data_type == 'WATER') {
 				$data_log_new[] = [
 					strtotime($item['date'].' '.$item['time']) * 1000,
 					floatval($item['water1'])
 				];
-			else
+			}
+			else {
 				$data_log_new[] = [
 					strtotime($item['date'].' '.$item['time']) * 1000,
-					floatval($item['rain10m']),
+					floatval($item['rain1h']),
 				];
+			}
 		}
 		$output = array(
 			'id' => $problem->id,
 			'data_type' => $problem->data_type,
+			'problem_type' => $problem->problem_type,
 			'start_datetime' => $problem->start_datetime,
 			'start_datetime_unix' => strtotime($problem->start_datetime),
 			'end_datetime' => $problem->end_datetime,
@@ -78,10 +81,12 @@ class APIProblemsController extends BaseController {
 		$status = $problem->status;
 		$html = '';
 		// 'Error' Button
-		$html .= $this->getErrorButton($problem->id, true, $status == 'true', 'btn btn-default');
-		$html .= ' &nbsp; ';
+		$html .= $this->getErrorButton($problem->id, 'true', $status, 'btn btn-default');
+		//$html .= ' &nbsp; ';
 		// 'Not Error' Button
-		$html .= $this->getErrorButton($problem->id, false, $status == 'false', 'btn btn-default');
+		$html .= $this->getErrorButton($problem->id, 'false', $status, 'btn btn-default');
+
+		$html .= $this->getErrorButton($problem->id, 'undefined', $status, 'btn btn-default');
 		return $html;
 		// return Response::json($output);
 	}
@@ -139,20 +144,25 @@ class APIProblemsController extends BaseController {
 	private function getRows($problems) {
 		foreach($problems as $problem){
 			$problem['station_name'] = '<a href="" class="model_btn" data-id="'.$problem['id'].'" data-toggle="modal" data-target="#detail">'.$problem['station_name'].'</a>';
-			$problem['is_error'] = $this->getErrorButton($problem['id'], true, $problem['status'] == 'true');
-			$problem['is_not_error'] = $this->getErrorButton($problem['id'], false, $problem['status'] == 'false');
+			$problem['is_error'] = $this->getErrorButton($problem['id'], 'true', $problem['status'] == 'true');
+			$problem['is_not_error'] = $this->getErrorButton($problem['id'], 'false', $problem['status'] == 'false');
 		}
 		return $problems;
 	}
 
-	private function getErrorButton($id, $is_error, $default = false, $classes) {
+	private function getErrorButton($id, $error, $default = false, $classes) {
+
 		$class = ' '.$classes;
-		if($default)
+		if($error == $default) {
 			$class .= ' active';
-		if($is_error)
-			return '<a href="#" data-error="true" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-ok"></span> <span class="text">Error</span></a>';
+		}
+			
+		if($error == "true")
+			return '<a href="#" data-error="true" data-id="'.$id.'" class="update error'.$class.'"><span class="glyphicon glyphicon-exclamation-sign"></span><!--<span class="text">Error</span></a>-->';
+		else if($error == "false")
+			return '<a href="#" data-error="false" data-id="'.$id.'" class="update noterror'.$class.'"><span class="glyphicon glyphicon-ok-sign"></span><!--<span class="text">Not Error</span></a>-->';
 		else
-			return '<a href="#" data-error="false" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-remove"></span> <span class="text">Not Error</span></a>';
+			return '<a href="#" data-error="undefined" data-id="'.$id.'" class="update undefined'.$class.'"><span class="glyphicon glyphicon-question-sign"></span><!--<span class="text">Undefined</span></a>-->';
 	}
 
 }

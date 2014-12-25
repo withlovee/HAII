@@ -1,9 +1,10 @@
 source('config.R')
 source('helper.R')
+source('datalog2.R')
 source('flat_value.R')
 
 
-FlatValue.Controller.FindFlatValue(stationCode, dataType, startDateTime, endDateTime) <- function () {
+FlatValue.Controller.FindFlatValue <- function (stationCode, dataType, startDateTime, endDateTime) {
 
   cat("Flat Value: ", stationCode , "\n")
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
@@ -12,7 +13,7 @@ FlatValue.Controller.FindFlatValue(stationCode, dataType, startDateTime, endDate
 
 }
 
-FlatValue.Controller.FindAllFlatValue() <- function (dataType, startDateTime, endDateTime) {
+FlatValue.Controller.FindAllFlatValue <- function (dataType, startDateTime, endDateTime) {
 
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
@@ -42,7 +43,7 @@ FlatValue.Controller.FindAllFlatValue() <- function (dataType, startDateTime, en
   return(resultAllStation)
 }
 
-FlatValue.Controller.DailyOperation() <- function (dataType, interval=NULL) {
+FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
 
   currentTime <- Sys.time()
   problemType <- "FV"

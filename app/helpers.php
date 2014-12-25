@@ -18,19 +18,22 @@ function getTime($offset = 0) {
 }
 function getProblemName($name) {
 	switch($name){
-		case 'BD':
+		case 'OR':
 			return 'Out-of-Range';
 		default:
 	}	
 }
-function getErrorButton($id, $is_error, $default = '') {
-	if($default == 'true' && $is_error ||
-		$default == 'false' && !$is_error)
+function getErrorButton($id, $error, $default = '') {
+
+	$class = '';
+	if($error == $default) {
 		$class = ' active';
+	}
+		
+	if($error == "true")
+		return '<a href="#" data-error="true" data-id="'.$id.'" class="update error'.$class.'"><span class="glyphicon glyphicon-exclamation-sign"></span><!--<span class="text">Error</span></a>-->';
+	else if($error == "false")
+		return '<a href="#" data-error="false" data-id="'.$id.'" class="update noterror'.$class.'"><span class="glyphicon glyphicon-ok-sign"></span><!--<span class="text">Not Error</span></a>-->';
 	else
-		$class = '';
-	if($is_error)
-		return '<a href="#" data-error="true" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-ok"></span> <span class="text">Error</span></a>';
-	else
-		return '<a href="#" data-error="false" data-id="'.$id.'" class="update'.$class.'"><span class="glyphicon glyphicon-remove"></span> <span class="text">Not Error</span></a>';
+		return '<a href="#" data-error="undefined" data-id="'.$id.'" class="update undefined'.$class.'"><span class="glyphicon glyphicon-question-sign"><!--</span> <span class="text">Undefined</span></a>-->';
 }

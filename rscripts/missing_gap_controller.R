@@ -45,7 +45,7 @@ MissingGap.Controller.DailyOperation <- function(dataType,
   interval = NULL) {
 
   currentTime <- Sys.time()
-  problemType <- "MV"
+  problemType <- "MG"
 
   # set default interval
   if (is.null(interval)) {

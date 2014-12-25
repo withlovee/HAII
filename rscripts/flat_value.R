@@ -1,7 +1,7 @@
 source('config.R')
 source('helper.R')
 
-FlatValue.findFlatValue <- function(data, dataType,
+FlatValue.FindFlatValue <- function(data, dataType,
                                     dataInterval = Config.defaultDataInterval,
                                     flatThreshold = Config.FlatValue.defaultThreshold) {
 
@@ -28,10 +28,10 @@ FlatValue.findFlatValue <- function(data, dataType,
 
   startDateTime <- c()
   endDateTime <- c()
+  v <- c()
+  n <- c()
 
   i <- 1
-  
-  print(data)
   
   # find consecutive data [i,j) which have same value
   while (i <= len) {
@@ -62,13 +62,12 @@ FlatValue.findFlatValue <- function(data, dataType,
       }
       
       # total time of sequence
-      diffTime <- as.numeric((data$datetime[j - 1]) - data$datetime[i], units="secs")
-
-
-      if(diffTime  >= flatThreshold) {
-        # add to list
+      flatDiffTime <- as.numeric((data$datetime[j - 1]) - data$datetime[i], units="secs")
+      if(flatDiffTime  >= flatThreshold) {
         startDateTime  <- c(startDateTime, data$datetime[i])
         endDateTime <- c(endDateTime, data$datetime[j-1])
+        v <- c(v, value[i])
+        n <- c(n, flatDiffTime)
       }
 
       # find new consecutive sequence
@@ -85,6 +84,5 @@ FlatValue.findFlatValue <- function(data, dataType,
   }
 
   # return data frame
-  return(data.frame(startDateTime=startDateTime, endDateTime=endDateTime))
-
+  return(data.frame(startDateTime=startDateTime, endDateTime=endDateTime, v=v, n=n, hr=n/3600))
 }

@@ -32,6 +32,8 @@ Route::get('api/problems/get_map', 'APIProblemsController@getMap')->before('auth
 Route::get('api/problems/get_buttons', 'APIProblemsController@getButtons')->before('auth');
 Route::get('api/problems/render_station_info', 'APIProblemsController@renderStationInfo')->before('auth');
 
+Route::get('api/telestation/wldetail', 'APITeleStationController@waterLevelDetail')->before('auth');
+
 Route::post('api/email/send_alert/{type}', 'APIEmailController@sendAlert');
 
 // Route::get('/', function()

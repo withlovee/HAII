@@ -63,7 +63,7 @@ class Problem extends \Eloquent {
 		else return $query;
 	}
 
-	static function recentByBasin($data_type, $problem_type = 'BD') {
+	static function recentByBasin($data_type, $problem_type = 'OR') {
 		/*-- Query latest problems with tele_station information --*/
 		$problems = self::dataType($data_type)
 			->problem($problem_type)
@@ -113,8 +113,17 @@ class Problem extends \Eloquent {
 			'start_time' => '',
 			'end_date' => '',
 			'end_time' => '',
+			'orderby' => 'start_datetime'
 		);
 		$params = array_merge($defaults, $params);
+
+		$orderby_order = array(
+				'start_datetime' => 'desc',
+				'station_code' => 'asc'
+			);
+
+		$order = $params['orderby'];
+
 		$problems = self::dataType($params['data_type'])
 			->basin($params['basin'])
 			->province($params['province'])
@@ -124,7 +133,7 @@ class Problem extends \Eloquent {
 			->marked($params['marked'])
 			->startDatetime(self::renderDate($params['start_date'], $params['start_time']))
 			->endDatetime(self::renderDate($params['end_date'], $params['end_time']))
-			->orderBy('start_datetime', 'desc')
+			->orderBy($order, $orderby_order[$order])
 			->orderBy('id', 'desc')
 			->paginate(25);
 			// ->get();
@@ -143,11 +152,28 @@ class Problem extends \Eloquent {
 	}
 
 	static function getTypeName($name){
+
+		$nameMap = array(
+				'OR' => 'Out of Range',
+				'FV' => 'Flat Value',
+				'MG' => 'Missing Gap',
+				'OL' => 'Outliers',
+				'HM' => 'Inhomogenity',
+				'MP' => 'Missing Pattern'
+			);
+
+		return $nameMap[$name];
+
+		/*
 		switch($name){
-			case 'BD':
+			case 'OR':
 				return 'Out-of-Range';
+			case 'MG':
+				return 'Missing Gap';
+			case 'FV':
+				return
 			default:
-		}
+		} */
 	}
 
 	static function yesterdayStat(){
@@ -167,10 +193,10 @@ class Problem extends \Eloquent {
 			->get();
 		$output = array(
 			'RAIN' => array(
-				'BD' => 0,
+				'OR' => 0,
 			),
 			'WATER' => array(
-				'BD' => 0,)
+				'OR' => 0,)
 		);
 		foreach($results as $type => $r)
 			foreach($r as $result)

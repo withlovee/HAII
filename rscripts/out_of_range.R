@@ -30,8 +30,13 @@ OutOfRange.RainLevel <- function (rainLevel,
   if (is.na(rainLevel)) {
     return(FALSE)
   }
+
+  if (rainLevel == 999999) {
+    return(FALSE)
+  }
   
   # cat(rainLevel, " " , threshold, " " , rainLevel > threshold, " ", rainLevel < 0 | rainLevel > threshold, "\n")
+  # print(rainLevel)
   return(rainLevel < 0 | rainLevel > threshold)
 }
 
@@ -57,7 +62,7 @@ OutOfRange.FindOutOfRange <- function(data, dataType) {
   
   # print(problemIdx)
   # print(problemIdx)
-  print(problemData)
+  # print(problemData)
   
 
   result <- Helper.MergeConsecutiveDateTime(problemData$datetime)

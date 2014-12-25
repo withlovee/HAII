@@ -14,7 +14,7 @@
 	<div class="form-group">
 		{{ Form::select('problem_type', array(
 			'' => 'ปัญหาทุกประเภท',
-			'BD' => 'Out-of-Range (BD)',
+			'OR' => 'Out-of-Range (OR)',
 			'FV' => 'Flat Value (FV)',
 			'MG' => 'Missing Gap (MG)',
 			'OL' => 'Outlier (OL)',

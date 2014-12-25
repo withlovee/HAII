@@ -98,7 +98,14 @@
 	border-radius: @v;
 }
 @w: 30px;
-@green: #2ebd9e;
+@green: #4CAF50;
+@red: #F44336;
+@cyan: #2196F3;
+
+@lightgreen: #81C784;
+@lightred: #E57373;
+@lightcyan: #64B5F6;
+
 body{
 	font-size: 100%;
 	.opensans;
@@ -253,13 +260,36 @@ a:hover{
 	}
 }
 .update{
-	color: #555;
+	color: #777;
+	font-size: 2em;
 	&:hover{
-		color: @green;
+		color: @lightgreen;
+
+		&.error{
+			color: @lightred;
+		}
+		&.noterror {
+			color: @lightgreen;
+		}
+		&.undefined {
+			color: @lightcyan
+		}
+
 	}
 	&.active{
 		color: @green;
 		font-weight: bold;
+
+		&.error{
+			color: @red;
+		}
+		&.noterror {
+			color: @green;
+		}
+		&.undefined {
+			color: @cyan
+		}
+
 	}
 }
 .noti-done{

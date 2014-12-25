@@ -18,14 +18,34 @@
 	<div class="form-group">
 		{{ Form::select('problem_type', array(
 			'' => 'ปัญหาทุกประเภท',
-			'BD' => 'Out-of-Range (BD)',
+			'OR' => 'Out-of-Range (OR)',
 			'FV' => 'Flat Value (FV)',
 			'MG' => 'Missing Gap (MG)'
 			), $params_rain['problem_type'], array('class' => 'form-control chosen'))
 		}}
-	</div>
+	</div>	
 	<input type="hidden" name="data_type" value="RAIN">
 	<input type="hidden" name="marked" value="{{ $status }}">
+	<p></p>
+	<pre>
+	</pre>
+	<div class="form-inline">
+		<div class="form-group">
+			<label for="">เรียงตาม</label>
+			<div class="radio">
+			  <label>
+			  	{{ Form::radio('orderby', 'start_datetime', $params_rain['orderby'] == 'start_datetime')}}
+			    <!-- <input type="radio" name="orderby" id="orderbyRadio1" value="datetime"> -->
+			    เวลาที่เกิดปัญหา
+			  </label>
+			  <label>
+			  	{{ Form::radio('orderby', 'station_code', $params_rain['orderby'] == 'station_code')}}
+			    <!-- <input type="radio" name="orderby" id="orderbyRadio2" value="stationcode"> -->
+			    รหัสสถานี
+			  </label>
+			</div>
+		</div>
+	</div>
 	@if($selectDate)
 	<p></p>
 	<div class="form-inline">

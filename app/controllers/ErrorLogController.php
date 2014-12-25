@@ -14,6 +14,7 @@ class ErrorLogController extends BaseController {
 		'start_time' => '',
 		'end_date' => '',
 		'end_time' => '',
+		'orderby' => 'start_datetime',
 	);
 
 	public function index($status, $data_type) {

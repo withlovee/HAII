@@ -11,7 +11,7 @@ class DataLog extends \Eloquent {
 
 	public function scopeValid($query, $type){
 		if($type == 'WATER') return $query->whereNotNull('water1');
-		elseif($type == 'RAIN') return $query->whereNotNull('rain10m');
+		elseif($type == 'RAIN') return $query->whereNotNull('rain1h');
 		return $query;
 	}
 

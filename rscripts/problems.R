@@ -136,12 +136,19 @@ Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTim
 Problems.AddProblems <- function(problems, dataType, problemType) {
   newStationCode <- c()
 
+  if(is.null(problems)) {
+    return(NULL)
+  }
+  if(nrow(problems) <= 0 ) {
+    return(NULL)
+  }
+  
   for (i in 1:nrow(problems)) {
     p <- problems[i,]
 
-    cat("Problems: Adding ")
-    str(p)
-    cat("\n")
+    #cat("Problems: Adding ")
+    #str(p)
+    #cat("\n")
 
     isNewProblem <- Problems.AddProblem(p$stationCode, dataType, problemType, p$startDateTime, p$endDateTime)
 

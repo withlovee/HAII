@@ -6,6 +6,7 @@ Config.databasePassword <- "postgres"
 
 # Data setup
 Config.defaultDataInterval <- 600     # 10 minutes
+Config.consecutiveProblemGapThreshold <- 6 # 1 hr
 Config.allowDataType <- c("WATER", "RAIN")
 
 # Email setup
@@ -31,4 +32,4 @@ Config.MissingGap.defaultInterval <- 0
 
 # Flat Value Config
 # Config.FlatValue.defaultIntervall <- 3 * 24 * 60 * 60 # 3 days
-Config.FlatValue.defaultThreshold <- 10 * 60 # 3 days
+Config.FlatValue.defaultThreshold <- 5 * 60 * 60 # 3 days
