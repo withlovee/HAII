@@ -10,8 +10,7 @@ Config.consecutiveProblemGapThreshold <- 6 # 1 hr
 Config.allowDataType <- c("WATER", "RAIN")
 
 # Email setup
-# Config.Email.baseURL <- "http://qc.haii.or.th/HAII/public/index.php"
-Config.Email.baseURL <- "http://localhost/HAII/public/index.php"
+Config.Email.baseURL <- "http://qc.haii.or.th/HAII/public/index.php"
 Config.Email.basePath <- "/api/email/send_alert/instantly"
 Config.Email.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath)
 Config.Email.useEmailNotification <- FALSE

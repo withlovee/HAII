@@ -69,13 +69,13 @@ OutOfRange.Controller.DailyOperation <- function (dataType) {
   currentDateTime <- Sys.time()
   startDateTime <- currentDateTime - Config.OutOfRange.backwardThreshold
 
-  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentTime)
+  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
 
-  outOfRange <- OutOfRange.Controller.Batch(dataType, startDateTime, currentTime)
+  outOfRange <- OutOfRange.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   problemsStationCode <- unique(outOfRange$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
-  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentTime)
+  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
 
   # send email
   return(outOfRange)

@@ -59,7 +59,7 @@ MissingGap.Controller.Batch <- function (dataType, startDateTime, endDateTime, a
 MissingGap.Controller.DailyOperation <- function(dataType,
   interval = NULL) {
 
-  currentTime <- Sys.time()
+  currentDateTime <- Sys.time()
   problemType <- "MG"
 
   # set default interval
@@ -71,17 +71,19 @@ MissingGap.Controller.DailyOperation <- function(dataType,
     }
   }
 
-  startTime = currentTime - interval
+  startDateTime = currentDateTime - interval
 
-  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentTime)
+  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
 
-  missingGap <- MissingGap.Controller.Batch(dataType, startDateTime, currentTime)
+  missingGap <- MissingGap.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   # update problem
+  # send email
+
   problemsStationCode <- unique(missingGap$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
-  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentTime)
+  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
 
-  # send email
+  
   return(missingGap)
 }

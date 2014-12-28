@@ -192,10 +192,6 @@ class Problem extends \Eloquent {
 			->groupBy('problem_type')
 			->get();
 
-		var_dump($results);
-		var_dump(self::getStartDate('Y-m-d 07:01', -1));
-		var_dump(self::getStartDate('Y-m-d 07:00'));
-
 		$output = array(
 			'RAIN' => array(
 				'OR' => 0,

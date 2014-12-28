@@ -35,6 +35,7 @@ class APIEmailController extends BaseController {
 			]
 		}
 		*/
+		//return Response::json(Input::all());
 		$data = Input::all();
 		if($type != 'instantly' && $type != 'daily' && $type != 'monthly')
 			return Response::json(['error' => 'incorrect type'], 400);

@@ -26,7 +26,8 @@ Route::get('dailyop/{status}/{data_type}', 'DailyOpController@index')->before('a
 
 Route::get('api/problems/all', 'APIProblemsController@all')->before('auth');
 Route::get('api/problems/get', 'APIProblemsController@get')->before('auth');
-Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('auth');
+// Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('auth');
+Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('admin-auth');
 Route::get('api/problems/get_problem', 'APIProblemsController@getProblem')->before('auth');
 Route::get('api/problems/get_map', 'APIProblemsController@getMap')->before('auth');
 Route::get('api/problems/get_buttons', 'APIProblemsController@getButtons')->before('auth');

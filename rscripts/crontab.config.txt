@@ -1,0 +1,4 @@
+==== example crontab config ====
+
+
+*/10 * * * * Rscript /Applications/XAMPP/xamppfiles/htdocs/HAII/rscripts/app.R exec_daily_water_out_of_range.R >> /Users/nuttt/crontest/shlog.txt 2>&1

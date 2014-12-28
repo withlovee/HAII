@@ -24,9 +24,7 @@
 			<!-- /.tab-content -->
 		</div>
 		<!-- /.today-report -->
-		<pre>
-			{{{ print_r($stats) }}}
-		</pre>
+
 		<div class="yesterday-report">
 			<h3>รายงานของวันที่ {{ thai_date(getTime(-1)) }} {{ date('Y', getTime(-1)) }} (เมื่อวาน)</h3>
 			<div class="row">
@@ -75,14 +73,17 @@
 							<span class="num">{{ $stats['RAIN']['OR'] }}</span>
 						</div>
 						<!-- /.item -->
-						<div class="item">
-							Flat Value
-							<span class="num">{{ $stats['RAIN']['FV'] }}</span>
-						</div>
-						<!-- /.item -->
+						<div class="item"></div>
 						<div class="item">
 							Missing Gap
 							<span class="num">{{ $stats['RAIN']['MG'] }}</span>
+						</div>
+						<!-- /.item -->
+						<div class="item"></div>
+						<div class="item"></div>
+						<div class="item">
+							Missing Pattern
+							<span class="num">{{ $stats['RAIN']['MP'] }}</span>
 						</div>
 						<!-- /.item -->
 					</div>

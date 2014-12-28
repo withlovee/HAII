@@ -12,9 +12,10 @@
 			</td>
 			<td>{{ getProblemName($problem->problem_type) }}</td>
 			<td>{{ $problem->num }}</td>
-			<td>{{ getErrorButton($problem->id, 'true', $problem->status) }}</td>
-			<td>{{ getErrorButton($problem->id, 'false', $problem->status) }}</td>
-			<td>{{ getErrorButton($problem->id, 'undefined', $problem->status) }}</td>
-			<td></td>
+			@if( isAdmin() )
+				<td>{{ getErrorButton($problem->id, 'true', $problem->status) }}</td>
+				<td>{{ getErrorButton($problem->id, 'false', $problem->status) }}</td>
+				<td>{{ getErrorButton($problem->id, 'undefined', $problem->status) }}</td>
+			@endif
 		</tr>
 	<?php endforeach; ?>

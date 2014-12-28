@@ -401,13 +401,36 @@ a:hover{
 		}
 	}
 	td:nth-child(4) a{
-		color: #555;
-		&.active{
-			color: #2ebd9e;
+		color: #777;
+	font-size: 2em;
+	&:hover{
+		color: @lightgreen;
+		&.error{
+			color: @lightred;
 		}
-		&:hover{
+		&.noterror {
+			color: @lightgreen;
+		}
+		&.undefined {
+			color: @lightcyan
+		}
+
+	}
+	&.active{
+		color: @green;
+		font-weight: bold;
+
+		&.error{
+			color: @red;
+		}
+		&.noterror {
 			color: @green;
 		}
+		&.undefined {
+			color: @cyan
+		}
+
+	}
 	}	
 }
 .yesterday-report{

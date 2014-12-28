@@ -2,6 +2,7 @@ source('config.R')
 source('helper.R')
 source('datalog2.R')
 source('flat_value.R')
+source('problems.R')
 
 
 FlatValue.Controller.FindFlatValue <- function (stationCode, dataType, startDateTime, endDateTime) {
@@ -46,7 +47,7 @@ FlatValue.Controller.FindAllFlatValue <- function (dataType, startDateTime, endD
 FlatValue.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB=TRUE) {
 
   problemType <- "FV"
-  flatValue <- FlatValue.Controller.FindAllFlatValue(dataType, startDateTieme, endDateTime)
+  flatValue <- FlatValue.Controller.FindAllFlatValue(dataType, startDateTime, endDateTime)
 
   if (addToDB) {
     print("Adding Problems")
@@ -59,7 +60,7 @@ FlatValue.Controller.Batch <- function (dataType, startDateTime, endDateTime, ad
 
 FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
 
-  currentTime <- Sys.time()
+  currentDateTime <- Sys.time()
   problemType <- "FV"
 
   # set default interval
@@ -71,14 +72,16 @@ FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
     }
   }
 
-  startDateTime = currentTime - interval
+  startDateTime = currentDateTime - interval
 
-  flatValue <- FlatValue.Controller.Batch(dataType, startDateTime, currentTime)
+  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
+
+  flatValue <- FlatValue.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   # update problem
   problemsStationCode <- unique(flatValue$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
-  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentTime)
+  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
 
   # send email
   return(flatValue)

@@ -28,7 +28,7 @@ Helper.MergeDateTime <- function(startDateTimeList, endDateTimeList) {
 }
 
 Helper.CountDataNum <- function(startDateTime, endDateTime, dataInterval = Config.defaultDataInterval) {
-  diff <- as.numeric(endDateTime - startDateTime)
+  diff <- as.numeric(endDateTime - startDateTime, units="secs")
   num <- round(diff / Config.defaultDataInterval) + 1
 
   return(num)
@@ -36,6 +36,8 @@ Helper.CountDataNum <- function(startDateTime, endDateTime, dataInterval = Confi
 
 
 Helper.FullProblemNameFromAbbr <- function(abbr) {
+  
+  fullName <- ""
   
   if (abbr == "OR") {
     fullName <- "Out of Range"

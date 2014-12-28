@@ -24,8 +24,15 @@
 							<td>{{ $problem['end_time'] }}</td>
 							<td>{{ $problem['num'] }}</td>
 							<td>
+								@if( isAdmin() )
+									{{ getErrorButton($problem['id'], 'true', $problem['status']) }}
+									{{ getErrorButton($problem['id'], 'false', $problem['status']) }}
+									{{ getErrorButton($problem['id'], 'undefined', $problem['status']) }}
+								@endif
+								<!-- 
 								<a href="#" data-error="true" data-id="{{ $problem['id'] }}" class="update"><span class="glyphicon glyphicon-ok"></span></a>
 								<a href="#" data-error="false" data-id="{{ $problem['id'] }}" class="update"><span class="glyphicon glyphicon-remove"></span></a>
+								-->
 							</td>
 						</tr>
 						@endforeach

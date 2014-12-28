@@ -43,3 +43,7 @@ function getErrorButton($id, $error, $default = '') {
 	else
 		return '<a href="#" data-error="undefined" data-id="'.$id.'" class="update undefined'.$class.'"><span class="glyphicon glyphicon-question-sign"><!--</span> <span class="text">Undefined</span></a>-->';
 }
+
+function isAdmin() {
+	return Auth::user()->role == 'Admin';
+}
