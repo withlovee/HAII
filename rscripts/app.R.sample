@@ -16,4 +16,10 @@ appArgs <- commandArgs(trailingOnly = TRUE)
 
 args <- appArgs[-1]
 
+cat(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+cat("App.R: Executing ", appArgs[-1], " start at ", Sys.time(), "\n")
+
 source(appArgs[1])
+
+cat("App.R: Executing ", appArgs[-1], " finished at ", Sys.time(), "\n")
+cat("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
