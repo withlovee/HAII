@@ -17,9 +17,13 @@ appArgs <- commandArgs(trailingOnly = TRUE)
 args <- appArgs[-1]
 
 cat(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
-cat("App.R: Executing ", appArgs[-1], " start at ", Sys.time(), "\n")
+
+App.StartExecTime <- Sys.time()
+cat("App.R: Executing ", appArgs[-1], " start at ", App.StartExecTime, "\n")
 
 source(appArgs[1])
 
-cat("App.R: Executing ", appArgs[-1], " finished at ", Sys.time(), "\n")
+App.EndExecTime <- Sys.time()
+cat("App.R: Executing ", appArgs[-1], " finished at ", App.EndExecTime, "\n")
+cat("App.R: Time Executed: ", as.numeric(App.EndExecTime - App.StartExecTime, unit="secs") , " secs\n")
 cat("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
