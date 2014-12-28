@@ -37,7 +37,7 @@ class DataLog extends \Eloquent {
 			return $query->whereRaw("
 				(date < DATE '$date'
 				OR
-				date = DATE '$date' AND time < TIME '$time')
+				date = DATE '$date' AND time <= TIME '$time')
 			");
 		}
 		return $query;

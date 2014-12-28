@@ -24,6 +24,7 @@
 			str += '<strong>'+data.full_name+'</strong><br>';
 			str += 'ลุ่มน้ำ: '+data.basin+'<br>';
 			str += 'จำนวนปัญหา: '+data.num+'<br>';
+			str += 'ปัญหาที่เกิด: '+data.problem_type+'<br>';
 			str += '</div>';
 			return str;
 		}

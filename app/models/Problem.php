@@ -25,7 +25,7 @@ class Problem extends \Eloquent {
 	public function scopeMap($query){
 		$attrs = ['code', 'name', 'lat', 'lng', 'tambon_name', 'amphoe_name', 'province_name', 'part', 'basin'];
 		$query->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
-			->selectRaw(implode(", ",$attrs).', sum(num) as num')
+			->selectRaw('array_agg(problem_type) as problem_type,'.implode(", ",$attrs).', sum(num) as num')
 			->groupBy($attrs);
 		return $query;
 	}
@@ -96,6 +96,8 @@ class Problem extends \Eloquent {
 			unset($problems[$i]['amphoe_name']);
 			unset($problems[$i]['province_name']);
 			unset($problems[$i]['name']);
+
+			$problems[$i]['problem_type'] = array_values(array_unique(explode(',' , substr($problem['problem_type'], 1, -1))));
 		}
 		return $problems;
 	}
