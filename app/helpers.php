@@ -27,7 +27,8 @@ function getProblemName($name) {
 			'MP' => 'Missing Pattern'
 		);
 	
-	return $map[$name];
+	if(isset($map[$name])) return $map[$name];
+	else return "";
 }
 function getErrorButton($id, $error, $default = '') {
 
