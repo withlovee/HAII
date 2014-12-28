@@ -5,7 +5,7 @@ source('config.R')
 source('helper.R')
 
 
-Email.sendMailNotification <- function(dataType, problemType, dateTime, problemStation,
+Email.sendMailNotification <- function(dataType, problemType, dateTime, problemStation, mailType="instantly",
                                         sendEmail=TRUE, returnJson=FALSE,key=Config.Email.APIKey) {
   cat("Email: Generating Email\n")
   str(problemStation)
@@ -36,10 +36,22 @@ Email.sendMailNotification <- function(dataType, problemType, dateTime, problemS
   
   # json <- as.character(toJSON(body))
 
+  url <- ""
+
+  if(mailType == "instantly") {
+    url <- Config.Email.Instantly.fullURL  
+  } else if(mailType == "daily") {
+    url <- Config.Email.Daily.fullURL  
+  } else if(mailType == "monthly") {
+    url <- Config.Email.Monthly.fullURL
+  }
+
+  
+
   emailResult <- NA
   if(Config.Email.useEmailNotification & sendEmail){
     cat("Sending email...\n")
-    emailResult <- POST(Config.Email.fullURL, body = body, encode = "json")
+    emailResult <- POST(url, body = body, encode = "json")
   }
   
   if(returnJson) {

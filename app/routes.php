@@ -39,6 +39,8 @@ Route::post('api/telestation/province/station', 'APITeleStationController@statio
 
 Route::post('api/email/send_alert/{type}', 'APIEmailController@sendAlert');
 
+Route::get('api/email/send_report/daily', 'DailyReportController@generateDailyReport');
+
 // Route::get('/', function()
 // {
 // 	return View::make('hello');

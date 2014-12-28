@@ -178,6 +178,67 @@ class Problem extends \Eloquent {
 		} */
 	}
 
+	static function yesterdayReport() {
+		$result_rain = DB::table('problems')
+			->select(array('station_code', 'problem_type'))
+			->where('data_type', '=', 'RAIN')
+			->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+			->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+			->get();
+
+		$result_water = DB::table('problems')
+			->select(array('station_code', 'problem_type'))
+			->where('data_type', '=', 'WATER')
+			->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+			->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+			->get();
+
+		$report_water = array(
+				'OR' => array(
+						'name' => getProblemName('OR'),
+						'stations' => array()
+					),
+				'MG' => array(
+						'name' => getProblemName('MG'),
+						'stations' => array()
+					),
+				'FV' => array(
+						'name' => getProblemName('FV'),
+						'stations' => array()
+					),
+			);
+
+		$report_rain = array(
+				'OR' => array(
+						'name' => getProblemName('OR'),
+						'stations' => array()
+					),
+				'MG' => array(
+						'name' => getProblemName('MG'),
+						'stations' => array()
+					),
+				'FV' => array(
+						'name' => getProblemName('FV'),
+						'stations' => array()
+					),
+			);
+
+		foreach ($result_rain as $r) {
+			if(isset($report_rain[$r->problem_type])) {
+				$report_rain[$r->problem_type]['stations'] []= $r->station_code;
+			}
+		}
+
+		foreach ($result_water as $w) {
+			if(isset($report_water[$w->problem_type])) {
+				$report_water[$w->problem_type]['stations'] []= $w->station_code;
+			}
+		}
+
+		return array("rain" => $report_rain, "water" => $report_water);
+
+	}
+
 	static function yesterdayStat(){
 		$results['RAIN'] = DB::table('problems')
 			->select(DB::raw('problem_type, count(*)'))

@@ -52,7 +52,7 @@ Problems.SendNewProblemNotification <- function(stationCode, dataType, problemTy
 
   # stationCode <- Problems.GetNewProblemStationCodeList(problems, dataType, problemType, dateTime)
 
-  Email.sendMailNotification(dataType, problemType, dateTime, stationCode)
+  Email.sendMailNotification(dataType, problemType, dateTime, stationCode, "instantly")
 
 }
 

@@ -37,6 +37,10 @@ class APIEmailController extends BaseController {
 		*/
 		//return Response::json(Input::all());
 		$data = Input::all();
+		return APIEmailController::sendEmail($data, $type);
+	}
+
+	public static function sendEmail($data, $type) {
 		if($type != 'instantly' && $type != 'daily' && $type != 'monthly')
 			return Response::json(['error' => 'incorrect type'], 400);
 		if($data['key'] != 'HAIIEMAILKEY')
@@ -44,7 +48,7 @@ class APIEmailController extends BaseController {
 
 		$users = User::where('report_'.$type, '=', true)->get()->toArray();
 		foreach($users as $user){
-			Mail::queue('emails.alert', $data, function($message) use ($data, $user) {
+			Mail::queue('emails.'.$type, $data, function($message) use ($data, $user) {
 				$message->to($user['email'], $user['username']);
 				$message->subject('[QC.HAII] '.$data['num'].' Problem(s) Detected at '.$data['date']);
 			});
