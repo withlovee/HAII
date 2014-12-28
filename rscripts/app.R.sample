@@ -19,11 +19,11 @@ args <- appArgs[-1]
 cat(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
 
 App.StartExecTime <- Sys.time()
-cat("App.R: Executing ", appArgs[-1], " start at ", App.StartExecTime, "\n")
+cat("App.R: Executing ", appArgs[-1], " start at ", strftime(App.StartExecTime, "%Y-%m-%d %H:%M:%S"), "\n")
 
 source(appArgs[1])
 
 App.EndExecTime <- Sys.time()
-cat("App.R: Executing ", appArgs[-1], " finished at ", App.EndExecTime, "\n")
+cat("App.R: Executing ", appArgs[-1], " finished at ", strftime(App.EndExecTime, "%Y-%m-%d %H:%M:%S"), "\n")
 cat("App.R: Time Executed: ", as.numeric(App.EndExecTime - App.StartExecTime, unit="secs") , " secs\n")
 cat("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
