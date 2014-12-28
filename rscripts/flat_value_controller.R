@@ -20,7 +20,7 @@ FlatValue.Controller.FindAllFlatValue <- function (dataType, startDateTime, endD
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList()
+  stations <- DataLog.GetStationCodeList(dataType)
 
   for (station in stations) {
 

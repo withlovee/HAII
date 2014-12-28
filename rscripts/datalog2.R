@@ -100,7 +100,7 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
 
 }
 
-DataLog.GetStationCodeList <- function (verbose = FALSE) {
+DataLog.GetStationCodeList <- function (dataType, verbose = FALSE) {
   # Get list of code of all telemetering station.
   #
   # Returns:
@@ -111,7 +111,14 @@ DataLog.GetStationCodeList <- function (verbose = FALSE) {
     cat("Getting station list\n")
   }
 
-  queryString <- "SELECT tele_wl_detail.code FROM tele_wl_detail"
+  queryString <- ""
+
+  if(dataType == "WATER") {
+    queryString <- "SELECT tele_wl_detail.code FROM tele_wl_detail"
+  } else if(dataType == "RAIN") {
+    queryString <- "SELECT tele_station.code FROM tele_station"
+  }
+
   dbConnection <- DBConnection.OpenDBConnection(verbose=verbose)
   data <- dbGetQuery(dbConnection, queryString)
   DBConnection.CloseDBConnection(dbConnection, verbose=verbose)

@@ -22,7 +22,7 @@ OutOfRange.Controller.FindAllOutOfRange <- function (dataType, startDateTime, en
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList()
+  stations <- DataLog.GetStationCodeList(dataType)
 
   for (station in stations) {
 

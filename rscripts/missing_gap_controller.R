@@ -18,7 +18,7 @@ MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, end
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList()
+  stations <- DataLog.GetStationCodeList(dataType)
 
   for (station in stations) {
 
