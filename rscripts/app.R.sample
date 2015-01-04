@@ -8,7 +8,7 @@ path <- '/Applications/XAMPP/xamppfiles/htdocs/HAII/rscripts'
 
 ###########################[ End Configuration ]###########################
 
-
+library('methods')
 
 setwd(path)
 
