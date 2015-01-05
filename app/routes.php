@@ -13,6 +13,9 @@
 
 Route::get('/', 'HomeController@index')->before('auth');
 
+Route::get('/test', 'TestController@test');
+Route::get('/test2', 'TestController@test2');
+
 Route::get('errorlog', function(){
 	return Redirect::to('errorlog/unmarked/water');
 })->before('auth');

@@ -12,71 +12,39 @@ class APIProblemsController extends BaseController {
 	
 	public function updateStatus() {
 		$problem = Problem::find(intval(Input::get('id')));
+		
 		$problem->status = Input::get('status');
 		$res = $problem->save();
+
+		Log::info(print_r($res, true));
+
 		if($res) {
 
+			Log::info("res true");
+
 			if ($problem->status == "true") {
-				$this->setErrorToNull($problem);
+				DataLog::setValToNull($problem);
+				// $this->setErrorToNull($problem);
 			} else if ($problem->status == "false" || $problem->status == "undefined") {
-				$this->setErrorToOrigin($problem);
+				DataLog::restoreVal($problem);
+				// $this->setErrorToOrigin($problem);
 			}
 
 			return Response::json(['success' => $res]);
 		}
-		else
+		else {
+			Log::info("res false");
 			return Response::make([], 400);
+		}
 	}
 
-
+	// TODO HERE!
 	private function setErrorToNull($problem) {
-		$data_log = DataLog::code($problem->station->code)
-			->from($problem->start_datetime)
-			->to($problem->end_datetime)
-			->valid($problem->data_type)
-			->get();
-
-		if($problem->data_type == "WATER") {
-			foreach ($data_log as $item) {
-				if(is_null($item->origin_water1)) {
-					$item->origin_water1 = $item->water1;
-				}
-				$item->water1 = NULL;
-				$item->save();
-			}
-		} else {
-			foreach ($data_log as $item) {
-				if(is_null($item->origin_rain1h)) {
-					$item->origin_rain1h = $item->rain1h;
-				}
-				$item->rain1h = NULL;
-				$item->save();
-			}
-		}
+		
 	}
 
 	private function setErrorToOrigin($problem) {
-		$data_log = DataLog::code($problem->station->code)
-			->from($problem->start_datetime)
-			->to($problem->end_datetime)
-			->valid($problem->data_type)
-			->get();
-
-		if($problem->data_type == "WATER") {
-			foreach ($data_log as $item) {
-				if(!is_null($item->origin_water1)) {
-					$item->water1 = $item->origin_water1;
-				}
-				$item->save();
-			}
-		} else {
-			foreach ($data_log as $item) {
-				if(!is_null($item->origin_rain1h)) {
-					$item->rain1h = $item->origin_rain1h;
-				}
-				$item->save();
-			}
-		}
+		
 	}
 
 	public function renderStationInfo() {

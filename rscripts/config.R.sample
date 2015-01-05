@@ -6,7 +6,7 @@ Config.databasePassword <- "postgres"
 
 # Data setup
 Config.defaultDataInterval <- 600     # 10 minutes
-Config.consecutiveProblemGapThreshold <- 6 # 1 hr
+Config.consecutiveProblemGapThreshold <- 1 # 1 hr
 Config.allowDataType <- c("WATER", "RAIN")
 
 # Email setup
