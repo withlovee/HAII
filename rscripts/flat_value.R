@@ -39,7 +39,10 @@ FlatValue.FindFlatValue <- function(data, dataType,
     if (is.na(value[i])) {
       # null cannot be in sequence
       i <- i + 1
-    } else {
+    } else if (value[i] == 999999 | value[i] == -9999) {
+      # machine error / marked as error
+      i <- i + 1
+    } else { 
       j <- i + 1
 
       # sliding j until out of sequence

@@ -12,7 +12,7 @@ OutOfRange.WaterLevel <- function (waterLevel, groundLevel, leftBankLevel, right
   
   # cat(waterLevel, " ", groundLevel, " ", leftBankLevel, " ", rightBankLevel, "\n")
   
-  if (any(is.na(c(waterLevel, groundLevel, bankLevel))) | waterLevel == 999999) {
+  if (any(is.na(c(waterLevel, groundLevel, bankLevel))) | waterLevel == 999999 | waterLevel == -9999) {
     return(FALSE)
   }
   # cat("valid\n")
@@ -31,7 +31,7 @@ OutOfRange.RainLevel <- function (rainLevel,
     return(FALSE)
   }
 
-  if (rainLevel == 999999) {
+  if (rainLevel == 999999 | rainLevel == -9999) {
     return(FALSE)
   }
   
