@@ -9,8 +9,8 @@
 		<div class="today-report">
 			<h3>Out-of-Range Monitor<br><small>(นับตั้งแต่ 7.01 น. ของวันที่  {{ thai_date() }} {{ date('Y', getTime()) }} จนถึงปัจจุบัน)</small></h3>
 			<ul class="nav nav-tabs" role="tablist">
-				<li class="active"><a href="#water" role="tab" data-toggle="tab">สถานีน้ำ</a></li>
-				<li><a href="#rain" role="tab" data-toggle="tab">สถานีฝน</a></li>
+				<li class="active"><a href="#water" role="tab" data-toggle="tab">ข้อมูลระดับน้ำ</a></li>
+				<li><a href="#rain" role="tab" data-toggle="tab">ข้อมูลฝน</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="water">
@@ -73,14 +73,14 @@
 							<span class="num">{{ $stats['RAIN']['OR'] }}</span>
 						</div>
 						<!-- /.item -->
-						<div class="item"></div>
+						<div class="item-disabled"></div>
 						<div class="item">
 							Missing Gap
 							<span class="num">{{ $stats['RAIN']['MG'] }}</span>
 						</div>
 						<!-- /.item -->
-						<div class="item"></div>
-						<div class="item"></div>
+						<div class="item-disabled"></div>
+						<div class="item-disabled"></div>
 						<div class="item">
 							Missing Pattern
 							<span class="num">{{ $stats['RAIN']['MP'] }}</span>

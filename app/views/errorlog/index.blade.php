@@ -9,8 +9,8 @@
 
 @section('content')
 <ul class="nav nav-tabs">
-	<li class="{{ $water }}"><a href="water">สถานีน้ำ</a></li>
-	<li class="{{ $rain }}"><a href="rain">สถานีฝน</a></li>
+	<li class="{{ $water }}"><a href="water">ข้อมูลระดับน้ำ</a></li>
+	<li class="{{ $rain }}"><a href="rain">ข้อมูลฝน</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane fade in active">

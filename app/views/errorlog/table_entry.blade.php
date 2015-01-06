@@ -1,7 +1,7 @@
 
 	<?php foreach ($problems as $problem): ?>
 		<tr>
-			<td>{{ $problem->id }}</td>
+			<!-- <td>{{ $problem->id }}</td> -->
 			<td>{{ $problem->start_datetime }}</td>
 			<td>{{ $problem->end_datetime }}</td>
 			<td>{{ $problem->code }}</td>

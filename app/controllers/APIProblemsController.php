@@ -112,6 +112,11 @@ class APIProblemsController extends BaseController {
 	}
 
 	public function getButtons() {
+
+		if(!isAdmin()) {
+			return "Log in ด้วยสิทธิ Admin เพื่อเปลี่ยนสถานะของปัญหา";
+		}
+
 		$problem = Problem::find(intval(Input::get('id')));
 		$status = $problem->status;
 		$html = '';
