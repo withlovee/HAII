@@ -55,7 +55,7 @@ $(function(){
 								name : "Value",
 								id : "dataseries",
 								data : res.data,
-								step: true,
+								step: false,
 								tooltip: {
 									valueDecimals: 2
 								},

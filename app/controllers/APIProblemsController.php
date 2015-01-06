@@ -76,13 +76,15 @@ class APIProblemsController extends BaseController {
 			if($problem->data_type == 'WATER') {
 				$data_log_new[] = [
 					strtotime($item['date'].' '.$item['time']) * 1000,
-					floatval($item['water1'])
+					// floatval($item['water1'])
+					floatval($item['origin_water1'])
 				];
 			}
 			else {
 				$data_log_new[] = [
 					strtotime($item['date'].' '.$item['time']) * 1000,
-					floatval($item['rain1h']),
+					// floatval($item['rain1h']),
+					floatval($item['origin_rain1h'])
 				];
 			}
 		}
