@@ -61,6 +61,7 @@ $(document).ready(function() {
 	/* -- Clicking status buttons (Error/ Not Error) -- */
 	$('body').on('click', '.update', function(e){
 		e.preventDefault();
+		console.log("update button clicked");
 		el = $(this);
 		data = {
 			id: el.data('id'),

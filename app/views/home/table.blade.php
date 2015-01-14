@@ -49,22 +49,27 @@
 					<li><a href="#">&raquo;</a></li>
 				</ul> -->
 <script>
-$('.monitor-table').on('click', '.update', function(e){
-	e.preventDefault();
-	el = $(this);
-	data = {
-		id: el.data('id'),
-		status: el.data('error')
-	}
-	$.post("{{ URL::to('api/problems/update_status') }}", data)
-		.done(function(res){
-			console.log(res);
-			if(res.success){
-				el.parent().parent().find('a[data-id="'+data.id+'"]').removeClass('active');
-				el.addClass('active');
-				el.parents('tr').fadeOut(400);
-				// console.log(el.parents('tr'));
-			}
-		});
-});
+/*
+$(document).ready(function(){
+	console.log("script loaded")
+	$('.monitor-table').on('click', '.update', function(e){
+		e.preventDefault();
+		console.log('update status');
+		el = $(this);
+		data = {
+			id: el.data('id'),
+			status: el.data('error')
+		}
+		$.post("{{ URL::to('api/problems/update_status') }}", data)
+			.done(function(res){
+				console.log(res);
+				if(res.success){
+					el.parent().parent().find('a[data-id="'+data.id+'"]').removeClass('active');
+					el.addClass('active');
+					el.parents('tr').fadeOut(400);
+					// console.log(el.parents('tr'));
+				}
+			});
+	});
+});*/
 </script>

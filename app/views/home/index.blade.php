@@ -100,6 +100,31 @@
 </div>
 <p>&nbsp;</p>
 
+<script>
+$(document).ready(function(){
+	console.log("script loaded")
+	$('body').on('click', '.update', function(e){
+		e.preventDefault();
+		console.log('update status');
+		el = $(this);
+		data = {
+			id: el.data('id'),
+			status: el.data('error')
+		}
+		$.post("{{ URL::to('api/problems/update_status') }}", data)
+			.done(function(res){
+				console.log(res);
+				if(res.success){
+					el.parent().parent().find('a[data-id="'+data.id+'"]').removeClass('active');
+					el.addClass('active');
+					el.parents('tr').fadeOut(400);
+					// console.log(el.parents('tr'));
+				}
+			});
+	});
+});
+</script>
+
 @include('data_log/modal')
 @include('home/map')
 
