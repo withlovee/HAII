@@ -149,7 +149,7 @@ class Problem extends \Eloquent {
 
 	static private function renderDate($date, $time){
 		if(!$date) return null;
-		if(!$time) $time = '07:00';
+		if(!$time) $time = '00:00';
 		return $date.' '.str_replace("%3A", ":", $time);
 	}
 

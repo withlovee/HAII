@@ -22,6 +22,9 @@ class ErrorLogController extends BaseController {
 		$data = $this->dataForForm($status, $data_type);
 		$data['selectDate'] = true;
 		$data['title'] = 'Error Log';
+
+		Log::info($params);
+
 		$data['problems'] = Problem::allForTable($params);
 		return View::make('errorlog/index', $data);
 	}

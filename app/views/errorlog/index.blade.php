@@ -164,8 +164,16 @@ $(document).ready(function() {
 		updateStation(province);
 	});
 
-
-
+	$(".datepicker").datepicker({
+		dateFormat: "yy-mm-dd",
+		// minDate: "+1d",
+		dayNamesMin: ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"],
+		monthNames: ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม" ]
+	});
+	$('.timepicker').timepicker({
+		timeFormat: "HH:mm",
+		pickerTimeFormat: "HH:mm"
+	});
 
 });
 </script>

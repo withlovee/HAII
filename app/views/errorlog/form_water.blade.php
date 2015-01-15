@@ -48,13 +48,13 @@
 	<div class="form-inline">
 		<div class="form-group">
 			<label for="">ตั้งแต่</label>
-			<input name="start_date" type="date" class="form-control" value="{{ $params_water['start_date'] }}">
-			<input name="start_time" type="time" class="form-control" value="{{ $params_water['start_time'] }}">
+			<input name="start_date" type="text" class="form-control datepicker" value="{{ $params_water['start_date'] }}">
+			<input name="start_time" type="text" class="form-control timepicker" value="{{ $params_water['start_time'] }}">
 		</div>
 		<div class="form-group">
 			<label for="">ถึง</label>
-			<input name="end_date" type="date" class="form-control" value="{{ $params_water['end_date'] }}">
-			<input name="end_time" type="time" class="form-control" value="{{ $params_water['end_time'] }}">
+			<input name="end_date" type="text" class="form-control datepicker" value="{{ $params_water['end_date'] }}">
+			<input name="end_time" type="text" class="form-control timepicker" value="{{ $params_water['end_time'] }}">
 		</div>
 		<button type="submit" class="query_btn btn btn-primary">Go</button>
 	</div>

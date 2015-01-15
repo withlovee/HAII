@@ -7,8 +7,11 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	{{ HTML::style('css/bootstrap.css'); }}
 	{{ HTML::style('css/animate.min.css'); }}
+	{{ HTML::style('css/jquery-ui-1.10.4.custom.min.css'); }}
 	<link rel="stylesheet/less" type="text/css" href="{{ URL::asset('css/style.less'); }}" />
 	{{ HTML::script('js/jquery.min.js'); }}
+	{{ HTML::script('js/jquery-ui-1.10.4.custom.min.js'); }}
+	{{ HTML::script('js/jquery-ui-timepicker-addon.js'); }}
 	{{ HTML::script('js/bootstrap.min.js'); }}
 	{{ HTML::script('js/less.js'); }}
 	<!--[if lt IE 9]>
