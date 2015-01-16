@@ -13,6 +13,7 @@ OutOfRange.WaterLevel <- function (waterLevel, groundLevel, leftBankLevel, right
   # cat(waterLevel, " ", groundLevel, " ", leftBankLevel, " ", rightBankLevel, "\n")
   
   if (any(is.na(c(waterLevel, groundLevel, bankLevel))) | waterLevel == 999999 | waterLevel == -9999) {
+    # cat("invalid value\n")
     return(FALSE)
   }
   # cat("valid\n")

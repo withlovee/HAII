@@ -20,7 +20,7 @@ Problems.GetProblemStationCodeList <- function(dataType, problemType ,startDateT
 
   data <- DBConnection.Query(queryString)
 
-  return(data$station_code)
+  return(unique(data$station_code))
 }
 
 Problems.GetLatestProblemStationCodeList <- function(dataType, problemType, endDateTime) {
