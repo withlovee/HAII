@@ -19,7 +19,7 @@
 							<td colspan="4" class="text-center">{{ $basin_name }}</td>
 						</tr>
 						@foreach ($p2 as $problem)
-						<tr>
+						<tr data-id="{{ $problem['id'] }}">
 							<td><a href="" class="model_btn" data-toggle="modal" data-id="{{ $problem['id'] }}" data-target="#detail" data-code="{{ $problem['code'] }}">{{ $problem['full_name'] }}</a></td>
 							<td>{{ $problem['end_time'] }}</td>
 							<td>{{ $problem['num'] }}</td>

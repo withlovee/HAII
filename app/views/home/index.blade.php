@@ -2,6 +2,17 @@
 @section('content')
 <div class="row">
 	<div class="col-md-5">
+		<div class="btn-group" data-toggle="buttons" id="map-selector">
+			<label class="btn btn-default active">
+		    <input type="radio" value="OR" name="map-selector" autocomplete="off" checked>OR
+		  </label>
+		  <label class="btn btn-default">
+		    <input type="radio" value="MG" name="map-selector" autocomplete="off">MG
+		  </label>
+		  <label class="btn btn-default">
+		    <input type="radio" value="FV" name="map-selector" autocomplete="off">FV
+		  </label>
+		</div>
 		<div id="map-canvas" style="height: 700px"></div>
 	</div>
 	<!-- /.col-md-4 -->
@@ -117,7 +128,10 @@ $(document).ready(function(){
 				if(res.success){
 					el.parent().parent().find('a[data-id="'+data.id+'"]').removeClass('active');
 					el.addClass('active');
-					el.parents('tr').fadeOut(400);
+
+					/* hotfix (bad practice) */
+					$('tr[data-id="'+data.id+'"]').fadeOut(500);
+					// el.parents('tr').fadeOut(400);
 					// console.log(el.parents('tr'));
 				}
 			});

@@ -1,112 +1,90 @@
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDWdPO7OO5-HIh_yo3hotDHgp0HxN8dbI"></script>
-<script type="text/javascript">
-	function initialize(){
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvFSmXsECeHYMyLagUAlvUjIbV-ViTlPs"></script>
+<script>
+$(function(){
 
-		function create_markers(image){
-			output = [];
-			sizes = [
-				[5, 10],
-				[20, 35]
-			];
-			for(i in sizes){
-				output.push(new google.maps.MarkerImage(
-					image,
-					null, /* size is determined at runtime */
-					null, /* origin is 0,0 */
-					null, /* anchor is bottom center of the scaled image */
-					new google.maps.Size(sizes[i][0], sizes[i][1])
-				));
-			}
-			return output;
-		}
-		function render_info(data){
-			str = '<div class="map_info">';
-			str += '<strong>'+data.full_name+'</strong><br>';
-			str += 'ลุ่มน้ำ: '+data.basin+'<br>';
-			str += 'จำนวนปัญหา: '+data.num+'<br>';
-			str += 'ปัญหาที่เกิด: '+data.problem_type+'<br>';
-			str += '</div>';
-			return str;
-		}
-		function get_status(num){
-			num = parseInt(num);
-			if(num > 50){
-				return 'medium';
-			}
-			else if(num > 200){
-				return 'high';
-			}
-			return 'low';
-		}
+  var thailandLatLng = new google.maps.LatLng(13.03887,101.490104);
+  var mapCanvasId = "map-canvas";
+  var map = null;
+  var mapOptions = {
+      center: thailandLatLng,
+      zoom: 6
+  };
+  var markers = [];
+  var infowindow = null;
 
-		var map = new google.maps.Map(document.getElementById("map-canvas"), {
-			center: new google.maps.LatLng(12.826045,101.54666),
-			zoom: 6
-		});
+  function initializeMap() {
 
-		var icons = {
-			low: create_markers("http://maps.google.com/mapfiles/marker_green.png"),
-			medium: create_markers("http://maps.google.com/mapfiles/marker_orange.png"),
-			high: create_markers("http://maps.google.com/mapfiles/marker.png"),
-		};
+    map = new google.maps.Map(document.getElementById(mapCanvasId),
+        mapOptions);
 
-		var markers = [];
+    $.get("{{ URL::to('api/problems/get_map') }}", function(stations){
+      addMarkers(stations);
+      showMarkerForType("OR");
+    });
+    
+  }
 
-		var openedInfoWindow;
+  function showInfoWindow(info, marker) {
+    if (infowindow) {
+      infowindow.close();
+    }
 
-		$.get("{{ URL::to('api/problems/get_map') }}", function(stations){
-			for(i in stations){
-				//console.log(stations[i]);
-				status = get_status(stations[i].num);
-				var marker = new google.maps.Marker({
-					map: map, 
-					position: new google.maps.LatLng(stations[i].lat, stations[i].lng),
-					title: stations[i].code,
-					status: status,
-					html: render_info(stations[i]),
-					icon: icons[status][0] 
-				});
-				markers.push(marker);
-				google.maps.event.addListener(marker, 'click', function() {
-					if (openedInfoWindow != null) openedInfoWindow.close();
-					var infoWindow = new google.maps.InfoWindow({
-						position: this.position,
-						content: this.html,
-					});
-					
-					// Open infoWindow
-					infoWindow.open(map,this);
-					// Remember the opened window
-					openedInfoWindow = infoWindow;
+    var str;
+    str = '<div class="map_info">';
+    str += '<strong>' + info.full_name + '</strong><br>';
+    str += 'รหัส: ' + info.code + '<br>';
+    str += 'ลุ่มน้ำ: ' + info.basin + '<br>';
+    str += 'จำนวนปัญหา: ' + info.num + '<br>';
+    str += '</div>';
 
-					// Close it if X box clicked
-					google.maps.event.addListener(infoWindow, 'closeclick', function() {
-						openedInfoWindow = null; 
-					});
+    infowindow = new google.maps.InfoWindow({content: str});
+    infowindow.open(map, marker);
+    console.log("show window info");
+    console.log(info);
+  }
 
-				});
-			}
-		});
-		
-		var zoomLevel = 1;
+  function addMarker(info) {
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(info.lat, info.lng),
+      animation: google.maps.Animation.DROP,
+      clickable: true,
+      info: info
+    });
 
-		google.maps.event.addListener(map, 'zoom_changed', function() {
-		  var i, prevZoomLevel;
-		  prevZoomLevel = zoomLevel;
-		  map.getZoom() < 10 ? zoomLevel = 0 : zoomLevel = 1;
-		  if(prevZoomLevel !== zoomLevel) {
-			for(i = 0; i < markers.length; i++) {
-				if(zoomLevel == 2) {
-					markers[i].setIcon(icons[markers[i].status][zoomLevel]);
-				}
-				else {
-					markers[i].setIcon(icons[markers[i].status][zoomLevel]);
-				}
-			}
-		  }
-		});
-	}
+    markers.push(marker);
 
-	google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addListener(marker, 'click', function() {
+      showInfoWindow(marker.info, marker);
+    });
+  }
 
+  function addMarkers(infos) {
+    for (var i = 0; i < infos.length; i++) {
+      addMarker(infos[i]);
+    }
+  }
+
+  function showMarkerForType(problem_type) {
+    if (infowindow) {
+      infowindow.close();
+    }
+    for (var i = 0; i < markers.length; i++) {
+      if (markers[i].info.problem_type == problem_type) {
+        markers[i].setMap(map);
+        markers[i].setAnimation(google.maps.Animation.DROP);
+      } else {
+        markers[i].setMap(null);
+      }
+    }
+  }  
+  
+  initializeMap();
+
+
+  $("input[name=map-selector]").change(function(){
+    var val = $(this).val();
+    showMarkerForType(val);
+  });
+  
+});
 </script>
