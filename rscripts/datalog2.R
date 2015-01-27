@@ -6,7 +6,7 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
   # Get raw data from databases in interval [startTime, endTime].
   #
   # Args:
-  #   stationCode: (String) code  of telemetering station (ex. CHI001)
+  #   stationCode: (String) code of telemetering station (ex. CHI001)
   #   dataType: (String) "WATER" or "RAIN"
   #   startDateTime: (POSIXct) start time of data
   #   endDateTime: (String) end time of data
@@ -92,9 +92,22 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
   } else if (dataType == "RAIN") {
     data$value = data$rain1h
   }
+  
+  # for rain data, use only 1 hr data
+  if (dataType == "RAIN") {
+    data <- data[as.numeric(strftime(data$datetime,"%M")) == 0,]
+    if (nrow(data) == 0) {
+      return(NULL)
+    }
+  }
 
   # order by datetime
   data <- data[order(data$datetime),]
+
+  str(data)
+  
+  
+
 
   return(data)
 
