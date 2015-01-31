@@ -15,9 +15,13 @@ class DataLog extends \Eloquent {
 		return $query;
 	}
 
-	public function scopeFrom($query, $datetime){
+	public function scopeHourly($query){
+		return $query->whereRaw("EXTRACT(MINUTE FROM time) = 0");
+	}
+
+	public function scopeFrom($query, $datetime, $offset=7200){
 		if($datetime) {
-			$unix_timestamp = strtotime($datetime) - (2*60*60);
+			$unix_timestamp = strtotime($datetime) - $offset;
 			$date = date('Y-m-d', $unix_timestamp);
 			$time = date('H:i:s', $unix_timestamp);
 			return $query->whereRaw("
@@ -29,9 +33,9 @@ class DataLog extends \Eloquent {
 		return $query;
 	}
 
-	public function scopeTo($query, $datetime){
+	public function scopeTo($query, $datetime, $offset=7200){
 		if($datetime) {
-			$unix_timestamp = strtotime($datetime) + (2*60*60);
+			$unix_timestamp = strtotime($datetime) + $offset;
 			$date = date('Y-m-d', $unix_timestamp);
 			$time = date('H:i:s', $unix_timestamp);
 			return $query->whereRaw("

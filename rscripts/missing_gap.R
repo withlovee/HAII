@@ -1,10 +1,18 @@
 library('xts')
 source('config.R')
 
-MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
-  dataInterval = Config.defaultDataInterval,
+MissingGap.FindMissingGap <- function(data, dataType, startDateTime, endDateTime, installedDate, 
+  waterDataInterval = Config.defaultDataInterval,
+  rainDataInterval = Config.defaultRainDataInterval,
   missingInterval    = Config.MissingGap.defaultInterval,
   verbose = FALSE) {
+
+  dataInterval <- NA
+  if (dataType == "WATER") {
+    dataInterval <- waterDataInterval
+  } else if (dataType == "RAIN") {
+    dataInterval <- rainDataInterval
+  }
 
   roundedStartDateTime <- align.time(startDateTime, dataInterval)
   if (roundedStartDateTime  - dataInterval == startDateTime) {
@@ -14,6 +22,30 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   roundedEndDateTime <- align.time(endDateTime, dataInterval) - dataInterval
   if (roundedEndDateTime  + dataInterval == endDateTime) {
     roundedEndDateTime <- roundedEndDateTime + dataInterval
+  }
+
+  # correct bound
+  if ( roundedStartDateTime >= roundedEndDateTime ) {
+    return(NULL)
+  }
+  
+  if(!is.null(data)){
+    # remove null value
+    data <- data[!is.na(data$value),]
+    if(nrow(data) <= 0) {
+      data <- NULL
+    }
+  }
+  
+  # check for installation date of the station
+  
+  if (!is.null(installedDate)) {
+    if (installedDate > roundedStartDateTime) {
+      roundedStartDateTime <- installedDate
+    }
+    if (roundedStartDateTime >= roundedEndDateTime) {
+      return(NULL)
+    }
   }
   
   # null
@@ -36,6 +68,8 @@ MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
   if (nrow(data) == 0) {
     return(data.frame(startDateTime=c(), endDateTime=c()))
   }
+
+  
 
   dt <- data$datetime
   dt <- dt[order(dt)]

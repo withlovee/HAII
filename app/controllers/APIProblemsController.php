@@ -65,12 +65,22 @@ class APIProblemsController extends BaseController {
 		// $start_datetime = (new Carbon($problem->start_datetime))->subHour(1);
 		// $end_datetime = (new Carbon($problem->end_datetime))->addHour(1);
 
-		$data_log = DataLog::code($problem->station->code)
-			->from($problem->start_datetime)
-			->to($problem->end_datetime)
-			->valid($problem->data_type)
-			->get()
-			->toArray();
+		$data_log = NULL;
+
+		$data_log_query = DataLog::code($problem->station->code)->valid($problem->data_type);
+
+		if($problem->data_type == "WATER") {
+			$data_log_query = $data_log_query->from($problem->start_datetime, 7200)
+																			 ->to($problem->end_datetime, 7200);
+		} else if($problem->data_type == "RAIN") {
+			$data_log_query = $data_log_query->from($problem->start_datetime, 3600*5)
+																			 ->to($problem->end_datetime, 3600*5)
+																			 ->hourly();
+		}
+
+		$data_log = $data_log_query->get()->toArray();
+
+		
 		$data_log_new = array();
 		foreach($data_log as $item){
 			if($problem->data_type == 'WATER') {

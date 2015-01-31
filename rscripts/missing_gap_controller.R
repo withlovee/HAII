@@ -7,9 +7,11 @@ MissingGap.Controller.FindMissingGap <- function(
   stationCode, dataType, startDateTime, endDateTime) {
 
   cat("Missing Gap: ", stationCode , "\n")
-
+  missingGap <- NA
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
-  missingGap <- MissingGap.FindMissingGap(data, startDateTime, endDateTime)
+  installedDate <- DataLog.GetInstallationDate(stationCode)
+  
+  missingGap <- MissingGap.FindMissingGap(data, dataType, startDateTime, endDateTime, installedDate)
   return(missingGap)
 }
 
@@ -56,25 +58,32 @@ MissingGap.Controller.Batch <- function (dataType, startDateTime, endDateTime, a
 }
 
 
-MissingGap.Controller.DailyOperation <- function(dataType,
-  interval = NULL) {
+MissingGap.Controller.DailyOperation <- function(dataType, interval = NULL) {
 
   currentDateTime <- Sys.time()
   problemType <- "MG"
+  
+  dataInterval <- NA
+  
+  if(dataType == "WATER") {
+    dataInterval <- Config.defaultDataInterval
+  } else if(dataType == "RAIN") {
+    dataInterval <- Config.defaultRainDataInterval
+  }
 
   # set default interval
   if (is.null(interval)) {
     if (Config.MissingGap.defaultInterval > 60*60) {
-      interval <- Config.MissingGap.defaultInterval + (3 * Config.defaultDataInterval)
+      interval <- Config.MissingGap.defaultInterval + (3 * dataInterval)
     } else {
-      interval <- 60 * 60 + (3 * Config.defaultDataInterval)
+      interval <- 60 * 60 + (3 * dataInterval)
     }
   }
-
-  startDateTime = currentDateTime - interval
-
+  
+  startDateTime <- currentDateTime - interval
+  
   alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
-
+      
   missingGap <- MissingGap.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   # update problem
@@ -84,6 +93,5 @@ MissingGap.Controller.DailyOperation <- function(dataType,
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
 
-  
   return(missingGap)
 }

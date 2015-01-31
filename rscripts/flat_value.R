@@ -2,7 +2,8 @@ source('config.R')
 source('helper.R')
 
 FlatValue.FindFlatValue <- function(data, dataType,
-                                    dataInterval = Config.defaultDataInterval,
+                                    waterDataInterval = Config.defaultDataInterval,
+                                    rainDataInterval = Config.defaultRainDataInterval,
                                     flatThreshold = Config.FlatValue.defaultThreshold) {
 
   Helper.CheckDataType(dataType)
@@ -12,6 +13,13 @@ FlatValue.FindFlatValue <- function(data, dataType,
   }
   if (!is(data, "data.frame")) {
     return(NULL)
+  }
+  
+  dataInterval <- NA
+  if (dataType == "WATER") {
+    dataInterval <- waterDataInterval
+  } else if (dataType == "RAIN") {
+    dataInterval <- rainDataInterval
   }
 
   # sort by datetime
@@ -42,6 +50,9 @@ FlatValue.FindFlatValue <- function(data, dataType,
     } else if (value[i] == 999999 | value[i] == -9999) {
       # machine error / marked as error
       i <- i + 1
+    } else if (dataType == "RAIN" & value[i] == 0) {
+      # no rain
+      i <- i + 1
     } else { 
       j <- i + 1
 
@@ -66,6 +77,7 @@ FlatValue.FindFlatValue <- function(data, dataType,
       
       # total time of sequence
       flatDiffTime <- as.numeric((data$datetime[j - 1]) - data$datetime[i], units="secs")
+      
       if(flatDiffTime  >= flatThreshold) {
         startDateTime  <- c(startDateTime, data$datetime[i])
         endDateTime <- c(endDateTime, data$datetime[j-1])

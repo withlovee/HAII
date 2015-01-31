@@ -27,9 +27,17 @@ Helper.MergeDateTime <- function(startDateTimeList, endDateTimeList) {
   return(merged)
 }
 
-Helper.CountDataNum <- function(startDateTime, endDateTime, dataInterval = Config.defaultDataInterval) {
+Helper.CountDataNum <- function(startDateTime, endDateTime, dataType, waterDataInterval = Config.defaultDataInterval, rainDataInterval = Config.defaultRainDataInterval) {
+
+  dataInterval <- NA
+  if (dataType == "WATER") {
+    dataInterval <- waterDataInterval
+  } else if (dataType == "RAIN") {
+    dataInterval <- rainDataInterval
+  }
+
   diff <- as.numeric(endDateTime - startDateTime, units="secs")
-  num <- round(diff / Config.defaultDataInterval) + 1
+  num <- round(diff / dataInterval) + 1
 
   return(num)
 }
@@ -56,8 +64,17 @@ Helper.FullProblemNameFromAbbr <- function(abbr) {
   return(fullName)
 }
 
-Helper.MergeConsecutiveDateTime <- function(dateTimeList, dataInterval = Config.defaultDataInterval,
+Helper.MergeConsecutiveDateTime <- function(dateTimeList, dataType, 
+                                            waterDataInterval = Config.defaultDataInterval,
+                                            rainDataInterval = Config.defaultRainDataInterval,
                                             consecutiveThreshold = Config.consecutiveProblemGapThreshold) {
+  
+  dataInterval <- NA
+  if (dataType == "WATER") {
+    dataInterval <- waterDataInterval
+  } else if (dataType == "RAIN") {
+    dataInterval <- rainDataInterval
+  }
 
   l <- length(dateTimeList)
 

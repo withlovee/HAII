@@ -81,7 +81,7 @@ Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTim
 
     for (id in result$id) {
       # update
-      num <- Helper.CountDataNum(newDateTime$startDateTime, newDateTime$endDateTime)
+      num <- Helper.CountDataNum(newDateTime$startDateTime, newDateTime$endDateTime, dataType)
 
       newStartDateTimeString <- Helper.POSIXctToString(newDateTime$startDateTime)
       newEndDateTimeString <- Helper.POSIXctToString(newDateTime$endDateTime)
@@ -107,7 +107,7 @@ Problems.AddProblem <- function(stationCode, dataType, problemType, startDateTim
     }
   } else {
     # insert
-    num <- Helper.CountDataNum(startDateTime, endDateTime)
+    num <- Helper.CountDataNum(startDateTime, endDateTime, dataType)
 
     cat("Problems: Insert ", problemType, " ", stationCode, " ",  startDateTimeString, " ", endDateTimeString, " ", num, "\n")
 

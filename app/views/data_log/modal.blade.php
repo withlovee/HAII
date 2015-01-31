@@ -36,6 +36,7 @@ $(function(){
 					errorButtons.html(html).show(100);
 				});
 				console.log(res);
+
 				/* Render Charts */
 				Highcharts.setOptions({
 					global: {
@@ -46,105 +47,108 @@ $(function(){
 
 				$.get("{{ URL::to('api/telestation/wldetail') }}", {station: res.station.code})
 					.done(function(telewldetail){
-					console.log(telewldetail);
 
-					series = []
+					if(res.data.length > 0) {
 
-					// data
-					series.push({
-								name : "Value",
-								id : "dataseries",
-								data : res.data,
-								step: false,
-								tooltip: {
-									valueDecimals: 2
-								},
-								marker: {
-									enabled: true,
-									radius: 4,
-									symbol: 'diamond'
-								},
-								zIndex: 9
-						});
+						console.log(telewldetail);
 
-					// flags
-					series.push({
-						type: 'flags',
-						name: 'Flags on series',
-						data: [{
-							x: res.start_datetime_unix * 1000,
-							title: 'เริ่ม'
-						}, {
-							x: res.end_datetime_unix * 1000,
-							title: 'สิ้นสุด'
-						}],
-						onSeries: 'dataseries',
-						shape: 'squarepin',
-						zIndex:8
-					});
+						series = []
 
-					var maxPair = _.max(res.data, function(x) { return x[1]; });
-					var maxVal = maxPair[1];
-
-					var minPair = _.min(res.data, function(x) { return x[1]; });
-					var minVal = minPair[1];
-
-					if(res.problem_type == "OR" && res.data_type == "WATER") {
-						groundLevel = parseInt(telewldetail.ground_level);
-						leftBank = parseInt(telewldetail.left_bank);
-						rightBank = parseInt(telewldetail.right_bank);
-						maxBank = leftBank > rightBank ? leftBank : rightBank;
-
-						groundLevelSeries = $.map(res.data, function(x, i){
-							return [[x[0], groundLevel]];
-						});
-
-						maxBankSeries = $.map(res.data, function(x, i){
-							return [[x[0], maxBank]];
-						});
-
+						// data
 						series.push({
-							name : "Ground Level",
-							id: "groundlevel",
-							data: groundLevelSeries,
-							zIndex:5
-						});
+									name : "Value",
+									id : "dataseries",
+									data : res.data,
+									step: false,
+									tooltip: {
+										valueDecimals: 2
+									},
+									marker: {
+										enabled: true,
+										radius: 4,
+										symbol: 'diamond'
+									},
+									zIndex: 9
+							});
+
+						// flags
 						series.push({
-								name : "Max Bank",
-								id: "maxBank",
-								data: maxBankSeries,
+							type: 'flags',
+							name: 'Flags on series',
+							data: [{
+								x: res.start_datetime_unix * 1000,
+								title: 'เริ่ม'
+							}, {
+								x: res.end_datetime_unix * 1000,
+								title: 'สิ้นสุด'
+							}],
+							onSeries: 'dataseries',
+							shape: 'squarepin',
+							zIndex:8
+						});
+
+						var maxPair = _.max(res.data, function(x) { return x[1]; });
+						var maxVal = maxPair[1];
+
+						var minPair = _.min(res.data, function(x) { return x[1]; });
+						var minVal = minPair[1];
+
+						if(res.problem_type == "OR" && res.data_type == "WATER") {
+							groundLevel = parseInt(telewldetail.ground_level);
+							leftBank = parseInt(telewldetail.left_bank);
+							rightBank = parseInt(telewldetail.right_bank);
+							maxBank = leftBank > rightBank ? leftBank : rightBank;
+
+							groundLevelSeries = $.map(res.data, function(x, i){
+								return [[x[0], groundLevel]];
+							});
+
+							maxBankSeries = $.map(res.data, function(x, i){
+								return [[x[0], maxBank]];
+							});
+
+							series.push({
+								name : "Ground Level",
+								id: "groundlevel",
+								data: groundLevelSeries,
 								zIndex:5
-						});
+							});
+							series.push({
+									name : "Max Bank",
+									id: "maxBank",
+									data: maxBankSeries,
+									zIndex:5
+							});
 
-						// maxVal = _.max([maxVal, groundLevel, leftBank, rightBank]);
+							// maxVal = _.max([maxVal, groundLevel, leftBank, rightBank]);
 
-					}
+						}
 
-					if (res.problem_type == "OR" && res.data_type == "RAIN"){
-						rainThresholdSeries = $.map(res.data, function(x, i){
-							return [[x[0], 120]];
-						});
+						if (res.problem_type == "OR" && res.data_type == "RAIN"){
+							rainThresholdSeries = $.map(res.data, function(x, i){
+								return [[x[0], 120]];
+							});
+							series.push({
+								name : "Rain Threshold",
+								id: "rainThreshold",
+								data: rainThresholdSeries,
+								zIndex:5
+							});
+
+							// maxVal = _.max([maxVal, rainThreshold]);
+						}
+
+
 						series.push({
-							name : "Rain Threshold",
-							id: "rainThreshold",
-							data: rainThresholdSeries,
-							zIndex:5
+							type: 'area',
+							name: 'Problem Area',
+							threshold: minVal - 1,
+							data: [[res.start_datetime_unix * 1000, maxVal + 1], [res.end_datetime_unix * 1000, maxVal + 1]],
+							zIndex:1,
+							lineWidth: 5,
+							color: "rgba(255,200,200,0.5)"
 						});
-
-						// maxVal = _.max([maxVal, rainThreshold]);
-					}
-
-
-					series.push({
-						type: 'area',
-						name: 'Problem Area',
-						threshold: minVal - 1,
-						data: [[res.start_datetime_unix * 1000, maxVal + 1], [res.end_datetime_unix * 1000, maxVal + 1]],
-						zIndex:1,
-						lineWidth: 5,
-						color: "rgba(255,200,200,0.5)"
-					});
-				
+					
 						$('#highcharts2').highcharts('StockChart', {
 							rangeSelector : {
 								selected : 1
@@ -157,7 +161,9 @@ $(function(){
 							},
 							series : series
 						});
-
+					} else {
+						$('#highcharts2').html('<h3>ไม่มีข้อมูลของสถานีนี้</h3>');
+					}
 				});
 
 			});

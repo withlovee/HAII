@@ -46,6 +46,9 @@ OutOfRange.FindOutOfRange <- function(data, dataType) {
   if (!is(data, "data.frame")) {
     return(NULL)
   }
+  if (nrow(data) <= 0) {
+    return(NULL)
+  }
 
   problemIdx <- NA
 
@@ -61,12 +64,14 @@ OutOfRange.FindOutOfRange <- function(data, dataType) {
   
   problemData <- data[problemIdx, ]
   
+  cat("Found: ", nrow(problemData) ,"\n")
+  
   # print(problemIdx)
   # print(problemIdx)
   # print(problemData)
   
-
-  result <- Helper.MergeConsecutiveDateTime(problemData$datetime)
+  
+  result <- Helper.MergeConsecutiveDateTime(problemData$datetime, dataType)
 
   return(result)
 

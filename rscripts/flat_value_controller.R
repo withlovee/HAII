@@ -63,12 +63,20 @@ FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
   currentDateTime <- Sys.time()
   problemType <- "FV"
 
+  dataInterval <- NA
+  
+  if(dataType == "WATER") {
+    dataInterval <- Config.defaultDataInterval
+  } else if(dataType == "RAIN") {
+    dataInterval <- Config.defaultRainDataInterval
+  }
+
   # set default interval
   if (is.null(interval)) {
     if (Config.FlatValue.defaultThreshold > 60*60) {
-      interval <- Config.FlatValue.defaultThreshold + (3 * Config.defaultDataInterval)
+      interval <- Config.FlatValue.defaultThreshold + (3 * dataInterval)
     } else {
-      interval <- 60 * 60 + (3 * Config.defaultDataInterval)
+      interval <- 60 * 60 + (3 * dataInterval)
     }
   }
 
