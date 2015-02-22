@@ -47,9 +47,15 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
   # columns to be pulled from database
   fields <- c("data_log.code", "data_log.date", "data_log.time")
 
+  # if (dataType == "WATER") {
+  #   fields <- c(fields, "data_log.water1", "tele_wl_detail.left_bank",
+  #               "tele_wl_detail.right_bank", "tele_wl_detail.ground_level")
+  # } else if(dataType == "RAIN") {
+  #   fields <- c(fields, "data_log.rain1h")
+  # }
+
   if (dataType == "WATER") {
-    fields <- c(fields, "data_log.water1", "tele_wl_detail.left_bank",
-                "tele_wl_detail.right_bank", "tele_wl_detail.ground_level")
+    fields <- c(fields, "data_log.water1")
   } else if(dataType == "RAIN") {
     fields <- c(fields, "data_log.rain1h")
   }
@@ -58,10 +64,10 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
   fieldsString <- paste0(fields, collapse=", ")
 
   # generate query string
+  #INNER JOIN tele_wl_detail ON tele_wl_detail.code = data_log.code
   queryString <- paste0(
     "SELECT ", fieldsString,"
      FROM data_log
-     INNER JOIN tele_wl_detail ON tele_wl_detail.code = data_log.code
      WHERE 
          (data_log.date > DATE '", startDateString ,"'
          OR
@@ -104,13 +110,40 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
   # order by datetime
   data <- data[order(data$datetime),]
 
-  str(data)
-  
-  
-
-
   return(data)
 
+}
+
+DataLog.GetWaterStationRiverLevel <- function (stationCode) {
+  queryString <- paste0("
+    SELECT code, left_bank, right_bank, ground_level
+    FROM tele_wl_detail
+    WHERE code = '", stationCode ,"'
+  ")
+
+  result <- DBConnection.Query(queryString)
+
+  return(result)
+}
+
+DataLog.GetInstallationDate <- function (stationCode) {
+  queryString <- paste0("
+    SELECT insdate
+    FROM tele_station
+    WHERE code = '", stationCode ,"'
+  ")
+
+  result <- DBConnection.Query(queryString)
+  
+  if (nrow(result) > 0) {
+    date <- result[1,]
+    if (is.na(date)) {
+      return(NULL)
+    }
+    return(as.POSIXct(strftime(date)))
+  }
+
+  return(NULL)
 }
 
 DataLog.GetStationCodeList <- function (dataType, verbose = FALSE) {

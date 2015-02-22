@@ -123,3 +123,26 @@ Helper.CheckDataType <- function (dataType) {
   }
 
 }
+
+Helper.FilterData <- function (data) {
+  filteredData <- data[!(data$value == 999999 | data$value == -9999 | is.na(data$value)), ]
+  return(filteredData)
+}
+
+Helper.SortByStartDateTime <- function (data) {
+  sortedData <- data[order(data$datetime), ]
+  return(sortedData)
+}
+
+Helper.FilterAndSort <- function (data) {
+  return(Helper.SortByStartDateTime(Helper.FilterData(data)))
+}
+
+# t1 - t2
+Helper.TimeDiffSecs <- function (t1, t2) {
+  return(as.numeric(t1 - t2, unit="secs"))
+}
+
+Helper.AbsoluteTimeDiffSecs <- function(t1, t2) {
+  return(abs(Helper.TimeDiffSecs(t1,t2)))
+}
