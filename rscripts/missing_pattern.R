@@ -1,4 +1,5 @@
 library('fpc')
+library('ggplot2')
 source('config.R')
 source('helper.R')
 source('cluster.R')
@@ -6,8 +7,6 @@ source('cluster.R')
 MissingPattern.ConvertToHourlyData <- function(data, dataType, startDate, endDate,
                                                minimumDay = Config.MissingPattern.minimumDay,
                                                mergeGap = Config.MissingPattern.mergeGap) {
-
-	data <- Helper.FilterAndSort(data)
 
 	# round time to house
 	data$roundedDatetime <- as.POSIXct(strftime(data$datetime, "%Y-%m-%d %H:00:00"))
@@ -98,8 +97,10 @@ MissingPattern.FindMissingPattern <- function(hourlyData, dataType, startDay, en
   eps <- 0.5 * maxFreqPossible
   
   clusterResult <- Cluster.TimeSeriesCluster(t=freq$hournum, y=freq$freq, dt=1, dy=eps)
-
+  
   haveOverallPattern = length(unique(clusterResult$cluster)) > 1
+  
+  # cat("Start",startDay, "End", endDay, "HavePattern", haveOverallPattern, "\n")
 
   missingPattern <- NULL
 
@@ -141,7 +142,23 @@ MissingPattern.FindMissingPattern <- function(hourlyData, dataType, startDay, en
 }
 
 MissingPattern.Find <- function(data, dataType, startDate, endDate) {
-  if (is.null(data)) {
+  
+  dataInterval <- NA
+  if(dataType == "WATER") {
+    dataInterval <- Config.defaultDataInterval
+  } else if (dataType == "RAIN"){
+    dataInterval <- Config.defaultRainDataInterval
+  }
+  if (!is.data.frame(data)) {
+    return(NULL)
+  }
+  if (nrow(data) <= 0) {
+    return(NULL)
+  }
+
+  data <- Helper.FilterAndSort(data)
+
+  if (!is.data.frame(data)) {
     return(NULL)
   }
   if (nrow(data) <= 0) {
@@ -149,9 +166,39 @@ MissingPattern.Find <- function(data, dataType, startDate, endDate) {
   }
 
   hourlyData <- MissingPattern.ConvertToHourlyData(data, dataType, startDate, endDate)
+  
+  if (!is.data.frame(data)) {
+    return(NULL)
+  }
+  if (nrow(data) <= 0) {
+    return(NULL)
+  }
+  
   startDay <- min(hourlyData$day)
   endDay <- max(hourlyData$day)
   missingPattern <- MissingPattern.FindMissingPattern(hourlyData, dataType, startDay, endDay)
 
-  return(missingPattern)
+  # add to hourlyData for plotting
+  hourlyData$pattern <- FALSE
+  hourlyData$caption <- NA
+  
+  if(is.null(missingPattern)) {
+    return(NULL)
+  }
+
+  for(i in 1:nrow(missingPattern)) {
+    mp <- missingPattern[i,]
+    hourlyData[hourlyData$day >= mp$startDay & hourlyData$day <= mp$endDay,]$pattern <- TRUE
+  }
+
+  # convert to problem format
+  missingPattern$startDatetime <- missingPattern$startDay*3600*24 + startDate
+  missingPattern$endDatetime <- (missingPattern$endDay + 1)*3600*24 - dataInterval + startDate
+  
+  problems <- missingPattern[,c("startDatetime", "endDatetime")]
+  
+  return(list(
+    missingPattern = problems,
+    hourlyData     = hourlyData
+  )) 
 }

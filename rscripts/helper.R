@@ -1,3 +1,4 @@
+library('lubridate')
 source('config.R')
 
 Helper.POSIXctToString <- function(time) {
@@ -20,6 +21,15 @@ Helper.StartOfDay <- function(t) {
   }
   
   return(a)
+}
+
+Helper.LastMonth <- function(ti, dataInterval) {
+  month(ti) <- month(ti) - 1
+  start <- floor_date(ti, "month")
+  end <- start
+  month(end) <- month(end) + 1
+  end <- end - dataInterval
+  return(list(start=start, end=end))
 }
 
 Helper.MergeDateTime <- function(startDateTimeList, endDateTimeList) {

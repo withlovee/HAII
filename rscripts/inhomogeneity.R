@@ -6,10 +6,16 @@ Inhomogeneity.Find <- function (data, dataType,
 																maxChangePoint = Config.Inhomogeneity.maximumChangePoint,
 																inhomogeneityThreshold = Config.Inhomogeneity.threshold) {
 
-  print(maxChangePoint)
+  if(!is.data.frame(data)) {
+    return(NULL)
+  }
+  if (nrow(data) <= Config.Inhomogeneity.minimumDataPoint) {
+    return(NULL)
+  }
+
 	data <- Helper.FilterAndSort(data)
 
-  if (nrow(data) <= 0) {
+  if (nrow(data) <= Config.Inhomogeneity.minimumDataPoint) {
     return(NULL)
   }
  	
@@ -25,7 +31,7 @@ Inhomogeneity.Find <- function (data, dataType,
 
   # check whether value is different more that {inhomogeneityThreshold}
   
-  print(changePoints)
+  # print(changePoints)
 
   for (changePoint in changePoints) {
   	if(changePoint < nrow(data)) {
@@ -41,8 +47,7 @@ Inhomogeneity.Find <- function (data, dataType,
 
   if(nrow(dataWithChangePoint) > 0) {
     # convert into problem format
-    changePointProblem <- data.frame(stationCode = dataWithChangePoint$code,
-                                     startDateTime = dataWithChangePoint$datetime,
+    changePointProblem <- data.frame(startDateTime = dataWithChangePoint$datetime,
                                      endDateTime = dataWithChangePoint$datetime);
 
     return(changePointProblem)
