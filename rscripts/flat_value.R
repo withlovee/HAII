@@ -2,7 +2,7 @@ source('config.R')
 source('helper.R')
 
 FlatValue.FindFlatValue <- function(data, dataType,
-                                    waterDataInterval = Config.defaultDataInterval,
+                                    waterDataInterval = Config.defaultWaterDataInterval,
                                     rainDataInterval = Config.defaultRainDataInterval,
                                     flatThreshold = Config.FlatValue.defaultThreshold) {
 

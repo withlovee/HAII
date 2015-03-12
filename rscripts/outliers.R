@@ -4,7 +4,7 @@ source('config.R')
 source('cluster.R')
 
 Outliers.Find <- function(data, dataType,
-													dataInterval    = Config.defaultDataInterval,
+													dataInterval    = Config.defaultWaterDataInterval,
 													valueThreshold	= Config.Outliers.valueThreshold,
 													noiseThreshold  = Config.Outliers.noiseThreshold) {
 	if(!is.data.frame(data)) {

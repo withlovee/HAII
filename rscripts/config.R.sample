@@ -1,41 +1,125 @@
+################################################################################
+#  PostgreSQL config
+################################################################################
 
-# PostgreSQL config
-Config.databaseName     <- "telemetering"
+Config.databaseName     <- "postgres"
 Config.databaseUser     <- "postgres"
 Config.databasePassword <- "postgres"
 
-# Data setup
-Config.defaultDataInterval <- 600     # 10 minutes
-Config.defaultRainDataInterval <- 3600 # 1 hour
-Config.consecutiveProblemGapThreshold <- 1 # 1 hr
-Config.allowDataType <- c("WATER", "RAIN")
 
-# Email setup
-# Config.Email.baseURL <- "http://qc.haii.or.th/HAII/public/index.php"
-Config.Email.baseURL <- "http://localhost/HAII/public/index.php"
-Config.Email.basePath <- "/api/email/"
-Config.Email.Instantly.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath, "send_alert/instantly")
+################################################################################
+#  Data Config
+################################################################################
 
-Config.Email.Daily.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath, "send_report/daily")
-# Config.Email.Monthly.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath, "monthly")
+Config.allowDataType                  <- c("WATER", "RAIN")
 
+### Time difference between each data
+Config.defaultWaterDataInterval       <- 600    # 10 minutes
+Config.defaultRainDataInterval        <- 3600	  # 1 hour
+
+### How many gap (based on time difference) to be count as consecutive interval
+Config.consecutiveProblemGapThreshold <- 1      # consecutive only (1 gap)
+
+
+################################################################################
+#  Default Data Flags
+################################################################################
+
+### Data flagged by user as an error
+Config.Flags.dataError <- -9999
+
+### Data flagged by telestation/admin as machine error
+Config.Flags.machineError <- 999999
+
+
+################################################################################
+#  Email Config 
+################################################################################
+
+### Change this to false to suppress all email
 Config.Email.useEmailNotification <- TRUE
-Config.Email.APIKey <- "HAIIEMAILKEY"
 
-# Out of Range config
+### Path for Laravel Email API
+# Config.Email.baseURL <- "http://qc.haii.or.th/HAII/public/index.php"
+Config.Email.baseURL  <- "http://localhost/HAII/public/index.php"
+Config.Email.basePath <- "/api/email/"
+Config.Email.APIKey <- "HAIIEMAILKEY"
+Config.Email.Instantly.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath, "send_alert/instantly")
+Config.Email.Daily.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath, "send_alert/daily")
+Config.Email.Monthly.fullURL <- paste0(Config.Email.baseURL, Config.Email.basePath, "send_alert/monthly")
+
+
+################################################################################
+# Out of range
+################################################################################
+
+### Offset of river
 Config.OutOfRange.Water.groundLevelOffset <- -1
 Config.OutOfRange.Water.bankOffset <- 4
 
+### Maximum level of normal rain
 Config.OutOfRange.Rain.threshold <- 120
 
-# Config.OutOfRange.backwardThreshold <- 60 * 60 * 24
-Config.OutOfRange.backwardThreshold <- 3600 * 24 * 30 * 5
+### how long to run algorithm backward in 10 minutes operation
+# Config.OutOfRange.backwardThreshold <- 60 * 60 * 24      # 1 day
+Config.OutOfRange.backwardThreshold <- 3600 * 24 * 30 * 5  # 5 month (for testing)
 
 
-# Missing Gap config
-# Config.MissingGap.defaultInterval <- 7 * 24 * 60 * 60    # 7 days
-Config.MissingGap.defaultInterval <- 5 * 60 * 60 # 5 hours
+################################################################################
+# Missing Gap
+################################################################################
 
-# Flat Value Config
+### Minimum length to be considered as missing gap
+# Config.MissingGap.defaultInterval <- 7 * 24 * 60 * 60    # 7 days (for testing)
+Config.MissingGap.defaultInterval <- 5 * 60 * 60           # 5 hours
+
+
+################################################################################
+# Flat Value
+################################################################################
+
+### Minimum length to be considered as flat value
 # Config.FlatValue.defaultIntervall <- 3 * 24 * 60 * 60 # 3 days
-Config.FlatValue.defaultThreshold <- 5 * 60 * 60 # 5 hours
+Config.FlatValue.defaultThreshold <- 3 * 60 * 60 # 5 hours
+
+
+################################################################################
+# Inhomogeneity Config
+################################################################################
+
+### Maximum changepoint for binary segmentation algorithm
+Config.Inhomogeneity.maximumChangePoint <- 20
+
+### Minimum value difference to be considered as Inhomogeneity
+Config.Inhomogeneity.threshold <- 1
+
+### Minimum data points to run inhomogeneity algorithm
+Config.Inhomogeneity.minimumDataPoint <- 144
+
+
+################################################################################
+# Outliers
+################################################################################
+
+### Minimum value difference to be considered as new cluster
+### (Used by Cluster.TimeSeriesCluster algorithm)
+Config.Outliers.valueThreshold <- 1
+
+### Maximum number of point in each cluster to be considered as an noise
+### (Used by Cluster.TimeSeriesCluster algorithm)
+Config.Outliers.noiseThreshold <- 2
+
+
+################################################################################
+# Missing Pattern
+################################################################################
+
+### Minimum day of data to run missing pattern algorithm (also in recursive function)
+Config.MissingPattern.minimumDay <- 7
+
+### Maximum gap to merge two missing pattern together
+Config.MissingPattern.mergeGap <- 15
+
+### Path to store image for monthly operation
+Config.MissingPattern.monthlyImagePath <- "../public/missingpattern/"
+

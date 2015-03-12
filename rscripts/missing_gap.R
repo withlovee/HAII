@@ -2,7 +2,7 @@ library('xts')
 source('config.R')
 
 MissingGap.FindMissingGap <- function(data, dataType, startDateTime, endDateTime, installedDate, 
-  waterDataInterval = Config.defaultDataInterval,
+  waterDataInterval = Config.defaultWaterDataInterval,
   rainDataInterval = Config.defaultRainDataInterval,
   missingInterval    = Config.MissingGap.defaultInterval,
   verbose = FALSE) {
@@ -102,7 +102,7 @@ MissingGap.FindMissingGap <- function(data, dataType, startDateTime, endDateTime
 }
 
 # MissingGap.FindMissingGap <- function(data, startDateTime, endDateTime,
-#   dataInterval = Config.defaultDataInterval,
+#   dataInterval = Config.defaultWaterDataInterval,
 #   missingInterval    = Config.MissingGap.defaultInterval,
 #   verbose = FALSE) {
 
@@ -162,7 +162,7 @@ MissingGap.FindMissingGap <- function(data, dataType, startDateTime, endDateTime
 #####################
 
 # MissingGap.FindMissingPoint <- function(data, startDateTime, endDateTime,
-#   dataInterval = Config.defaultDataInterval,
+#   dataInterval = Config.defaultWaterDataInterval,
 #   verbose = FALSE) {
 
 #   # Find all missing time point between startDateTime and endDateTime
@@ -208,7 +208,7 @@ MissingGap.FindMissingGap <- function(data, dataType, startDateTime, endDateTime
 # }
 
 # MissingGap.FindMissingGap <- function (data, startDateTime, endDateTime,
-#   dataInterval = Config.defaultDataInterval,
+#   dataInterval = Config.defaultWaterDataInterval,
 #   missingInterval    = Config.MissingGap.defaultInterval,
 #   verbose = FALSE) {
 

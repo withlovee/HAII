@@ -67,7 +67,7 @@ MissingPattern.Controller.MonthlyOperation <- function(dataType, currentDateTime
 
   problemType <- "MP"
 
-  lastMonth <- Helper.LastMonth(currentDateTime, Config.defaultDataInterval)
+  lastMonth <- Helper.LastMonth(currentDateTime, Config.defaultWaterDataInterval)
   print(lastMonth)
 
   allMissingPattern <- MissingPattern.Controller.Batch(dataType, lastMonth$start, lastMonth$end, addToDB, mergeProblem = FALSE)

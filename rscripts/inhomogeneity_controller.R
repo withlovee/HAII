@@ -60,7 +60,7 @@ Inhomogeneity.Controller.MonthlyOperation <- function(currentDateTime = Sys.time
   dataType <- "WATER"
   problemType <- "HM"
 
-  lastMonth <- Helper.LastMonth(currentDateTime, Config.defaultDataInterval)
+  lastMonth <- Helper.LastMonth(currentDateTime, Config.defaultWaterDataInterval)
   print(lastMonth)
 
   changePoint <- Inhomogeneity.Controller.Batch(dataType, lastMonth$start, lastMonth$end, addToDB)

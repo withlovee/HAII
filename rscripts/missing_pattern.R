@@ -150,7 +150,7 @@ MissingPattern.Find <- function(data, dataType, startDate, endDate) {
   
   dataInterval <- NA
   if(dataType == "WATER") {
-    dataInterval <- Config.defaultDataInterval
+    dataInterval <- Config.defaultWaterDataInterval
   } else if (dataType == "RAIN"){
     dataInterval <- Config.defaultRainDataInterval
   }
