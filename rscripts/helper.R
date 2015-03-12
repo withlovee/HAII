@@ -23,13 +23,32 @@ Helper.StartOfDay <- function(t) {
   return(a)
 }
 
-Helper.LastMonth <- function(ti, dataInterval) {
+Helper.LastMonth <- function(ti, dataInterval=1) {
   month(ti) <- month(ti) - 1
   start <- floor_date(ti, "month")
   end <- start
   month(end) <- month(end) + 1
   end <- end - dataInterval
   return(list(start=start, end=end))
+}
+
+Helper.LastOperationDay <- function(ti, dataInterval=1) {
+
+  end <- NA
+
+  # less than or equal 07:00:00
+  if(hour(ceiling_date(ti, "hour")) <= 7){
+      day(ti) <- day(ti) - 1
+  }
+
+  end <- floor_date(ti, "hour")
+  hour(end) <- 7
+
+  start <- end
+  day(start) <- day(start) - 1
+  start <- start + dataInterval
+
+  return(list(start = start, end = end))
 }
 
 Helper.MergeDateTime <- function(startDateTimeList, endDateTimeList) {

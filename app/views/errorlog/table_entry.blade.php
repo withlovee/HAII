@@ -12,8 +12,12 @@
 			</td>
 			<td>{{ getProblemName($problem->problem_type) }}</td>
 			<td>{{ $problem->num }}</td>
-			@if( isAdmin() )
+			@if( isAdmin() && ($problem->problem_type != "HM" && $problem->problem_type != "MP"))
 				<td>{{ getErrorButton($problem->id, 'true', $problem->status) }}</td>
+				<td>{{ getErrorButton($problem->id, 'false', $problem->status) }}</td>
+				<td>{{ getErrorButton($problem->id, 'undefined', $problem->status) }}</td>
+			@elseif($problem->problem_type == "HM" || $problem->problem_type == "MP")
+				<td></td>
 				<td>{{ getErrorButton($problem->id, 'false', $problem->status) }}</td>
 				<td>{{ getErrorButton($problem->id, 'undefined', $problem->status) }}</td>
 			@endif

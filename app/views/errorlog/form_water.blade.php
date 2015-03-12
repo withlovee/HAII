@@ -3,24 +3,24 @@
 		<label for="">เลือกดูตาม</label>
 	</div>
 	<div class="form-group">
-		{{ Form::select('basin', $basins, $params_water['basin'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('basin', $basins, $params_water['basin'], array('class' => 'form-control chosen', 'data-placeholder' => 'ลุ่มน้ำ')) }}
 	</div>
 	<div class="form-group">
-		{{ Form::select('province', $provinces, $params_water['province'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('province', $provinces, $params_water['province'], array('class' => 'form-control chosen', 'data-placeholder' => 'จังหวัด')) }}
 	</div>
 	<div class="form-group">
-		{{ Form::select('code', $codes, $params_water['code'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('code', $codes, $params_water['code'], array('class' => 'form-control chosen', 'data-placeholder' => 'สถานี')) }}
 	</div>
 	<div class="form-group">
 		{{ Form::select('problem_type', array(
-			'' => 'ปัญหาทุกประเภท',
+			'' => '',
 			'OR' => 'Out-of-Range (OR)',
 			'FV' => 'Flat Value (FV)',
 			'MG' => 'Missing Gap (MG)',
 			'OL' => 'Outlier (OL)',
 			'HM' => 'Homogeneity (HM)',
 			'MP' => 'Missing Pattern (MP)'
-			), $params_water['problem_type'], array('class' => 'form-control chosen'))
+			), $params_water['problem_type'], array('class' => 'form-control chosen', 'data-placeholder' => 'ปัญหาทุกประเภท'))
 		}}
 	</div>
 	<input type="hidden" name="data_type" value="WATER">

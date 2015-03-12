@@ -47,21 +47,24 @@ Outliers.Find <- function(data, dataType,
 		isOutliers <- FALSE
 		noiseData <- data[noiseId,]
 
-		if (noiseId == minDataId) {
-			rightTimeDiff <- Helper.TimeDiffSecs(data[noiseId + 1,]$datetime,
-																				   noiseData$datetime)
-			haveRightData = rightTimeDiff <= dataInterval
-			if (haveRightData) {
-				isOutliers <- TRUE
-			}
-		} else if (noiseId == maxDataId) {
-			leftTimeDiff <- Helper.TimeDiffSecs(noiseData$datetime,
-																				  data[noiseId - 1,]$datetime)
-			haveLeftData = leftTimeDiff <= dataInterval
-		  if (haveLeftData) {
-		  	isOutliers <- TRUE
-		  }
-		} else {
+		### Not check edge case for now
+		# if (noiseId == minDataId) {
+		# 	rightTimeDiff <- Helper.TimeDiffSecs(data[noiseId + 1,]$datetime,
+		# 																		   noiseData$datetime)
+		# 	haveRightData = rightTimeDiff <= dataInterval
+		# 	if (haveRightData) {
+		# 		isOutliers <- TRUE
+		# 	}
+		# } else if (noiseId == maxDataId) {
+		# 	leftTimeDiff <- Helper.TimeDiffSecs(noiseData$datetime,
+		# 																		  data[noiseId - 1,]$datetime)
+		# 	haveLeftData = leftTimeDiff <= dataInterval
+		#   if (haveLeftData) {
+		#   	isOutliers <- TRUE
+		#   }
+		# } 
+		# else {
+		if (noiseId != minDataId && noiseId != maxDataId) {
 			leftTimeDiff <- Helper.TimeDiffSecs(noiseData$datetime,
 																					data[noiseId - 1,]$datetime)
 			rightTimeDiff <- Helper.TimeDiffSecs(data[noiseId + 1,]$datetime,

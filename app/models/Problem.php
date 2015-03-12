@@ -63,12 +63,17 @@ class Problem extends \Eloquent {
 		else return $query;
 	}
 
+	public function scopeEndDatetimeAfter($query, $datetime) {
+		if($datetime) return $query->where('end_datetime', '>=', $datetime);
+		else return $query;	
+	}
+
 	static function recentByBasin($data_type, $problem_type = 'OR') {
 		/*-- Query latest problems with tele_station information --*/
 		$problems = self::dataType($data_type)
 			->problem($problem_type)
 			->marked('false')
-			->startDatetime(self::getStartDate('Y-m-d 07:00'))
+			->endDatetimeAfter(self::getStartDate('Y-m-d 07:01'))
 			->get()->toArray();
 		// return self::getStartDate('Y-m-d 07:01');
 		/*-- Group the data by basins --*/
@@ -89,7 +94,7 @@ class Problem extends \Eloquent {
 
 	static function recentMap(){
 		/*-- Query telestations that has recent problems --*/
-		$problems = self::map()->startDatetime(self::getStartDate('Y-m-d 07:01'))->get()->toArray();
+		$problems = self::map()->endDatetimeAfter(self::getStartDate('Y-m-d 07:01'))->get()->toArray();
 		foreach($problems as $i => $problem){
 			$problems[$i]['full_name'] = self::buildFullStationName($problem);
 			unset($problems[$i]['tambon_name']);
@@ -114,6 +119,8 @@ class Problem extends \Eloquent {
 			'start_date' => '',
 			'start_time' => '',
 			'end_date' => '',
+			'end_date_after' => '',
+			'end_time_after' => '',
 			'end_time' => '',
 			'orderby' => 'start_datetime'
 		);
@@ -135,6 +142,8 @@ class Problem extends \Eloquent {
 			->marked($params['marked'])
 			->startDatetime(self::renderDate($params['start_date'], $params['start_time']))
 			->endDatetime(self::renderDate($params['end_date'], $params['end_time']))
+			->endDatetimeAfter(self::renderDate($params['end_date_after'], $params['end_time_after']))
+			// ->endDatetimeAfter(self::renderDate($params['end_date_after'], $params['end_time_after'])
 			->orderBy($order, $orderby_order[$order])
 			->orderBy('id', 'desc')
 			->paginate(25);
@@ -240,6 +249,21 @@ class Problem extends \Eloquent {
 	}
 
 	static function yesterdayStat(){
+		// $results['RAIN'] = DB::table('problems')
+		// 	->select(DB::raw('problem_type, count(*)'))
+		// 	->where('data_type', '=', 'RAIN')
+		// 	->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+		// 	->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+		// 	->groupBy('problem_type')
+		// 	->get();
+		// $results['WATER'] = DB::table('problems')
+		// 	->select(DB::raw('problem_type, count(*)'))
+		// 	->where('data_type', '=', 'WATER')
+		// 	->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+		// 	->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+		// 	->groupBy('problem_type')
+		// 	->get();
+
 		$results['RAIN'] = DB::table('problems')
 			->select(DB::raw('problem_type, count(*)'))
 			->where('data_type', '=', 'RAIN')

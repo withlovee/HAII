@@ -15,6 +15,26 @@ class DataLog extends \Eloquent {
 		return $query;
 	}
 
+	public function scopeClean($query, $type) {
+		if($type == 'WATER') {
+			return $query->where('water1', '!=', '999999')
+									 ->where('water1', '!=', '-9999');
+		} else if ($type == 'RAIN'){
+			return $query->where('rain1h', '!=', '999999')
+									 ->where('rain1h', '!=', '-9999');
+		}
+	}
+
+	public function scopeCleanOrigin($query, $type) {
+		if($type == 'WATER') {
+			return $query->where('origin_water1', '!=', '999999')
+									 ->where('origin_water1', '!=', '-9999');
+		} else if ($type == 'RAIN'){
+			return $query->where('origin_rain1h', '!=', '999999')
+									 ->where('origin_rain1h', '!=', '-9999');
+		}
+	}
+
 	public function scopeHourly($query){
 		return $query->whereRaw("EXTRACT(MINUTE FROM time) = 0");
 	}

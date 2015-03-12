@@ -88,8 +88,8 @@ MissingPattern.FindMissingPattern <- function(hourlyData, dataType, startDay, en
   leftMissing <- MissingPattern.FindMissingPattern(hourlyData, dataType, startDay, halfDay)
   rightMissing <- MissingPattern.FindMissingPattern(hourlyData, dataType, halfDay + 1, endDay)
 
-  haveLeftPattern <- is.null(leftMissing)
-  haveRightPattern <- is.null(rightMissing)
+  haveLeftPattern <- !is.null(leftMissing)
+  haveRightPattern <- !is.null(rightMissing)
 
   # analyze
   freq <- MissingPattern.ConvertToFrequencyData(dataInRange)
@@ -100,7 +100,12 @@ MissingPattern.FindMissingPattern <- function(hourlyData, dataType, startDay, en
   
   haveOverallPattern = length(unique(clusterResult$cluster)) > 1
   
-  # cat("Start",startDay, "End", endDay, "HavePattern", haveOverallPattern, "\n")
+  # cat("===================\n")
+  # cat("Start",startDay, "End", endDay,  "Max.Freq.", maxFreqPossible, "eps", eps, "\n")
+  # cat("HavePattern", haveOverallPattern, "| HaveLeftPattern", haveLeftPattern, "| HaveRightPattern", haveRightPattern, "\n")
+  # print(freq)
+  # cat("===================\n")
+  
 
   missingPattern <- NULL
 
@@ -192,10 +197,10 @@ MissingPattern.Find <- function(data, dataType, startDate, endDate) {
   }
 
   # convert to problem format
-  missingPattern$startDatetime <- missingPattern$startDay*3600*24 + startDate
-  missingPattern$endDatetime <- (missingPattern$endDay + 1)*3600*24 - dataInterval + startDate
+  missingPattern$startDateTime <- missingPattern$startDay*3600*24 + startDate
+  missingPattern$endDateTime <- (missingPattern$endDay + 1)*3600*24 - dataInterval + startDate
   
-  problems <- missingPattern[,c("startDatetime", "endDatetime")]
+  problems <- missingPattern[,c("startDateTime", "endDateTime")]
   
   return(list(
     missingPattern = problems,

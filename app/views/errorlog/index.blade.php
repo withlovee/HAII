@@ -20,44 +20,26 @@
 		</div>
 	</div>
 </div>
+{{--
 {{ HTML::style('css/chosen.min.css'); }}
 {{ HTML::script('js/chosen.jquery.min.js'); }}
 {{ HTML::style('css/watable.css'); }}
 {{ HTML::script('js/jquery.watable.js'); }}
+--}}
 <script>
 $(document).ready(function() {
-	function HAIIWATable(divName, params){
-		mainElement = $(divName);
-		args = {};
-		function getFormObj(inputs) {
-			var formObj = {};
-			$.each(inputs, function (i, input) {
-				formObj[input.name] = input.value;
-			});
-			return formObj;
-		}
-		// function getTable(){
-		// 	$.get("{{ URL::to('api/problems/get_table') }}", args)
-		// 		.done(function(data) {
-		// 		console.log(data);
-		// 		$("#"+args.data_type+" .table-full").html(data);
-		// 	});
-		// }
-		// mainElement.parent().find('form').on('click', '.query_btn', function(e){
-		// 	e.preventDefault();
-		// 	args = getFormObj($(this).parents('form').serializeArray());
-		// 	console.log(args);
-		// 	getTable();
-		// });
-		mainElement.parent().on('click', '.pagination a', function(e){
-			// e.preventDefault();
-			// args = getFormObj($(this).parents('form').serializeArray());
-			// // args.page = $(this).html();
-			// console.log($(this).parents('form').serializeArray());
-			// console.log(args);
-			// getTable();
-		});
-	}
+	// function HAIIWATable(divName, params){
+	// 	mainElement = $(divName);
+	// 	args = {};
+	// 	function getFormObj(inputs) {
+	// 		var formObj = {};
+	// 		$.each(inputs, function (i, input) {
+	// 			formObj[input.name] = input.value;
+	// 		});
+	// 		return formObj;
+	// 	}
+	// }
+	
 	/* -- Clicking status buttons (Error/ Not Error) -- */
 	$('body').on('click', '.update', function(e){
 		e.preventDefault();
@@ -79,23 +61,41 @@ $(document).ready(function() {
 				}
 			});
 	});
-	new HAIIWATable("#div1", {
-		data_type: 'WATER', 
-		marked: '{{ $status }}',
-		start_date: '{{ $start_date }}',
-		start_time: '{{ $start_time }}'
-	});
-	new HAIIWATable("#div2", {
-		data_type: 'RAIN', 
-		marked: '{{ $status }}',
-		start_date: '{{ $start_date }}',
-		start_time: '{{ $start_time }}'
-	});
+	// new HAIIWATable("#div1", {
+	// 	data_type: 'WATER', 
+	// 	marked: '{{ $status }}',
+	// 	start_date: '{{ $start_date }}',
+	// 	start_time: '{{ $start_time }}'
+	// });
+	// new HAIIWATable("#div2", {
+	// 	data_type: 'RAIN', 
+	// 	marked: '{{ $status }}',
+	// 	start_date: '{{ $start_date }}',
+	// 	start_time: '{{ $start_time }}'
+	// });
 
 
 	/*----- Update provice, stationcode dropdown -----*/
 
+	$('select[name="province"]').chosen({
+		allow_single_deselect: true
+	});
+
+	$('select[name="basin"]').chosen({
+		allow_single_deselect: true
+	});
+
+	$('select[name="code"]').chosen({
+		allow_single_deselect: true
+	});
+
+	$('select[name="problem_type"]').chosen({
+		allow_single_deselect: true
+	});
+
+
 	var updateProvince = function(basin) {
+		console.log("update province with basin:"+basin);
 		var url = "{{ URL::to('api/telestation/basin/province') }}";
 		var data = {basin: basin};
 
@@ -103,49 +103,68 @@ $(document).ready(function() {
 		$.post(url, data).done(function(res){
 			province = res;
 
-			console.log(res);
 			setProvince(province);
 			updateStation(province);
 		});
-
 		
 	}
 
 	var setProvince = function(province) {
 
-		console.log(province);
-
 		dropdown = $('select[name="province"]');
+		oldValue = dropdown.val();
+
 		dropdown.html("");
-		dropdown.append('<option value="" selected="selected">จังหวัด</option>');
+		dropdown.append('<option value=""></option>');
 
 		for(i = 0; i < province.length;i++) {
-			dropdown.append('<option value="'+province[i]+'">'+province[i]+'</option>');
+			if (province[i] == oldValue) {
+				dropdown.append('<option value="'+province[i]+'" selected="selected">'+province[i]+'</option>');	
+			} else {
+				dropdown.append('<option value="'+province[i]+'">'+province[i]+'</option>');
+			}
+			
 		}
+
+		dropdown.trigger("chosen:updated");
 
 	}
 
 	var updateStation = function(province) {
+		provinceDropdown = $('select[name="province"]');
+		if (provinceDropdown.val() != "") {
+			province = provinceDropdown.val();
+		}
+
+		console.log("update station with province:"+province);
+
 		var url = "{{ URL::to('api/telestation/province/station') }}";
 		var data = {province: province};
 
 		var station = [];
 		$.post(url, data).done(function(res){
 			station = res;
-
-			console.log(res);
 			setStation(station);
 		});
 	}
 
 	var setStation = function(station) {
 		dropdown = $('select[name="code"]');
+		oldValue = dropdown.val();
+
 		dropdown.html("");
-		dropdown.append('<option value="" selected="selected">รหัสสถานี</option>');
+		dropdown.append('<option value=""></option>');
 
 		for(i = 0; i < station.length;i++) {
-			dropdown.append('<option value="'+station[i]+'">'+station[i]+'</option>');
+			if (station[i] == oldValue) {
+				dropdown.append('<option value="'+station[i]+'" selected="selected">'+station[i]+'</option>');	
+			} else {
+				dropdown.append('<option value="'+station[i]+'">'+station[i]+'</option>');	
+			}
+			
 		}
+
+		dropdown.trigger("chosen:updated");
 	}
 
 	$('select[name="basin"]').change(function(){
@@ -163,6 +182,14 @@ $(document).ready(function() {
 		}
 		updateStation(province);
 	});
+
+	var initProvinceAndStationFilter = function() {
+		// basin + province 
+		var basinDropdown = $('select[name="basin"]');
+		basinDropdown.trigger('change');
+	}
+
+	initProvinceAndStationFilter();
 
 	$(".datepicker").datepicker({
 		dateFormat: "yy-mm-dd",

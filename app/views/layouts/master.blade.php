@@ -7,12 +7,15 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	{{ HTML::style('css/bootstrap.css'); }}
 	{{ HTML::style('css/animate.min.css'); }}
+	{{ HTML::style('css/bootstrap-datetimepicker.min.css'); }}
 	{{ HTML::style('css/jquery-ui-1.10.4.custom.min.css'); }}
+	{{ HTML::style('css/chosen.min.css'); }}
 	<link rel="stylesheet/less" type="text/css" href="{{ URL::asset('css/style.less'); }}" />
 	{{ HTML::script('js/jquery.min.js'); }}
 	{{ HTML::script('js/jquery-ui-1.10.4.custom.min.js'); }}
 	{{ HTML::script('js/jquery-ui-timepicker-addon.js'); }}
 	{{ HTML::script('js/bootstrap.min.js'); }}
+	{{ HTML::script('js/chosen.jquery.min.js'); }}
 	{{ HTML::script('js/less.js'); }}
 	<!--[if lt IE 9]>
 		{{ HTML::script('js/html5shiv.js'); }}
@@ -39,10 +42,12 @@
 		<ul class="nav navbar-nav">
 			<li>{{ HTML::link('dailyop', 'Daily Operations') }}</li>
 			<li>{{ HTML::link('errorlog', 'Error Log') }}</li>
-			<!--li><a href="batch.php">Batch Processing</a></li>
+			<li>{{ HTML::link('batch', 'Batch Processor') }}</li>
+			<!-- 
 			<li><a href="reports.php">Report Generation</a></li>
 			<li><a href="settings.php">Settings</a></li>
-			<li><a href="export.php">Export</a></li-->
+			<li><a href="export.php">Export</a></li>
+			-->
 		</ul>
 		@if(!Auth::check())
 		<ul class="nav navbar-nav navbar-right">
@@ -98,6 +103,13 @@
 	<!-- /.container -->
 </section>
 <!-- /.content-wrapper -->
+	<script>
+		$(function(){
 
+			$(".chosen").chosen();
+			
+		});
+	</script>
+	@yield('script')
 </body>
 </html>

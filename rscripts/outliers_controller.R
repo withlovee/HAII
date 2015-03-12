@@ -58,7 +58,7 @@ Outliers.Controller.Batch <- function (dataType, startDateTime, endDateTime, add
 Outliers.Controller.MonthlyOperation <- function(currentDateTime = Sys.time(), addToDB = TRUE) {
 
   dataType <- "WATER"
-  problemType <- "HM"
+  problemType <- "OL"
 
   lastMonth <- Helper.LastMonth(currentDateTime, Config.defaultDataInterval)
   print(lastMonth)

@@ -12,7 +12,8 @@ class TeleStation extends \Eloquent {
 			->get();
 		$output = array();
 		if($form){
-			$output[""] = 'ลุ่มน้ำ';
+			// $output[""] = 'ลุ่มน้ำ';
+			$output[""] = "";
 			foreach($results as $result){
 				if($result->basin)
 					$output[$result->basin] = $result->basin;
@@ -32,7 +33,8 @@ class TeleStation extends \Eloquent {
 			->get();
 		$output = array();
 		if($form){
-			$output[""] = 'จังหวัด';
+			// $output[""] = 'จังหวัด';
+			$output[""] = "";
 			foreach($results as $result){
 				if($result->province_name)
 					$output[$result->province_name] = $result->province_name;
@@ -102,7 +104,8 @@ class TeleStation extends \Eloquent {
 			->get();
 		$output = array();
 		if($form){
-			$output[""] = 'ภูมิภาค';
+			// $output[""] = 'ภูมิภาค';
+			$output[""] = '';
 			foreach($results as $result){
 				if($result->part)
 					$output[$result->part] = $result->part;
@@ -122,7 +125,8 @@ class TeleStation extends \Eloquent {
 			->get();
 		$output = array();
 		if($form){
-			$output[""] = 'รหัสสถานี';
+			// $output[""] = 'รหัสสถานี';
+			$output[""] = '';
 			foreach($results as $result){
 				$output[$result->code] = $result->code;
 			}

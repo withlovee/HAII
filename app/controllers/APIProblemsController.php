@@ -71,11 +71,13 @@ class APIProblemsController extends BaseController {
 
 		if($problem->data_type == "WATER") {
 			$data_log_query = $data_log_query->from($problem->start_datetime, 7200)
-																			 ->to($problem->end_datetime, 7200);
+																			 ->to($problem->end_datetime, 7200)
+																			 ->cleanOrigin("WATER");
 		} else if($problem->data_type == "RAIN") {
 			$data_log_query = $data_log_query->from($problem->start_datetime, 3600*5)
 																			 ->to($problem->end_datetime, 3600*5)
-																			 ->hourly();
+																			 ->hourly()
+																			 ->cleanOrigin("RAIN");
 		}
 
 		$data_log = $data_log_query->get()->toArray();
@@ -121,6 +123,16 @@ class APIProblemsController extends BaseController {
 		return Response::json($output);
 	}
 
+	public function getMissingPatternMonthlyImage() {
+		$id = intval(Input::get('id'));
+		$problem = Problem::find($id);
+		// dd($problem);
+		$datetime = strtotime($problem->start_datetime);
+		
+		$filename = date('Y-m-01', $datetime).'_'.$problem->station_code.'_'.$problem->data_type.'.png';
+		return Response::json(asset('missingpattern/'.$filename));
+	}
+
 	public function getButtons() {
 
 		if(!isAdmin()) {
@@ -128,10 +140,13 @@ class APIProblemsController extends BaseController {
 		}
 
 		$problem = Problem::find(intval(Input::get('id')));
+		$type = $problem->problem_type;
 		$status = $problem->status;
 		$html = '';
 		// 'Error' Button
-		$html .= $this->getErrorButton($problem->id, 'true', $status, 'btn btn-default');
+		if ($type != 'HM' && $type != 'MP') {
+			$html .= $this->getErrorButton($problem->id, 'true', $status, 'btn btn-default');	
+		}
 		//$html .= ' &nbsp; ';
 		// 'Not Error' Button
 		$html .= $this->getErrorButton($problem->id, 'false', $status, 'btn btn-default');

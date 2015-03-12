@@ -12,6 +12,15 @@
 		  <label class="btn btn-default">
 		    <input type="radio" value="FV" name="map-selector" autocomplete="off">FV
 		  </label>
+		  <label class="btn btn-default">
+		    <input type="radio" value="OL" name="map-selector" autocomplete="off">OL
+		  </label>
+		  <label class="btn btn-default">
+		    <input type="radio" value="HM" name="map-selector" autocomplete="off">HM
+		  </label>
+		  <label class="btn btn-default">
+		    <input type="radio" value="MP" name="map-selector" autocomplete="off">MP
+		  </label>
 		</div>
 		<div id="map-canvas" style="height: 700px"></div>
 	</div>

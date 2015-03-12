@@ -35,6 +35,7 @@ Route::get('api/problems/get_problem', 'APIProblemsController@getProblem')->befo
 Route::get('api/problems/get_map', 'APIProblemsController@getMap')->before('auth');
 Route::get('api/problems/get_buttons', 'APIProblemsController@getButtons')->before('auth');
 Route::get('api/problems/render_station_info', 'APIProblemsController@renderStationInfo')->before('auth');
+Route::get('api/problems/missing_pattern_monthly_image', 'APIProblemsController@getMissingPatternMonthlyImage')->before('auth');
 
 Route::get('api/telestation/wldetail', 'APITeleStationController@waterLevelDetail')->before('auth');
 Route::post('api/telestation/basin/province', 'APITeleStationController@provincesByBasin')->before('auth');
@@ -43,6 +44,9 @@ Route::post('api/telestation/province/station', 'APITeleStationController@statio
 Route::post('api/email/send_alert/{type}', 'APIEmailController@sendAlert');
 
 Route::get('api/email/send_report/daily', 'DailyReportController@generateDailyReport');
+
+// Batch Processing
+Route::get('batch', 'BatchController@index')->before('auth');
 
 // Route::get('/', function()
 // {

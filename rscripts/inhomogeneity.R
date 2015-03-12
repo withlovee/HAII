@@ -25,6 +25,8 @@ Inhomogeneity.Find <- function (data, dataType,
 															 pen.value  = "4*log(n)",
 															 Q          = maxChangePoint)
 
+  # print(cpt)
+  
   changePoints <- cpt@cpts
 
   filteredChangePoints <- c()

@@ -2,6 +2,7 @@ source('datalog2.R')
 source('config.R')
 source('problems.R')
 source('out_of_range.R')
+source('email.R')
 
 OutOfRange.Controller.FindOutOfRange <- function (stationCode, dataType, startDateTime, endDateTime) {
 
@@ -83,7 +84,8 @@ OutOfRange.Controller.DailyOperation <- function (dataType) {
 
   problemsStationCode <- unique(outOfRange$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
-  Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
+  # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
+  Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
 
   # send email
   return(outOfRange)

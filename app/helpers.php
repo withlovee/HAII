@@ -16,6 +16,7 @@ function getTime($offset = 0) {
 	if(intval(date('G')) < 7 || (intval(date('G')) == 7) && intval(date('i')) == 0) $offset -= 1;
 	return time()+($offset*24*60*60);
 }
+
 function getProblemName($name) {
 
 	$map = array(

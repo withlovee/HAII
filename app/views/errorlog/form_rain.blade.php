@@ -4,24 +4,24 @@
 		<label for="">เลือกดูตาม</label>
 	</div>
 	<div class="form-group">
-		{{ Form::select('basin', $basins, $params_rain['basin'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('basin', $basins, $params_rain['basin'], array('class' => 'form-control chosen', 'data-placeholder' => 'ลุ่มน้ำ')) }}
 	</div>
 	<div class="form-group" style="display:none;">
-		{{ Form::select('part', $parts, $params_rain['part'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('part', $parts, $params_rain['part'], array('class' => 'form-control chosen', 'data-placeholder' => 'ลุ่มน้ำ')) }}
 	</div>
 	<div class="form-group">
-		{{ Form::select('province', $provinces, $params_rain['province'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('province', $provinces, $params_rain['province'], array('class' => 'form-control chosen', 'data-placeholder' => 'จังหวัด')) }}
 	</div>
 	<div class="form-group">
-		{{ Form::select('code', $codes, $params_rain['code'], array('class' => 'form-control chosen')) }}
+		{{ Form::select('code', $codes, $params_rain['code'], array('class' => 'form-control chosen', 'data-placeholder' => 'สถานี')) }}
 	</div>
 	<div class="form-group">
 		{{ Form::select('problem_type', array(
-			'' => 'ปัญหาทุกประเภท',
+			'' => '',
 			'OR' => 'Out-of-Range (OR)',
 			'FV' => 'Flat Value (FV)',
 			'MG' => 'Missing Gap (MG)'
-			), $params_rain['problem_type'], array('class' => 'form-control chosen'))
+			), $params_rain['problem_type'], array('class' => 'form-control chosen', 'data-placeholder' => 'ปัญหาทุกประเภท'))
 		}}
 	</div>	
 	<input type="hidden" name="data_type" value="RAIN">

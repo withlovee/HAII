@@ -31,144 +31,166 @@ $(function(){
 				.done(function(html){
 					stationInfo.html(html).show(100);
 				});
+
+
 				$.get("{{ URL::to('api/problems/get_buttons') }}", {id: id})
 				.done(function(html){
 					errorButtons.html(html).show(100);
-				});
+				});	
+
 				console.log(res);
 
-				/* Render Charts */
-				Highcharts.setOptions({
-					global: {
-						timezoneOffset: -7 * 60
-					}
-				});
+				$('#highcharts2').hide();
+				$('.img-test').hide();
 
-
-				$.get("{{ URL::to('api/telestation/wldetail') }}", {station: res.station.code})
-					.done(function(telewldetail){
-
-					if(res.data.length > 0) {
-
-						console.log(telewldetail);
-
-						series = []
-
-						// data
-						series.push({
-									name : "Value",
-									id : "dataseries",
-									data : res.data,
-									step: false,
-									tooltip: {
-										valueDecimals: 2
-									},
-									marker: {
-										enabled: true,
-										radius: 4,
-										symbol: 'diamond'
-									},
-									zIndex: 9
-							});
-
-						// flags
-						series.push({
-							type: 'flags',
-							name: 'Flags on series',
-							data: [{
-								x: res.start_datetime_unix * 1000,
-								title: 'เริ่ม'
-							}, {
-								x: res.end_datetime_unix * 1000,
-								title: 'สิ้นสุด'
-							}],
-							onSeries: 'dataseries',
-							shape: 'squarepin',
-							zIndex:8
-						});
-
-						var maxPair = _.max(res.data, function(x) { return x[1]; });
-						var maxVal = maxPair[1];
-
-						var minPair = _.min(res.data, function(x) { return x[1]; });
-						var minVal = minPair[1];
-
-						if(res.problem_type == "OR" && res.data_type == "WATER") {
-							groundLevel = parseInt(telewldetail.ground_level);
-							leftBank = parseInt(telewldetail.left_bank);
-							rightBank = parseInt(telewldetail.right_bank);
-							maxBank = leftBank > rightBank ? leftBank : rightBank;
-
-							groundLevelSeries = $.map(res.data, function(x, i){
-								return [[x[0], groundLevel]];
-							});
-
-							maxBankSeries = $.map(res.data, function(x, i){
-								return [[x[0], maxBank]];
-							});
-
-							series.push({
-								name : "Ground Level",
-								id: "groundlevel",
-								data: groundLevelSeries,
-								zIndex:5
-							});
-							series.push({
-									name : "Max Bank",
-									id: "maxBank",
-									data: maxBankSeries,
-									zIndex:5
-							});
-
-							// maxVal = _.max([maxVal, groundLevel, leftBank, rightBank]);
-
-						}
-
-						if (res.problem_type == "OR" && res.data_type == "RAIN"){
-							rainThresholdSeries = $.map(res.data, function(x, i){
-								return [[x[0], 120]];
-							});
-							series.push({
-								name : "Rain Threshold",
-								id: "rainThreshold",
-								data: rainThresholdSeries,
-								zIndex:5
-							});
-
-							// maxVal = _.max([maxVal, rainThreshold]);
-						}
-
-
-						series.push({
-							type: 'area',
-							name: 'Problem Area',
-							threshold: minVal - 1,
-							data: [[res.start_datetime_unix * 1000, maxVal + 1], [res.end_datetime_unix * 1000, maxVal + 1]],
-							zIndex:1,
-							lineWidth: 5,
-							color: "rgba(255,200,200,0.5)"
-						});
+				if(res.problem_type == "MP") {
 					
-						$('#highcharts2').highcharts('StockChart', {
-							rangeSelector : {
-								selected : 1
-							},
-							legend : {
-								enabled: true
-							},
-							title : {
-								text : res.station.name
-							},
-							series : series
-						});
-					} else {
-						$('#highcharts2').html('<h3>ไม่มีข้อมูลของสถานีนี้</h3>');
-					}
-				});
+					$.get("{{ URL::to('api/problems/missing_pattern_monthly_image') }}", {id: res.id})
+					.done(function(url){
+						console.log(url);
+						$('.img-test').html('<img src="'+url+'"/>');
+						$('.img-test').fadeIn();
+					});
+				} else {
+					$('#highcharts2').show();
+					drawChart(res);
+				}
 
+				/* Render Charts */
+				
 			});
 		});
 	});
+
+	var drawChart = function(res) {
+
+		Highcharts.setOptions({
+			global: {
+				timezoneOffset: -7 * 60
+			}
+		});
+
+		$.get("{{ URL::to('api/telestation/wldetail') }}", {station: res.station.code})
+		.done(function(telewldetail){
+
+		if(res.data.length > 0) {
+
+			console.log(telewldetail);
+
+			series = []
+
+			// data
+			series.push({
+						name : "Value",
+						id : "dataseries",
+						data : res.data,
+						step: false,
+						tooltip: {
+							valueDecimals: 2
+						},
+						marker: {
+							enabled: true,
+							radius: 4,
+							symbol: 'diamond'
+						},
+						zIndex: 9
+				});
+
+			// flags
+			series.push({
+				type: 'flags',
+				name: 'Flags on series',
+				data: [{
+					x: res.start_datetime_unix * 1000,
+					title: 'เริ่ม'
+				}, {
+					x: res.end_datetime_unix * 1000,
+					title: 'สิ้นสุด'
+				}],
+				onSeries: 'dataseries',
+				shape: 'squarepin',
+				zIndex:8
+			});
+
+			var maxPair = _.max(res.data, function(x) { return x[1]; });
+			var maxVal = maxPair[1];
+
+			var minPair = _.min(res.data, function(x) { return x[1]; });
+			var minVal = minPair[1];
+
+			if(res.problem_type == "OR" && res.data_type == "WATER") {
+				groundLevel = parseInt(telewldetail.ground_level);
+				leftBank = parseInt(telewldetail.left_bank);
+				rightBank = parseInt(telewldetail.right_bank);
+				maxBank = leftBank > rightBank ? leftBank : rightBank;
+
+				groundLevelSeries = $.map(res.data, function(x, i){
+					return [[x[0], groundLevel]];
+				});
+
+				maxBankSeries = $.map(res.data, function(x, i){
+					return [[x[0], maxBank]];
+				});
+
+				series.push({
+					name : "Ground Level",
+					id: "groundlevel",
+					data: groundLevelSeries,
+					zIndex:5
+				});
+				series.push({
+						name : "Max Bank",
+						id: "maxBank",
+						data: maxBankSeries,
+						zIndex:5
+				});
+
+				// maxVal = _.max([maxVal, groundLevel, leftBank, rightBank]);
+
+			}
+
+			if (res.problem_type == "OR" && res.data_type == "RAIN"){
+				rainThresholdSeries = $.map(res.data, function(x, i){
+					return [[x[0], 120]];
+				});
+				series.push({
+					name : "Rain Threshold",
+					id: "rainThreshold",
+					data: rainThresholdSeries,
+					zIndex:5
+				});
+
+				// maxVal = _.max([maxVal, rainThreshold]);
+			}
+
+
+			series.push({
+				type: 'area',
+				name: 'Problem Area',
+				threshold: minVal - 1,
+				data: [[res.start_datetime_unix * 1000, maxVal + 1], [res.end_datetime_unix * 1000, maxVal + 1]],
+				zIndex:1,
+				lineWidth: 5,
+				color: "rgba(255,200,200,0.5)"
+			});
+		
+			$('#highcharts2').highcharts('StockChart', {
+				rangeSelector : {
+					selected : 1
+				},
+				legend : {
+					enabled: true
+				},
+				title : {
+					text : res.station.name
+				},
+				series : series
+			});
+		} else {
+			$('#highcharts2').html('<h3>ไม่มีข้อมูลของสถานีนี้</h3>');
+		}
+	});
+	}
 });
 </script>
 <div class="modal fade" id="detail">
@@ -191,6 +213,7 @@ $(function(){
 						<div class="modal-buttons"></div>
 					</div>
 					<!-- /.col-md-6 -->
+					<div class="img-test"></div>
 					<div class="col-md-9">
 						<div id="highcharts2" style="height: 400px; min-width: 710px"></div>
 						

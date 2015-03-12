@@ -114,6 +114,39 @@ DataLog.GetData <- function (stationCode, dataType, startDateTime, endDateTime,
 
 }
 
+DataLog.UpdateValue <- function(stationCode, dataType, startDateTime, endDateTime, value) {
+  startDateString <- strftime(startDateTime, "%Y-%m-%d")
+  endDateString   <- strftime(endDateTime, "%Y-%m-%d")
+  
+  startTimeString <- strftime(startDateTime, "%H:%M:%S")
+  endTimeString   <- strftime(endDateTime, "%H:%M:%S")
+
+  field <- ""
+
+  if (dataType == "WATER") {
+    field <- "water1"
+  } else if (dataType == "RAIN") {
+    field <- "rain1h"
+  }
+
+  queryString <- paste0(
+    "UPDATE data_log
+     SET ", field ," = ", value ,"
+     WHERE 
+         (data_log.date > DATE '", startDateString ,"'
+         OR
+         data_log.date = DATE '", startDateString ,"' AND data_log.time >= TIME '", startTimeString ,"')
+       AND
+         (data_log.date < DATE '", endDateString ,"'
+         OR
+         data_log.date = DATE '", endDateString ,"' AND data_log.time <= TIME '", endTimeString ,"')
+       AND data_log.code = '", stationCode ,"'
+     ")
+
+  print(queryString)
+  DBConnection.SendQuery(queryString)
+}
+
 DataLog.GetWaterStationRiverLevel <- function (stationCode) {
   queryString <- paste0("
     SELECT code, left_bank, right_bank, ground_level
