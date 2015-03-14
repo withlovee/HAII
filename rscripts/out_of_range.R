@@ -41,6 +41,40 @@ OutOfRange.RainLevel <- function (rainLevel,
   return(rainLevel < 0 | rainLevel > threshold)
 }
 
+OutOfRange.FindOutOfRange.depricated <- function(data, dataType) {
+  if (!is(data, "data.frame")) {
+    return(NULL)
+  }
+  if (nrow(data) <= 0) {
+    return(NULL)
+  }
+
+  isOutOfRange <- NA
+
+  if (dataType == "WATER") {
+    belowGroundLevel <- data$water1 < (data$ground_level + Config.OutOfRange.Water.groundLevelOffset)
+
+    aboveLeftBank <- data$water1 > (data$left_bank + Config.OutOfRange.Water.bankOffset)
+    aboveRightBank <- data$water1 > (data$left_bank + Config.OutOfRange.Water.bankOffset)
+    leftBankNA <- is.na(data$left_bank)
+    rightBankNA <- is.na(data$right_bank)
+
+    aboveMaxBank <- (aboveLeftBank | leftBankNA) & (aboveRightBank | rightBankNA) & (!leftBankNA | !rightBankNA)
+
+    isOutOfRange <- belowGroundLevel | aboveMaxBank
+  } else if (dataType == "RAIN") {
+    belowZero <- data$rain1h < 0
+    aboveThresold <- data$rain1h > Config.OutOfRange.Rain.threshold
+
+    isOutOfRange <- belowZero | aboveThresold
+    
+  }
+
+  outOfRangeData <- data[isOutOfRange & !is.na(isOutOfRange),] 
+  return(Helper.MergeConsecutiveDateTime(outOfRangeData$datetime, dataType))
+
+}
+
 OutOfRange.FindOutOfRange <- function(data, dataType) {
 
   if (!is(data, "data.frame")) {

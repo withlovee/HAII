@@ -2,10 +2,12 @@ source('inhomogeneity_controller.R')
 source('outliers_controller.R')
 source('missing_pattern_controller.R')
 
-Inhomogeneity.Controller.MonthlyOperation()
-Outliers.Controller.MonthlyOperation()
-MissingPattern.Controller.MonthlyOperation("WATER")
-MissingPattern.Controller.MonthlyOperation("RAIN")
+Exec.MonthlyOperation <- function() {
+	Inhomogeneity.Controller.MonthlyOperation()
+	Outliers.Controller.MonthlyOperation()
+	MissingPattern.Controller.MonthlyOperation("WATER")
+	MissingPattern.Controller.MonthlyOperation("RAIN")
+}
 
 # for testing
 # currentTime <- as.POSIXct('2012-02-01')

@@ -35,8 +35,6 @@ Email.sendMailNotification <- function(dataType, problemType, dateTime, problemS
                date = unbox(Helper.POSIXctToString(dateTime)),
                rain = rain,
                water = water)
-  
-  # json <- as.character(toJSON(body))
 
   url <- ""
 
@@ -57,7 +55,7 @@ Email.sendMailNotification <- function(dataType, problemType, dateTime, problemS
   }
   
   if(returnJson) {
-    return(json)    
+    return(toJSON(body))    
   } 
 
   cat("Email: ", as.character(toJSON(body)) , "\n")
@@ -69,7 +67,7 @@ Email.sendMailNotification <- function(dataType, problemType, dateTime, problemS
 Email.FindOverlapProblemJSON <- function(dataType, problemType, startDateTime, endDateTime) {
   res <- list(name = unbox(problemType),
           stations = Problems.GetProblemStationCodeListOverlapInterval(
-                      dataType, problemType ,datetime$start, datetime$end)
+                      dataType, problemType , startDateTime, endDateTime)
          )
 
   return(res)

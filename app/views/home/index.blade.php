@@ -93,7 +93,10 @@
 							<span class="num">{{ $stats['RAIN']['OR'] }}</span>
 						</div>
 						<!-- /.item -->
-						<div class="item-disabled"></div>
+						<div class="item">
+							Flat Value
+							<span class="num">{{ $stats['RAIN']['FV'] }}</span>
+						</div>
 						<div class="item">
 							Missing Gap
 							<span class="num">{{ $stats['RAIN']['MG'] }}</span>
