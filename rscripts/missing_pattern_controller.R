@@ -1,3 +1,4 @@
+library('ggplot2')
 source('datalog2.R')
 source('config.R')
 source('problems.R')

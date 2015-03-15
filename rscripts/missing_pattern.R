@@ -1,5 +1,4 @@
 library('fpc')
-library('ggplot2')
 source('config.R')
 source('helper.R')
 source('cluster.R')

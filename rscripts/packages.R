@@ -1,5 +1,5 @@
 
-packages <- c('RPostgreSQL', 'RUnit', 'httr', 'DBI', 'jsonlite', 'xts', 'changepoint', 'mclust', 'fpc', 'ggplot', 'lubridate')
+packages <- c('RPostgreSQL', 'RUnit', 'httr', 'DBI', 'jsonlite', 'xts', 'changepoint', 'mclust', 'fpc', 'ggplot2', 'lubridate')
 
 
 ################################
