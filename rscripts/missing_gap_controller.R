@@ -93,7 +93,7 @@ MissingGap.Controller.DailyOperation <- function(dataType, interval = NULL) {
   problemsStationCode <- unique(missingGap$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
-  Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
+  # Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
 
   return(missingGap)
 }

@@ -91,7 +91,7 @@ FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
   problemsStationCode <- unique(flatValue$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
-  Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
+  # Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
 
   # send email
   return(flatValue)
