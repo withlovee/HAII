@@ -189,8 +189,6 @@ class Problem extends \Eloquent {
 
 	static function yesterdayReport() {
 
-		dd(self::getStartDate('Y-m-d 07:01', -1));
-
 		$result_rain = DB::table('problems')
 			->select(array('station_code', 'problem_type'))
 			->where('data_type', '=', 'RAIN')
@@ -271,8 +269,6 @@ class Problem extends \Eloquent {
 		// 	->groupBy('problem_type')
 		// 	->get();
 		// 	
-		
-		dd(self::getStartDate('Y-m-d 07:01', -1)."     ".self::getStartDate('Y-m-d 07:00'));
 
 		$results['RAIN'] = DB::table('problems')
 			->select(DB::raw('problem_type, count(*)'))
