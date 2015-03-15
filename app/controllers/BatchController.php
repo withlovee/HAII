@@ -1,8 +1,9 @@
-<?php 
+<?php
 
-class BatchController extends BaseController {
-
-	public function index() {
-		return View::make('batch/index');
-	}
+class BatchController extends BaseController
+{
+    public function index()
+    {
+        return View::make('batch/index');
+    }
 }

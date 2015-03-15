@@ -1,8 +1,9 @@
 <?php
 
-class DailyReportController extends Controller {
-
-  public function generateDailyReport() {
+class DailyReportController extends Controller
+{
+  public function generateDailyReport()
+  {
 
     /*
       {
@@ -36,27 +37,30 @@ class DailyReportController extends Controller {
         }
     */
     $data = Problem::yesterdayReport();
-    $num = count($data["water"]["OR"]["stations"])
+      $num = count($data["water"]["OR"]["stations"])
             + count($data["water"]["MG"]["stations"])
             + count($data["water"]["FV"]["stations"])
             + count($data["rain"]["OR"]["stations"])
             + count($data["rain"]["MG"]["stations"])
             + count($data["rain"]["FV"]["stations"]);
 
-    $input = array(
+      $input = array(
         "key" => "HAIIEMAILKEY",
         "num" => $num,
         "date" => self::getStartDate('Y-m-d 07:00'),
         "rain" => $data["rain"],
-        "water" => $data["water"]
+        "water" => $data["water"],
       );
 
-    return APIEmailController::sendEmail($input, 'daily');
+      return APIEmailController::sendEmail($input, 'daily');
   }
 
-  private static function getStartDate($format, $offset = 0) {
-    if(intval(date('G')) < 7 || (intval(date('G')) == 7) && intval(date('i')) == 0) $offset -= 1;
-    return date($format, time()+($offset*24*60*60));
-  }
+    private static function getStartDate($format, $offset = 0)
+    {
+        if (intval(date('G')) < 7 || (intval(date('G')) == 7) && intval(date('i')) == 0) {
+            $offset -= 1;
+        }
 
+        return date($format, time()+($offset*24*60*60));
+    }
 }

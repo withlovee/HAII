@@ -1,9 +1,8 @@
 <?php
 
 
-
 /**
- * Class UserRepository
+ * Class UserRepository.
  *
  * This service abstracts some interactions that occurs between Confide and
  * the Database.
@@ -11,15 +10,15 @@
 class UserRepository
 {
     /**
-     * Signup a new account with the given parameters
+     * Signup a new account with the given parameters.
      *
-     * @param  array $input Array containing 'username', 'email' and 'password'.
+     * @param array $input Array containing 'username', 'email' and 'password'.
      *
-     * @return  User User object that may or may not be saved successfully. Check the id to make sure.
+     * @return User User object that may or may not be saved successfully. Check the id to make sure.
      */
     public function signup($input)
     {
-        $user = new User;
+        $user = new User();
 
         $user->username = array_get($input, 'username');
         $user->email    = array_get($input, 'email');
@@ -55,7 +54,7 @@ class UserRepository
         // The password confirmation will be removed from model
         // before saving. This field will be used in Ardent's
         // auto validation.
-        if(array_get($input, 'password')){
+        if (array_get($input, 'password')) {
             $user->password = array_get($input, 'password');
             $user->password_confirmation = array_get($input, 'password_confirmation');
         }
@@ -65,7 +64,8 @@ class UserRepository
 
         return $user;
     }
-    public function profile($input){
+    public function profile($input)
+    {
         $user = Auth::user();
         $user->username = array_get($input, 'username');
         $user->email    = array_get($input, 'email');
@@ -76,7 +76,7 @@ class UserRepository
         // The password confirmation will be removed from model
         // before saving. This field will be used in Ardent's
         // auto validation.
-        if(array_get($input, 'password')){
+        if (array_get($input, 'password')) {
             $user->password = array_get($input, 'password');
             $user->password_confirmation = array_get($input, 'password_confirmation');
         }
@@ -90,9 +90,9 @@ class UserRepository
     /**
      * Attempts to login with the given credentials.
      *
-     * @param  array $input Array containing the credentials (email/username and password)
+     * @param array $input Array containing the credentials (email/username and password)
      *
-     * @return  boolean Success?
+     * @return boolean Success?
      */
     public function login($input)
     {
@@ -105,11 +105,11 @@ class UserRepository
 
     /**
      * Checks if the credentials has been throttled by too
-     * much failed login attempts
+     * much failed login attempts.
      *
-     * @param  array $credentials Array containing the credentials (email/username and password)
+     * @param array $credentials Array containing the credentials (email/username and password)
      *
-     * @return  boolean Is throttled
+     * @return boolean Is throttled
      */
     public function isThrottled($input)
     {
@@ -118,11 +118,11 @@ class UserRepository
 
     /**
      * Checks if the given credentials correponds to a user that exists but
-     * is not confirmed
+     * is not confirmed.
      *
-     * @param  array $credentials Array containing the credentials (email/username and password)
+     * @param array $credentials Array containing the credentials (email/username and password)
      *
-     * @return  boolean Exists and is not confirmed?
+     * @return boolean Exists and is not confirmed?
      */
     public function existsButNotConfirmed($input)
     {
@@ -141,9 +141,9 @@ class UserRepository
     /**
      * Resets a password of a user. The $input['token'] will tell which user.
      *
-     * @param  array $input Array containing 'token', 'password' and 'password_confirmation' keys.
+     * @param array $input Array containing 'token', 'password' and 'password_confirmation' keys.
      *
-     * @return  boolean Success
+     * @return boolean Success
      */
     public function resetPassword($input)
     {
@@ -165,11 +165,11 @@ class UserRepository
     }
 
     /**
-     * Simply saves the given instance
+     * Simply saves the given instance.
      *
-     * @param  User $instance
+     * @param User $instance
      *
-     * @return  boolean Success
+     * @return boolean Success
      */
     public function save(User $instance)
     {
