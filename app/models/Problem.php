@@ -191,15 +191,19 @@ class Problem extends \Eloquent {
 		$result_rain = DB::table('problems')
 			->select(array('station_code', 'problem_type'))
 			->where('data_type', '=', 'RAIN')
-			->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
-			->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+			// ->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+			// ->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+			->where('end_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+			->where('start_datetime', '<', self::getStartDate('Y-m-d 07:00'))
 			->get();
 
 		$result_water = DB::table('problems')
 			->select(array('station_code', 'problem_type'))
 			->where('data_type', '=', 'WATER')
-			->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
-			->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+			// ->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+			// ->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
+			->where('end_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
+			->where('start_datetime', '<', self::getStartDate('Y-m-d 07:00'))
 			->get();
 
 		$report_water = array(
