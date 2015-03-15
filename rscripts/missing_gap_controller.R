@@ -2,6 +2,7 @@ source('datalog2.R')
 source('config.R')
 source('problems.R')
 source('missing_gap.R')
+source('email.R')
 
 MissingGap.Controller.FindMissingGap <- function(
   stationCode, dataType, startDateTime, endDateTime) {

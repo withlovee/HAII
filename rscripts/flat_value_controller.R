@@ -3,6 +3,7 @@ source('helper.R')
 source('datalog2.R')
 source('flat_value.R')
 source('problems.R')
+source('email.R')
 
 
 FlatValue.Controller.FindFlatValue <- function (stationCode, dataType, startDateTime, endDateTime) {
