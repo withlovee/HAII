@@ -56,7 +56,8 @@ Problems.GetProblemStationCodeListOverlapInterval <- function(dataType, problemT
 
 Problems.GetLatestProblemStationCodeList <- function(dataType, problemType, endDateTime) {
   startDateTime <- Helper.StartOfDay(endDateTime)
-  stationCode <- Problems.GetProblemStationCodeList(dataType, problemType, startDateTime, endDateTime)
+  # stationCode <- Problems.GetProblemStationCodeList(dataType, problemType, startDateTime, endDateTime)
+  stationCode <- Problems.GetProblemStationCodeListOverlapInterval(dataType, problemType, startDateTime, endDateTime)
 
   return(stationCode)
 }
