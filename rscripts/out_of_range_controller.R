@@ -6,7 +6,7 @@ source('email.R')
 
 OutOfRange.Controller.FindOutOfRange <- function (stationCode, dataType, startDateTime, endDateTime) {
 
-  cat("Out of Range: ", stationCode , "\n")
+  # cat("Out of Range: ", stationCode , "\n")
 
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
 
@@ -40,7 +40,7 @@ OutOfRange.Controller.FindAllOutOfRange <- function (dataType, startDateTime, en
     if(is.data.frame(result)) {
       if(nrow(result) > 0) {
         
-        cat(nrow(result), " Found.\n")
+        # cat(station, nrow(result), " Found.\n")
         
         result$stationCode <- station
         resultAllStation <-rbind(resultAllStation, result)
@@ -82,7 +82,7 @@ OutOfRange.Controller.DailyOperation <- function (dataType) {
 
   outOfRange <- OutOfRange.Controller.Batch(dataType, startDateTime, currentDateTime)
 
-  problemsStationCode <- unique(outOfRange$stationCode)
+  problemsStationCode <- unique(outOfRange[outOfRange$endDateTime >= Helper.StartOfDay(currentDateTime)]$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
   Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")

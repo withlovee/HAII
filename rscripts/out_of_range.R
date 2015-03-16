@@ -98,7 +98,7 @@ OutOfRange.FindOutOfRange <- function(data, dataType) {
   
   problemData <- data[problemIdx, ]
   
-  cat("Found: ", nrow(problemData) ,"\n")
+  # cat("Found: ", nrow(problemData) ,"\n")
   
   # print(problemIdx)
   # print(problemIdx)

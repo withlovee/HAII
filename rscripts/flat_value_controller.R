@@ -8,7 +8,7 @@ source('email.R')
 
 FlatValue.Controller.FindFlatValue <- function (stationCode, dataType, startDateTime, endDateTime) {
 
-  cat("Flat Value: ", stationCode , "\n")
+  # cat("Flat Value: ", stationCode , "\n")
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
 
   return(FlatValue.FindFlatValue(data, dataType))
@@ -88,7 +88,7 @@ FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
   flatValue <- FlatValue.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   # update problem
-  problemsStationCode <- unique(flatValue$stationCode)
+  problemsStationCode <- unique(flatValue[flatValue$endDateTime >= Helper.StartOfDay(currentDateTime)]$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
   # Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")

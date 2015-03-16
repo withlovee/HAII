@@ -7,7 +7,7 @@ source('email.R')
 MissingGap.Controller.FindMissingGap <- function(
   stationCode, dataType, startDateTime, endDateTime) {
 
-  cat("Missing Gap: ", stationCode , "\n")
+  # cat("Missing Gap: ", stationCode , "\n")
   missingGap <- NA
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
   installedDate <- DataLog.GetInstallationDate(stationCode)
@@ -90,7 +90,7 @@ MissingGap.Controller.DailyOperation <- function(dataType, interval = NULL) {
   # update problem
   # send email
 
-  problemsStationCode <- unique(missingGap$stationCode)
+  problemsStationCode <- unique(missingGap[missingGap$endDateTime >= Helper.StartOfDay(currentDateTime)]$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
   # Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
