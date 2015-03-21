@@ -2,23 +2,31 @@
 @section('content')
 <div class="row">
 	<div class="col-md-5">
-		<div class="btn-group" data-toggle="buttons" id="map-selector">
+		<div class="btn-group" data-toggle="buttons" id="map-data-type">
 			<label class="btn btn-default active">
+		    <input type="radio" value="WATER" name="data-type-selector" autocomplete="off" checked>WATER
+		  </label>
+		  <label class="btn btn-default">
+		    <input type="radio" value="RAIN" name="data-type-selector" autocomplete="off" checked>RAIN
+		  </label>
+		</div>
+		<div class="btn-group" data-toggle="buttons" id="map-selector">
+			<label class="btn btn-default active color-or">
 		    <input type="radio" value="OR" name="map-selector" autocomplete="off" checked>OR
 		  </label>
-		  <label class="btn btn-default">
+		  <label class="btn btn-default color-mg">
 		    <input type="radio" value="MG" name="map-selector" autocomplete="off">MG
 		  </label>
-		  <label class="btn btn-default">
+		  <label class="btn btn-default color-fv">
 		    <input type="radio" value="FV" name="map-selector" autocomplete="off">FV
 		  </label>
-		  <label class="btn btn-default">
+		  <label class="btn btn-default color-ol">
 		    <input type="radio" value="OL" name="map-selector" autocomplete="off">OL
 		  </label>
-		  <label class="btn btn-default">
+		  <label class="btn btn-default color-hm">
 		    <input type="radio" value="HM" name="map-selector" autocomplete="off">HM
 		  </label>
-		  <label class="btn btn-default">
+		  <label class="btn btn-default color-mp">
 		    <input type="radio" value="MP" name="map-selector" autocomplete="off">MP
 		  </label>
 		</div>
@@ -46,7 +54,7 @@
 		<!-- /.today-report -->
 
 		<div class="yesterday-report">
-			<h3>รายงานของวันที่ {{ thai_date(getTime(-1)) }} {{ date('Y', getTime(-1)) }} (เมื่อวาน)</h3>
+			<h3>รายงานของวันที่ {{ thai_date(getTime()) }} {{ date('Y', getTime()) }} (วันนี้)</h3>
 			<div class="row">
 				<div class="col-sm-6">
 					<h4>ข้อมูลน้ำ</h4>

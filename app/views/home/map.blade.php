@@ -11,6 +11,8 @@ $(function(){
   };
   var markers = [];
   var infowindow = null;
+  var currentProblemType = "OR";
+  var currentDataType = "WATER";
 
   function initializeMap() {
 
@@ -19,7 +21,7 @@ $(function(){
 
     $.get("{{ URL::to('api/problems/get_map') }}", function(stations){
       addMarkers(stations);
-      showMarkerForType("OR");
+      showMarkerForType(currentDataType, currentProblemType);
     });
     
   }
@@ -64,12 +66,15 @@ $(function(){
     }
   }
 
-  function showMarkerForType(problem_type) {
+  function showMarkerForType(data_type, problem_type) {
     if (infowindow) {
       infowindow.close();
     }
+
     for (var i = 0; i < markers.length; i++) {
-      if (markers[i].info.problem_type == problem_type) {
+      console.log(markers[i].info);
+      if (markers[i].info.problem_type == problem_type &&
+          markers[i].info.data_type == data_type) {
         markers[i].setMap(map);
         markers[i].setAnimation(google.maps.Animation.DROP);
       } else {
@@ -83,7 +88,14 @@ $(function(){
 
   $("input[name=map-selector]").change(function(){
     var val = $(this).val();
-    showMarkerForType(val);
+    currentProblemType = val;
+    showMarkerForType(currentDataType, currentProblemType);
+  });
+
+  $("input[name=data-type-selector]").change(function(){
+    var val = $(this).val();
+    currentDataType = val;
+    showMarkerForType(currentDataType, currentProblemType);
   });
   
 });

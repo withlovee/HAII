@@ -7,7 +7,9 @@ class Problem extends \Eloquent
     public function scopeDataType($query, $type)
     {
         $query->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
-            ->select('problems.id', 'code',
+            ->select(
+                'problems.id',
+                'code',
                 'name',
                 'problem_type',
                 'tambon_name',
@@ -19,7 +21,7 @@ class Problem extends \Eloquent
                 'end_datetime',
                 'num',
                 'problems.status'
-                );
+            );
         if ($type) {
             return $query->where('data_type', '=', $type);
         }
@@ -29,7 +31,8 @@ class Problem extends \Eloquent
 
     public function scopeMap($query)
     {
-        $attrs = ['problem_type', 'code', 'name', 'lat', 'lng', 'tambon_name', 'amphoe_name', 'province_name', 'part', 'basin'];
+        $attrs = ['data_type', 'problem_type', 'code', 'name', 'lat', 'lng', 'tambon_name', 'amphoe_name', 'province_name', 'part', 'basin'];
+        // $attrs = ['problem_type', 'code', 'name', 'lat', 'lng', 'tambon_name', 'amphoe_name', 'province_name', 'part', 'basin'];
         $query->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
             ->selectRaw(implode(", ", $attrs).', sum(num) as num')
             ->groupBy($attrs);
@@ -307,31 +310,15 @@ class Problem extends \Eloquent
         return array("rain" => $report_rain, "water" => $report_water);
     }
 
-    public static function yesterdayStat()
+    public static function todayStat()
     {
-        // $results['RAIN'] = DB::table('problems')
-        // 	->select(DB::raw('problem_type, count(*)'))
-        // 	->where('data_type', '=', 'RAIN')
-        // 	->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
-        // 	->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
-        // 	->groupBy('problem_type')
-        // 	->get();
-        // $results['WATER'] = DB::table('problems')
-        // 	->select(DB::raw('problem_type, count(*)'))
-        // 	->where('data_type', '=', 'WATER')
-        // 	->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
-        // 	->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
-        // 	->groupBy('problem_type')
-        // 	->get();
-        //
-
         $results['RAIN'] = DB::table('problems')
             ->select(DB::raw('problem_type, count(*)'))
             ->where('data_type', '=', 'RAIN')
             // ->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
             // ->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
-            ->where('end_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
-            ->where('start_datetime', '<', self::getStartDate('Y-m-d 07:00'))
+            ->where('end_datetime', '>=', self::getStartDate('Y-m-d 07:01'))
+            ->where('start_datetime', '<', self::getStartDate('Y-m-d 07:00', +1))
             ->groupBy('problem_type')
             ->get();
         $results['WATER'] = DB::table('problems')
@@ -339,8 +326,8 @@ class Problem extends \Eloquent
             ->where('data_type', '=', 'WATER')
             // ->where('start_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
             // ->where('start_datetime', '<=', self::getStartDate('Y-m-d 07:00'))
-            ->where('end_datetime', '>=', self::getStartDate('Y-m-d 07:01', -1))
-            ->where('start_datetime', '<', self::getStartDate('Y-m-d 07:00'))
+            ->where('end_datetime', '>=', self::getStartDate('Y-m-d 07:01'))
+            ->where('start_datetime', '<', self::getStartDate('Y-m-d 07:00', +1))
             ->groupBy('problem_type')
             ->get();
 

@@ -4,6 +4,7 @@ class BatchController extends BaseController
 {
     public function index()
     {
-        return View::make('batch/index');
+    		$stations = TeleStation::codes();
+        return View::make('batch/index', compact('stations'));
     }
 }

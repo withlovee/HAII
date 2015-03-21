@@ -7,7 +7,7 @@ class HomeController extends BaseController
         $data = array();
         $data['rain_problems'] = Problem::recentByBasin('RAIN', 'OR');
         $data['water_problems'] = Problem::recentByBasin('WATER', 'OR');
-        $data['stats'] = Problem::yesterdayStat();
+        $data['stats'] = Problem::todayStat();
 
         return View::make('home/index', $data);
     }
