@@ -4,9 +4,9 @@ source('problems.R')
 source('out_of_range.R')
 source('email.R')
 
-OutOfRange.Controller.FindOutOfRange <- function (stationCode, dataType, startDateTime, endDateTime) {
+OutOfRange.Controller.Find <- function (stationCode, dataType, startDateTime, endDateTime) {
 
-  # cat("Out of Range: ", stationCode , "\n")
+  cat("Out of Range: ", stationCode , "\n")
 
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
 
@@ -20,22 +20,24 @@ OutOfRange.Controller.FindOutOfRange <- function (stationCode, dataType, startDa
     data$ground_level = NA
   }
   
-  outOfRange <- OutOfRange.FindOutOfRange(data, dataType)
+  outOfRange <- OutOfRange.Find(data, dataType)
   return(outOfRange)
 
 }
 
-OutOfRange.Controller.FindAllOutOfRange <- function (dataType, startDateTime, endDateTime) {
+OutOfRange.Controller.FindAll <- function (dataType, startDateTime, endDateTime, stations = NA, allStation = TRUE) {
 
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList(dataType)
+  if (allStation) {
+    stations <- DataLog.GetStationCodeList(dataType)
+  }
 
   for (station in stations) {
 
-    result <- OutOfRange.Controller.FindOutOfRange(station, dataType, startDateTime, endDateTime)
+    result <- OutOfRange.Controller.Find(station, dataType, startDateTime, endDateTime)
 
     if(is.data.frame(result)) {
       if(nrow(result) > 0) {
@@ -56,10 +58,10 @@ OutOfRange.Controller.FindAllOutOfRange <- function (dataType, startDateTime, en
 
 }
 
-OutOfRange.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE) {
+OutOfRange.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE, stations = NA, allStation = TRUE) {
 
   problemType <- "OR"
-  outOfRange <- OutOfRange.Controller.FindAllOutOfRange(dataType, startDateTime, endDateTime)
+  outOfRange <- OutOfRange.Controller.FindAll(dataType, startDateTime, endDateTime, stations = stations, allStation = allStation)
 
   if (addToDB) {
     # update problem

@@ -47,6 +47,7 @@ Route::get('api/email/send_report/daily', 'DailyReportController@generateDailyRe
 
 // Batch Processing
 Route::get('batch', 'BatchController@index')->before('auth');
+Route::post('batch/create', 'BatchController@create')->before('auth');
 
 // Route::get('/', function()
 // {

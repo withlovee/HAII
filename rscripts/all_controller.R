@@ -1,0 +1,6 @@
+source('out_of_range_controller.R')
+source('missing_gap_controller.R')
+source('flat_value_controller.R')
+source('outliers_controller.R')
+source('inhomogeneity_controller.R')
+source('missing_pattern_controller.R')

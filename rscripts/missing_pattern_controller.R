@@ -20,13 +20,15 @@ MissingPattern.Controller.Find <- function(
   return(missingPatternResult)
 }
 
-MissingPattern.Controller.FindAll <- function(dataType, startDateTime, endDateTime) {
+MissingPattern.Controller.FindAll <- function(dataType, startDateTime, endDateTime, stations = NA, allStation = TRUE) {
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
                                 endDateTime = c())
   hourlyDataAllStation <- list()
 
-  stations <- DataLog.GetStationCodeList(dataType)
+  if (allStation) {
+    stations <- DataLog.GetStationCodeList(dataType)
+  }
 
   for (station in stations) {
 
@@ -49,10 +51,10 @@ MissingPattern.Controller.FindAll <- function(dataType, startDateTime, endDateTi
 
 } 
 
-MissingPattern.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE, mergeProblem = TRUE) {
+MissingPattern.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE, mergeProblem = TRUE, stations = NA, allStation = TRUE, returnProblemOnly = FALSE) {
 
   problemType <- "MP"
-  allMissingPattern <- MissingPattern.Controller.FindAll(dataType, startDateTime, endDateTime)
+  allMissingPattern <- MissingPattern.Controller.FindAll(dataType, startDateTime, endDateTime, stations = stations, allStation = allStation)
 
   if (addToDB) {
     # update problem
@@ -61,7 +63,11 @@ MissingPattern.Controller.Batch <- function (dataType, startDateTime, endDateTim
     Problems.AddProblems(allMissingPattern$problems, dataType, problemType, mergeProblem = mergeProblem)
   }
 
-  return(allMissingPattern)
+  if (returnProblemOnly) {
+    return(allMissingPattern$problems)
+  } else {
+    return(allMissingPattern)
+  }
 }
 
 MissingPattern.Controller.MonthlyOperation <- function(dataType, currentDateTime = Sys.time(), addToDB = TRUE) {

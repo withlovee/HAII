@@ -1,7 +1,7 @@
 library('xts')
 source('config.R')
 
-MissingGap.FindMissingGap <- function(data, dataType, startDateTime, endDateTime, installedDate, 
+MissingGap.Find <- function(data, dataType, startDateTime, endDateTime, installedDate, 
   waterDataInterval = Config.defaultWaterDataInterval,
   rainDataInterval = Config.defaultRainDataInterval,
   missingInterval    = Config.MissingGap.defaultInterval,

@@ -6,26 +6,28 @@ source('problems.R')
 source('email.R')
 
 
-FlatValue.Controller.FindFlatValue <- function (stationCode, dataType, startDateTime, endDateTime) {
+FlatValue.Controller.Find <- function (stationCode, dataType, startDateTime, endDateTime) {
 
-  # cat("Flat Value: ", stationCode , "\n")
+  cat("Flat Value: ", stationCode , "\n")
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
 
-  return(FlatValue.FindFlatValue(data, dataType))
+  return(FlatValue.Find(data, dataType))
 
 }
 
-FlatValue.Controller.FindAllFlatValue <- function (dataType, startDateTime, endDateTime) {
+FlatValue.Controller.FindAll <- function (dataType, startDateTime, endDateTime, stations = NA, allStation = TRUE) {
 
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList(dataType)
+  if (allStation) {
+    stations <- DataLog.GetStationCodeList(dataType)
+  }
 
   for (station in stations) {
 
-    result <- FlatValue.Controller.FindFlatValue(station, dataType, startDateTime, endDateTime)
+    result <- FlatValue.Controller.Find(station, dataType, startDateTime, endDateTime)
 
     if(is.data.frame(result)) {
       if(nrow(result) > 0) {
@@ -45,10 +47,10 @@ FlatValue.Controller.FindAllFlatValue <- function (dataType, startDateTime, endD
   return(resultAllStation)
 }
 
-FlatValue.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB=TRUE) {
+FlatValue.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB=TRUE, stations = NA, allStation = TRUE) {
 
   problemType <- "FV"
-  flatValue <- FlatValue.Controller.FindAllFlatValue(dataType, startDateTime, endDateTime)
+  flatValue <- FlatValue.Controller.FindAll(dataType, startDateTime, endDateTime, stations = stations, allStation = allStation)
 
   if (addToDB) {
     print("Adding Problems")

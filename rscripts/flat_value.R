@@ -1,7 +1,7 @@
 source('config.R')
 source('helper.R')
 
-FlatValue.FindFlatValue <- function(data, dataType,
+FlatValue.Find <- function(data, dataType,
                                     waterDataInterval = Config.defaultWaterDataInterval,
                                     rainDataInterval = Config.defaultRainDataInterval,
                                     flatThreshold = Config.FlatValue.defaultThreshold) {
@@ -99,5 +99,6 @@ FlatValue.FindFlatValue <- function(data, dataType,
   }
 
   # return data frame
-  return(data.frame(startDateTime=startDateTime, endDateTime=endDateTime, v=v, n=n, hr=n/3600))
+  # return(data.frame(startDateTime=startDateTime, endDateTime=endDateTime, v=v, n=n, hr=n/3600))
+  return(data.frame(startDateTime=startDateTime, endDateTime=endDateTime))
 }

@@ -75,7 +75,7 @@ OutOfRange.FindOutOfRange.depricated <- function(data, dataType) {
 
 }
 
-OutOfRange.FindOutOfRange <- function(data, dataType) {
+OutOfRange.Find <- function(data, dataType) {
 
   if (!is(data, "data.frame")) {
     return(NULL)

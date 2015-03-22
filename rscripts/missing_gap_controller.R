@@ -4,28 +4,30 @@ source('problems.R')
 source('missing_gap.R')
 source('email.R')
 
-MissingGap.Controller.FindMissingGap <- function(
+MissingGap.Controller.Find <- function(
   stationCode, dataType, startDateTime, endDateTime) {
 
-  # cat("Missing Gap: ", stationCode , "\n")
+  cat("Missing Gap: ", stationCode , "\n")
   missingGap <- NA
   data <- DataLog.GetData(stationCode, dataType, startDateTime, endDateTime)
   installedDate <- DataLog.GetInstallationDate(stationCode)
   
-  missingGap <- MissingGap.FindMissingGap(data, dataType, startDateTime, endDateTime, installedDate)
+  missingGap <- MissingGap.Find(data, dataType, startDateTime, endDateTime, installedDate)
   return(missingGap)
 }
 
-MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, endDateTime) {
+MissingGap.Controller.FindAll <- function(dataType, startDateTime, endDateTime, stations = NA, allStation = TRUE) {
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList(dataType)
+  if (allStation) {
+    stations <- DataLog.GetStationCodeList(dataType)
+  }
 
   for (station in stations) {
 
-    result <- MissingGap.Controller.FindMissingGap(station, dataType, startDateTime, endDateTime)
+    result <- MissingGap.Controller.Find(station, dataType, startDateTime, endDateTime)
 
     if(is.data.frame(result)) {
       if(nrow(result) > 0) {
@@ -43,10 +45,10 @@ MissingGap.Controller.FindAllMissingGap <- function(dataType, startDateTime, end
 
 } 
 
-MissingGap.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE) {
+MissingGap.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE, stations = NA, allStation = TRUE) {
 
   problemType <- "MG"
-  missingGap <- MissingGap.Controller.FindAllMissingGap(dataType, startDateTime, endDateTime)
+  missingGap <- MissingGap.Controller.FindAll(dataType, startDateTime, endDateTime, stations = stations, allStation = allStation)
 
   if (addToDB) {
     # update problem

@@ -13,12 +13,14 @@ Inhomogeneity.Controller.Find <- function(
   return(changePoint)
 }
 
-Inhomogeneity.Controller.FindAll <- function(dataType, startDateTime, endDateTime) {
+Inhomogeneity.Controller.FindAll <- function(dataType, startDateTime, endDateTime, stations = NA, allStation = TRUE) {
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList(dataType)
+  if (allStation) {
+    stations <- DataLog.GetStationCodeList(dataType)
+  }
 
   for (station in stations) {
 
@@ -40,10 +42,10 @@ Inhomogeneity.Controller.FindAll <- function(dataType, startDateTime, endDateTim
 
 } 
 
-Inhomogeneity.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE) {
+Inhomogeneity.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE, stations = NA, allStation = TRUE) {
 
   problemType <- "HM"
-  changePoint <- Inhomogeneity.Controller.FindAll(dataType, startDateTime, endDateTime)
+  changePoint <- Inhomogeneity.Controller.FindAll(dataType, startDateTime, endDateTime, stations = stations, allStation = allStation)
 
   if (addToDB) {
     # update problem

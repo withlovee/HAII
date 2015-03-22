@@ -13,12 +13,14 @@ Outliers.Controller.Find <- function(
   return(outliers)
 }
 
-Outliers.Controller.FindAll <- function(dataType, startDateTime, endDateTime) {
+Outliers.Controller.FindAll <- function(dataType, startDateTime, endDateTime, stations = NA, allStation = TRUE) {
   resultAllStation <- data.frame(stationCode = c(),
                                 startDateTime = c(),
                                 endDateTime = c())
 
-  stations <- DataLog.GetStationCodeList(dataType)
+  if (allStation) {
+    stations <- DataLog.GetStationCodeList(dataType)
+  }
 
   for (station in stations) {
 
@@ -40,10 +42,10 @@ Outliers.Controller.FindAll <- function(dataType, startDateTime, endDateTime) {
 
 } 
 
-Outliers.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE) {
+Outliers.Controller.Batch <- function (dataType, startDateTime, endDateTime, addToDB = TRUE, stations = NA, allStation = TRUE) {
 
   problemType <- "OL"
-  outliers <- Outliers.Controller.FindAll(dataType, startDateTime, endDateTime)
+  outliers <- Outliers.Controller.FindAll(dataType, startDateTime, endDateTime, stations = stations, allStation = allStation)
 
   if (addToDB) {
     # update problem
