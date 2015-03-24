@@ -28,6 +28,7 @@ $env = $app->detectEnvironment(array(
 
 	'local' => array('homestead'),
   'development' => array('Nuttapons-MacBook-Pro.local'),
+  'production' => array('qc.haii.or.th'),
 
 ));
 

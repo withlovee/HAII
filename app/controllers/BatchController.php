@@ -33,13 +33,13 @@ class BatchController extends BaseController
         }
 
         // $validator = Validator::make(Input::all(), $rules);
-        foreach($rules as $r) {
-            if(!isset($data[$r])) {
+        foreach ($rules as $r) {
+            if (!isset($data[$r])) {
                 return Redirect::back()->withInput()->with('alert-danger', $r.' is incomplete!');
             }
         }
 
-        if($data['startDateTime'] == "" or $data['endDateTime'] == "") {
+        if ($data['startDateTime'] == "" or $data['endDateTime'] == "") {
             return Redirect::back()->withInput()->with('alert-danger', 'Date is incomplete!');
         }
 
