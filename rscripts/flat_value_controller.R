@@ -85,13 +85,13 @@ FlatValue.Controller.DailyOperation <- function (dataType, interval=NULL) {
 
   startDateTime = currentDateTime - interval
 
-  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
+  # alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
 
   flatValue <- FlatValue.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   # update problem
-  problemsStationCode <- unique(flatValue[flatValue$endDateTime >= Helper.StartOfDay(currentDateTime)]$stationCode)
-  newStation <- setdiff(problemsStationCode, alreadySentStationCode)
+  # problemsStationCode <- unique(flatValue[flatValue$endDateTime >= Helper.StartOfDay(currentDateTime),]$stationCode)
+  # newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
   # Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
 

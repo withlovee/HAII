@@ -84,7 +84,7 @@ OutOfRange.Controller.DailyOperation <- function (dataType) {
 
   outOfRange <- OutOfRange.Controller.Batch(dataType, startDateTime, currentDateTime)
 
-  problemsStationCode <- unique(outOfRange[outOfRange$endDateTime >= Helper.StartOfDay(currentDateTime)]$stationCode)
+  problemsStationCode <- unique(outOfRange[outOfRange$endDateTime >= Helper.StartOfDay(currentDateTime),]$stationCode)
   newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
   Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")

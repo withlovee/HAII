@@ -85,15 +85,15 @@ MissingGap.Controller.DailyOperation <- function(dataType, interval = NULL) {
   
   startDateTime <- currentDateTime - interval
   
-  alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
+  # alreadySentStationCode <- Problems.GetLatestProblemStationCodeList(dataType, problemType, currentDateTime)
       
   missingGap <- MissingGap.Controller.Batch(dataType, startDateTime, currentDateTime)
 
   # update problem
   # send email
 
-  problemsStationCode <- unique(missingGap[missingGap$endDateTime >= Helper.StartOfDay(currentDateTime)]$stationCode)
-  newStation <- setdiff(problemsStationCode, alreadySentStationCode)
+  # problemsStationCode <- unique(missingGap[missingGap$endDateTime >= Helper.StartOfDay(currentDateTime),]$stationCode)
+  # newStation <- setdiff(problemsStationCode, alreadySentStationCode)
   # Problems.SendNewProblemNotification(newStation, dataType, problemType, currentDateTime)
   # Email.sendMailNotification(dataType, problemType, currentDateTime, newStation, "instantly")
 
