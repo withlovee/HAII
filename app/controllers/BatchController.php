@@ -24,12 +24,12 @@ class BatchController extends BaseController
         $dataType = $data['dataType'];
         $rules = ['startDateTime' , 'endDateTime'];
         if ($dataType == "WATER") {
-            $rules []= 'waterProblemType';
+            $rules [] = 'waterProblemType';
         } elseif ($dataType == "RAIN") {
-            $rules []= 'rainProblemType';
+            $rules [] = 'rainProblemType';
         }
         if (!isset($data['allStation'])) {
-            $rules []= 'stations';
+            $rules [] = 'stations';
         }
 
         // $validator = Validator::make(Input::all(), $rules);
@@ -42,7 +42,6 @@ class BatchController extends BaseController
         if ($data['startDateTime'] == "" or $data['endDateTime'] == "") {
             return Redirect::back()->withInput()->with('alert-danger', 'Date is incomplete!');
         }
-
 
         $batchData['data_type'] = $data['dataType'];
 
@@ -68,11 +67,11 @@ class BatchController extends BaseController
         // dd($batchData);
         $batch = Batch::create($batchData);
 
+        // Queue::connection()->getIron()->ssl_verifypeer = false;
+
         Queue::push('BatchController', ['id' => $batch->id]);
 
         return Redirect::to('batch')->with('alert-success', 'Task #'.$batch->id.' Added Successfully.');
-
-        
     }
 
     public function fire($job, $data)
@@ -106,7 +105,12 @@ class BatchController extends BaseController
             $batch->save();
         }
 
-        $job->delete();
+        // $job->delete();
+        try {
+            $job->delete();
+        } catch (\Exception $e) {
+            Log::info("Batch: Failed to delete job #".$id);
+        }
         Log::info("Batch: Finish Task #".$id);
     }
 }

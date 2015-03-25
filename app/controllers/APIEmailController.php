@@ -74,7 +74,7 @@ class APIEmailController extends BaseController
 
         # send email to each users
         foreach ($users as $user) {
-            Mail::queue($template, $data, function ($message) use ($data, $user, $subject) {
+            Mail::send($template, $data, function ($message) use ($data, $user, $subject) {
                 $message->to($user['email'], $user['username']);
                 $message->subject($subject);
             });
