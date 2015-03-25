@@ -15,7 +15,7 @@ Config.allowDataType                  <- c("WATER", "RAIN")
 
 ### Time difference between each data
 Config.defaultWaterDataInterval       <- 600    # 10 minutes
-Config.defaultRainDataInterval        <- 3600	  # 1 hour
+Config.defaultRainDataInterval        <- 3600   # 1 hour
 
 ### How many gap (based on time difference) to be count as consecutive interval
 Config.consecutiveProblemGapThreshold <- 1      # consecutive only (1 gap)
@@ -70,8 +70,8 @@ Config.OutOfRange.backwardThreshold <- 3600 * 24 * 30 * 5  # 5 month (for testin
 ################################################################################
 
 ### Minimum length to be considered as missing gap
-# Config.MissingGap.defaultInterval <- 7 * 24 * 60 * 60    # 7 days (for testing)
-Config.MissingGap.defaultInterval <- 5 * 60 * 60           # 5 hours
+Config.MissingGap.defaultInterval <- 7 * 24 * 60 * 60    # 7 days (for testing)
+# Config.MissingGap.defaultInterval <- 5 * 60 * 60           # 5 hours
 
 
 ################################################################################
@@ -79,8 +79,8 @@ Config.MissingGap.defaultInterval <- 5 * 60 * 60           # 5 hours
 ################################################################################
 
 ### Minimum length to be considered as flat value
-# Config.FlatValue.defaultIntervall <- 3 * 24 * 60 * 60 # 3 days
-Config.FlatValue.defaultThreshold <- 3 * 60 * 60 # 5 hours
+Config.FlatValue.defaultThreshold <- 3 * 24 * 60 * 60 # 3 days
+# Config.FlatValue.defaultThreshold <- 3 * 60 * 60 # 5 hours
 
 
 ################################################################################
@@ -114,7 +114,8 @@ Config.Outliers.noiseThreshold <- 2
 # Missing Pattern
 ################################################################################
 
-### Minimum day of data to run missing pattern algorithm (also in recursive function)
+### Minimum day of data to run missing pattern algorithm
+### (also in recursive function)
 Config.MissingPattern.minimumDay <- 7
 
 ### Maximum gap to merge two missing pattern together
@@ -123,3 +124,8 @@ Config.MissingPattern.mergeGap <- 15
 ### Path to store image for monthly operation
 Config.MissingPattern.monthlyImagePath <- "../public/missingpattern/"
 
+################################################################################
+# Manual Batch Processor
+################################################################################
+
+Config.Batch.CsvPath <- "../public/batchreport/"
