@@ -83,7 +83,7 @@ class BatchController extends BaseController
         $batch->status = "running";
         $batch->save();
 
-        Log::info("Batch: Task #".$id);
+        // Log::info("Batch: Task #".$id);
         # Execute R Task
         $rscriptCommand = Config::get('r.rscript');
         $rAppPath = base_path()."/rscripts/app.R batch_controller.R";
@@ -109,8 +109,8 @@ class BatchController extends BaseController
         try {
             $job->delete();
         } catch (\Exception $e) {
-            Log::info("Batch: Failed to delete job #".$id);
+            // Log::info("Batch: Failed to delete job #".$id);
         }
-        Log::info("Batch: Finish Task #".$id);
+        // Log::info("Batch: Finish Task #".$id);
     }
 }
