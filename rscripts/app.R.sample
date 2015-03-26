@@ -3,7 +3,8 @@
 ###########################################################################
 
 path <- '/Applications/XAMPP/xamppfiles/htdocs/HAII/rscripts'
-
+# For production server 
+# .libPaths(c('/home/haii/R/x86_64-unknown-linux-gnu-library/3.0','/opt/R-3.0.1/lib64/R/library'))
 
 
 ###########################[ End Configuration ]###########################
