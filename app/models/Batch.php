@@ -21,4 +21,14 @@ class Batch extends \Eloquent
     public function setProblemTypeAttribute($value) {
         $this->attributes['problem_type'] = json_encode($value);
     }
+
+    public static function isCanceled($id) {
+        $batch = self::findOrFail($id);
+        return $batch->cancel;
+    }
+
+    public function setStatus($status) {
+        $this->status = $status;
+        $this->save();
+    }
 }

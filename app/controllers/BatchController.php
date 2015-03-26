@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Process\Process;
+
 class BatchController extends BaseController
 {
     public function index()
@@ -74,12 +76,35 @@ class BatchController extends BaseController
         return Redirect::to('batch')->with('alert-success', 'Task #'.$batch->id.' Added Successfully.');
     }
 
-    public function fire($job, $data)
+    public function xcancel($id)
+    {
+        $batch = Batch::find($id);
+        if ($batch->status == "waiting") {
+            // cancel may success (Race Condition)
+            $batch->cancel = true;
+            $batch->save();
+
+            return Redirect::to('batch')->with('alert-info', 'Task #'.$batch->id.' should be cancel in a moment.');
+        } else {
+            // Task already runned
+            return Redirect::to('batch')->with('alert-warning', 'Task #'.$batch->id.' Already Started.');
+        }
+    }
+
+    public function xfire($job, $data)
     {
         # for testing
         // $data['id'] = 5;
         $id = intval($data['id']);
         $batch = Batch::find($id);
+        if ($batch->cancel) {
+            $job->delete();
+            $batch->status = "cancel";
+            $batch->save();
+
+            return;
+        }
+
         $batch->status = "running";
         $batch->save();
 
@@ -88,6 +113,8 @@ class BatchController extends BaseController
         $rscriptCommand = Config::get('r.rscript');
         $rAppPath = base_path()."/rscripts/app.R batch_controller.R";
         $execCommand = $rscriptCommand." ".$rAppPath." ".$id;
+
+        return;
 
         $result = shell_exec($execCommand);
 
@@ -112,5 +139,73 @@ class BatchController extends BaseController
             // Log::info("Batch: Failed to delete job #".$id);
         }
         // Log::info("Batch: Finish Task #".$id);
+    }
+
+    public function cancel($id)
+    {
+        $batch = Batch::find($id);
+
+        if ($batch->status != 'success' && $batch->status != 'fail') {
+            $batch->cancel = true;
+            $batch->save();
+
+            return Redirect::to('batch')->with('alert-info', 'Task #'.$batch->id.' should be cancel in a moment.');
+        } else {
+            return Redirect::to('batch')->with('alert-danger', 'Task #'.$batch->id.' already finished!');
+        }
+    }
+
+    public function fire($job, $message)
+    {
+        $id = intval($message['id']);
+        $batch = Batch::find($id);
+
+        if ($batch->cancel) {
+            $job->delete();
+            $batch->setStatus('canceled');
+            return;
+        }
+
+        $batch->status = "running";
+        $batch->save();
+
+        $rscriptCommand = Config::get('r.rscript');
+        $rAppPath = base_path()."/rscripts/app.R batch_controller.R";
+        $execCommand = $rscriptCommand." ".$rAppPath." ".$id;
+
+        $process = new Process($execCommand);
+        $process->start();
+
+        while ($process->isRunning()) {
+            usleep(200000);
+            if (Batch::isCanceled($id)) {
+                // Kill Process
+                $process->stop(3, SIGINT);
+                $batch->setStatus('canceled');
+                $job->delete();
+
+                return;
+            }
+        }
+
+        $output = $process->getOutput();
+
+        # get new status after exec R file
+        $batch = Batch::find($id);
+
+        # write to logfile
+        $logfile = fopen(base_path().'/public/batchreport/'.$batch->id.".log", "w+");
+        fwrite($logfile, $output);
+        fclose($logfile);
+
+        # Check if task if finish running
+        if ($batch->status != "success") {
+            $batch->setStatus('fail');
+        }
+
+        try {
+            $job->delete();
+        } catch (\Exception $e) {
+        }
     }
 }

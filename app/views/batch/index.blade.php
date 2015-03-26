@@ -90,6 +90,7 @@
         <th>Status</th>
         <th>Date Finished</th>
         <th>CSV</th>
+        <th>Cancel</th>
       </thead>
       <tbody>
         @foreach($batches as $batch)
@@ -110,13 +111,20 @@
               'waiting' => 'label-default',
               'running' => 'label-info',
               'success' => 'label-success',
-              'fail'    => 'label-danger'
+              'fail'    => 'label-danger',
+              'canceled'  => 'label-warning'
             ];
             ?>
             <td>
-              <span class="task-status label {{ $statusClassMap[$batch->status] }}">
-                {{ ucwords($batch->status) }}
-              </span>
+              @if($batch->cancel && ($batch->status != 'canceled' && $batch->status != 'success' && $batch->status != 'fail'))
+                <span class="task-status label label-warning">
+                  Canceling...
+                </span>
+              @else
+                <span class="task-status label {{ $statusClassMap[$batch->status] }}">
+                  {{ ucwords($batch->status) }}
+                </span>
+              @endif
             </td>
             <td>{{ $batch->finish_datetime }}</td>
             <td>
@@ -124,6 +132,11 @@
                 <a class="btn btn-primary btn-xs" href="{{ asset('batchreport/'.$batch->id.'.csv') }}" target="_blank" download>Download</a>
               @elseif($batch->status == 'fail')
                 <a class="btn btn-danger btn-xs" href="{{ asset('batchreport/'.$batch->id.'.log') }}" target="_blank" download>Log</a>
+              @endif
+            </td>
+            <td>
+              @if(!$batch->cancel && ($batch->status == 'waiting' || $batch->status == 'running'))
+                <a href="{{ URL::to('batch/cancel', $batch->id )}}" class="btn btn-warning btn-xs">Cancel</a>
               @endif
             </td>
           </tr>
