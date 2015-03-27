@@ -45,12 +45,25 @@ $(function(){
     console.log(info);
   }
 
+  var markerPath = {
+    OR: '{{ asset('images/marker-or.png') }}',
+    MG: '{{ asset('images/marker-mg.png') }}',
+    FV: '{{ asset('images/marker-fv.png') }}',
+    OL: '{{ asset('images/marker-ol.png') }}',
+    HM: '{{ asset('images/marker-hm.png') }}',
+    MP: '{{ asset('images/marker-mp.png') }}'
+  };
+
   function addMarker(info) {
+    console.log(info);
+
+
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(info.lat, info.lng),
       animation: google.maps.Animation.DROP,
       clickable: true,
-      info: info
+      info: info,
+      icon: markerPath[info.problem_type]
     });
 
     markers.push(marker);
