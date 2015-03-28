@@ -88,7 +88,7 @@
         <th>End</th>
         <th>Date Added</th>
         <th>Status</th>
-        <th>Date Finished</th>
+        <th>Time Elapsed</th>
         <th>CSV</th>
         <th>Cancel</th>
       </thead>
@@ -126,7 +126,14 @@
                 </span>
               @endif
             </td>
-            <td>{{ $batch->finish_datetime }}</td>
+            <td>
+              @if(isset($batch->begin_exec_datetime) and isset($batch->finish_datetime))
+                {{ strtotime($batch->finish_datetime) - strtotime($batch->begin_exec_datetime) }}s
+              @elseif(isset($batch->begin_exec_datetime))
+                {{ time() - strtotime($batch->begin_exec_datetime) }}s
+              @endif
+            </td>
+            {{-- <td>{{ $batch->finish_datetime }}</td> --}}
             <td>
               @if($batch->status == 'success')
                 <a class="btn btn-primary btn-xs" href="{{ asset('batchreport/'.$batch->id.'.csv') }}" target="_blank" download>Download</a>

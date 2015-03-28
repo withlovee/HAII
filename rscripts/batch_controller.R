@@ -85,7 +85,7 @@ for (problemType in batch$problem_type) {
 
 }
 
-Batch.SetFinishTime(batch)
+# Batch.SetFinishTime(batch)
 Batch.SetStatusAsSuccess(batch)
 
 # Save CSV

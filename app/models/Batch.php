@@ -31,4 +31,14 @@ class Batch extends \Eloquent
         $this->status = $status;
         $this->save();
     }
+
+    public function stampBeginExecDatetime() {
+        $this->begin_exec_datetime = Date('Y-m-d H:i:s');
+        $this->save();
+    }
+
+    public function stampFinishDatetime() {
+        $this->finish_datetime = Date('Y-m-d H:i:s');
+        $this->save();
+    }
 }

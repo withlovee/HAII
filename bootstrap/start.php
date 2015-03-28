@@ -27,7 +27,7 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
 	'local' => array('homestead'),
-  'development' => array('Nuttapons-MacBook-Pro.local'),
+  'development' => array('Nuttapons-MacBook-Pro.local', 'Nuttapons-MBP'),
   'production' => array('qc.haii.or.th'),
 
 ));

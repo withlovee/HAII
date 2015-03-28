@@ -76,71 +76,6 @@ class BatchController extends BaseController
         return Redirect::to('batch')->with('alert-success', 'Task #'.$batch->id.' Added Successfully.');
     }
 
-    public function xcancel($id)
-    {
-        $batch = Batch::find($id);
-        if ($batch->status == "waiting") {
-            // cancel may success (Race Condition)
-            $batch->cancel = true;
-            $batch->save();
-
-            return Redirect::to('batch')->with('alert-info', 'Task #'.$batch->id.' should be cancel in a moment.');
-        } else {
-            // Task already runned
-            return Redirect::to('batch')->with('alert-warning', 'Task #'.$batch->id.' Already Started.');
-        }
-    }
-
-    public function xfire($job, $data)
-    {
-        # for testing
-        // $data['id'] = 5;
-        $id = intval($data['id']);
-        $batch = Batch::find($id);
-        if ($batch->cancel) {
-            $job->delete();
-            $batch->status = "cancel";
-            $batch->save();
-
-            return;
-        }
-
-        $batch->status = "running";
-        $batch->save();
-
-        // Log::info("Batch: Task #".$id);
-        # Execute R Task
-        $rscriptCommand = Config::get('r.rscript');
-        $rAppPath = base_path()."/rscripts/app.R batch_controller.R";
-        $execCommand = $rscriptCommand." ".$rAppPath." ".$id;
-
-        return;
-
-        $result = shell_exec($execCommand);
-
-        # get new status after exec R file
-        $batch = Batch::find($id);
-
-        # write to logfile
-        $logfile = fopen(base_path().'/public/batchreport/'.$batch->id.".log", "w+");
-        fwrite($logfile, $result);
-        fclose($logfile);
-
-        # Check if task if finish running
-        if ($batch->status != "success") {
-            $batch->status = "fail";
-            $batch->save();
-        }
-
-        // $job->delete();
-        try {
-            $job->delete();
-        } catch (\Exception $e) {
-            // Log::info("Batch: Failed to delete job #".$id);
-        }
-        // Log::info("Batch: Finish Task #".$id);
-    }
-
     public function cancel($id)
     {
         $batch = Batch::find($id);
@@ -166,12 +101,15 @@ class BatchController extends BaseController
             return;
         }
 
-        $batch->status = "running";
-        $batch->save();
+        $batch->setStatus('running');
+
+        $batch->stampBeginExecDatetime();
 
         $rscriptCommand = Config::get('r.rscript');
         $rAppPath = base_path()."/rscripts/app.R batch_controller.R";
         $execCommand = $rscriptCommand." ".$rAppPath." ".$id;
+
+        Log::info($execCommand);
 
         $process = new Process($execCommand);
         $process->start();
@@ -182,6 +120,7 @@ class BatchController extends BaseController
                 // Kill Process
                 $process->stop(3, SIGINT);
                 $batch->setStatus('canceled');
+                $batch->stampFinishDatetime();
                 $job->delete();
 
                 return;
@@ -192,6 +131,8 @@ class BatchController extends BaseController
 
         # get new status after exec R file
         $batch = Batch::find($id);
+
+        $batch->stampFinishDatetime();
 
         # write to logfile
         $logfile = fopen(base_path().'/public/batchreport/'.$batch->id.".log", "w+");
