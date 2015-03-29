@@ -109,8 +109,6 @@ class BatchController extends BaseController
         $rAppPath = base_path()."/rscripts/app.R batch_controller.R";
         $execCommand = $rscriptCommand." ".$rAppPath." ".$id;
 
-        Log::info($execCommand);
-
         $process = new Process($execCommand);
         $process->start();
 
