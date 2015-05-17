@@ -3,6 +3,7 @@
 /app/config/app.php
 /rscripts/app.R
 /rscripts/config.R
+/rscript/research/*
 /public/missingpattern/*
 /vendor
 composer.phar
