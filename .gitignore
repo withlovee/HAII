@@ -5,6 +5,7 @@
 /rscripts/config.R
 /rscript/research/*
 /public/missingpattern/*
+/public/batchreport/*
 /vendor
 composer.phar
 composer.lock
@@ -13,3 +14,8 @@ composer.lock
 .DS_Store
 Thumbs.db
 .Rproj.user
+rscripts/research/changepoint_experiment.R
+rscripts/research/experiment.R
+rscripts/research/experiment2.R
+rscripts/research/load_test.R
+rscripts/research/outlier_experiment.R

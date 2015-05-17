@@ -1,4 +1,12 @@
-==== example crontab config ====
+# ------ [ OUT-OF RANGE ] ----- #
+*/10 * * * * /opt/R-3.0.1/bin/Rscript /home/haii/html/HAII/rscripts/app.R exec_daily_water_out_of_range.R >> /home/haii/html/HAII/rscripts/log_out_of_range_water_dailyop.log 2>&1
 
+5 */1 * * * /opt/R-3.0.1/bin/Rscript /home/haii/html/HAII/rscripts/app.R exec_daily_rain_out_of_range.R >> /home/haii/html/HAII/rscripts/log_out_of_range_rain_dailyop.log 2>&1
 
-*/10 * * * * Rscript /Applications/XAMPP/xamppfiles/htdocs/HAII/rscripts/app.R exec_daily_water_out_of_range.R >> /Users/nuttt/crontest/shlog.txt 2>&1
+# ------ [ Daily Report ] ----- #
+# Executed at 7.30
+35 7 * * * /opt/R-3.0.1/bin/Rscript /home/haii/html/HAII/rscripts/app.R exec_daily_report.R >> /home/haii/html/HAII/rscripts/log_daily_report.log 2>&1
+
+# ------ [ Monthly Report ] ----- #
+# Executed at 8.30 at first day of every month
+35 8 1 * * /opt/R-3.0.1/bin/Rscript /home/haii/html/HAII/rscripts/app.R exec_monthly_report.R >> /home/haii/html/HAII/rscripts/log_monthly_report.log 2>&1
