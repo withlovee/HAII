@@ -2,6 +2,10 @@
 
 class APITeleStationController extends BaseController
 {
+    /**
+     * Get bank level and ground level of station
+     * @return mixed
+     */
     public function waterLevelDetail()
     {
         $stationCode = Input::get('station');
@@ -11,6 +15,10 @@ class APITeleStationController extends BaseController
         return Response::json($station);
     }
 
+    /**
+     * get province list by basin
+     * @return mixed
+     */
     public function provincesByBasin()
     {
         $basin = Input::get('basin');
@@ -26,6 +34,10 @@ class APITeleStationController extends BaseController
         return Response::json($provinces);
     }
 
+    /**
+     * Get station codes by province
+     * @return mixed
+     */
     public function stationCodeByProvince()
     {
         $province = Input::get('province');

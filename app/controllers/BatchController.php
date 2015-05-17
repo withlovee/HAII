@@ -4,6 +4,10 @@ use Symfony\Component\Process\Process;
 
 class BatchController extends BaseController
 {
+    /**
+     * Get batch task status and add task page
+     * @return mixed
+     */
     public function index()
     {
         $title = 'Batch Processor';
@@ -13,6 +17,10 @@ class BatchController extends BaseController
         return View::make('batch/index', compact('stations', 'title', 'batches'));
     }
 
+    /**
+     * create new batch task
+     * @return mixed
+     */
     public function create()
     {
         $data = Input::all();
@@ -34,7 +42,6 @@ class BatchController extends BaseController
             $rules [] = 'stations';
         }
 
-        // $validator = Validator::make(Input::all(), $rules);
         foreach ($rules as $r) {
             if (!isset($data[$r])) {
                 return Redirect::back()->withInput()->with('alert-danger', $r.' is incomplete!');
@@ -64,18 +71,19 @@ class BatchController extends BaseController
         $batchData['end_datetime'] = Date($data['endDateTime']);
         $batchData['add_datetime'] = Date('Y-m-d H:i:s');
 
-        // $batchData['problem_type'] = serialize($batchData['problem_type']);
-        // $batchData['stations'] = serialize($batchData['stations']);
-        // dd($batchData);
-        $batch = Batch::create($batchData);
 
-        // Queue::connection()->getIron()->ssl_verifypeer = false;
+        $batch = Batch::create($batchData);
 
         Queue::push('BatchController', ['id' => $batch->id]);
 
         return Redirect::to('batch')->with('alert-success', 'Task #'.$batch->id.' Added Successfully.');
     }
 
+    /**
+     * User cancel specific batch task
+     * @param $id
+     * @return mixed
+     */
     public function cancel($id)
     {
         $batch = Batch::find($id);
@@ -90,6 +98,11 @@ class BatchController extends BaseController
         }
     }
 
+    /**
+     * Message Queue Listener + Process task
+     * @param job   $job            Laravel job object
+     * @param object    $message    message detail (contains task id)
+     */
     public function fire($job, $message)
     {
         $id = intval($message['id']);

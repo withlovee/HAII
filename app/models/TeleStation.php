@@ -6,7 +6,8 @@ class TeleStation extends \Eloquent
     protected $fillable = [];
 
     /**
-     * @param bool $form
+     * Get list of basin
+     * @param bool $form    convert name to key-value array format to be used with HTML dropdown filter on error_log page
      * @return array
      */
     public static function basins($form = false)
@@ -35,7 +36,8 @@ class TeleStation extends \Eloquent
     }
 
     /**
-     * @param bool $form
+     * Get list of provinces
+     * @param bool $form    convert name to key-value array format to be used with HTML dropdown filter on error_log page
      * @return array
      */
     public static function provinces($form = false)
@@ -64,6 +66,7 @@ class TeleStation extends \Eloquent
     }
 
     /**
+     * Get list of province in basin
      * @param $basin
      * @return array
      */
@@ -95,6 +98,7 @@ class TeleStation extends \Eloquent
     }
 
     /**
+     * Get list of telestations code by province
      * @param $province
      * @return array
      */
@@ -126,7 +130,8 @@ class TeleStation extends \Eloquent
     }
 
     /**
-     * @param bool $form
+     * Get list of parts of Thailand
+     * @param bool $form    convert name to key-value array format to be used with HTML dropdown filter on error_log page
      * @return array
      */
     public static function parts($form = false)
@@ -155,7 +160,8 @@ class TeleStation extends \Eloquent
     }
 
     /**
-     * @param bool $form
+     * Get list of telestation codes
+     * @param bool $form    convert name to key-value array format to be used with HTML dropdown filter on error_log page
      * @return array
      */
     public static function codes($form = false)

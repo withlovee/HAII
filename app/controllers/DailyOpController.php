@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class DailyOpController
+ * View error log for only today
+ */
 class DailyOpController extends ErrorLogController
 {
     public function index($status, $data_type)

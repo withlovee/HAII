@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class DailyReportController
+ * [Deprecated] Move all email procedure into R script instead
+ */
 class DailyReportController extends Controller
 {
   public function generateDailyReport()

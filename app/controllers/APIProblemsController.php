@@ -2,6 +2,10 @@
 
 class APIProblemsController extends BaseController
 {
+    /**
+     * Get all problem to show in error_log page
+     * @return mixed
+     */
     public function all()
     {
         $params = Input::all();
@@ -11,6 +15,10 @@ class APIProblemsController extends BaseController
         return Response::json($output);
     }
 
+    /**
+     * Update problem flag
+     * @return mixed
+     */
     public function updateStatus()
     {
         $problem = Problem::find(intval(Input::get('id')));
@@ -39,15 +47,11 @@ class APIProblemsController extends BaseController
         }
     }
 
-    // TODO HERE!
-    private function setErrorToNull($problem)
-    {
-    }
 
-    private function setErrorToOrigin($problem)
-    {
-    }
-
+    /**
+     * Get detailed station info
+     * @return mixed
+     */
     public function renderStationInfo()
     {
         $station = Input::get('station');
@@ -55,6 +59,10 @@ class APIProblemsController extends BaseController
         return View::make('data_log/station_info', $station);
     }
 
+    /**
+     * Get recent problem and render to map dashboard
+     * @return mixed
+     */
     public function getMap()
     {
         $output = Problem::recentMap();
@@ -62,14 +70,14 @@ class APIProblemsController extends BaseController
         return Response::json($output);
     }
 
+    /**
+     * Get problem from specific problem id
+     * @return mixed
+     */
     public function getProblem()
     {
         $problem = Problem::find(intval(Input::get('id')));
 
-        //return Response::json($problem);
-
-        // $start_datetime = (new Carbon($problem->start_datetime))->subHour(1);
-        // $end_datetime = (new Carbon($problem->end_datetime))->addHour(1);
 
         $data_log = null;
 
@@ -128,6 +136,10 @@ class APIProblemsController extends BaseController
         return Response::json($output);
     }
 
+    /**
+     * Get graph result of missing pattern (plotted from R in public/missingpattern)
+     * @return mixed
+     */
     public function getMissingPatternMonthlyImage()
     {
         $id = intval(Input::get('id'));
@@ -140,6 +152,10 @@ class APIProblemsController extends BaseController
         return Response::json(asset('missingpattern/'.$filename));
     }
 
+    /**
+     * Return HTML buttons for flagging problem status
+     * @return string
+     */
     public function getButtons()
     {
         if (!isAdmin()) {
@@ -164,16 +180,13 @@ class APIProblemsController extends BaseController
         // return Response::json($output);
     }
 
+    /**
+     * Get array of column in error_log page
+     * @return array
+     */
     private function getCols()
     {
         return array(
-            // 'id' => array(
-            // 	'index' => 1,
-            // 	'type' => 'number',
-            // 	'sortOrder' => 'desc',
-            // 	'unique' => true,
-            // 	'friendly' => 'ID'
-            // ),
             'start_datetime' => array(
                 'index' => 1,
                 'type' => 'date',
@@ -215,6 +228,11 @@ class APIProblemsController extends BaseController
         );
     }
 
+    /**
+     * Get each row in data_log page
+     * @param $problems
+     * @return mixed
+     */
     private function getRows($problems)
     {
         foreach ($problems as $problem) {
@@ -226,6 +244,14 @@ class APIProblemsController extends BaseController
         return $problems;
     }
 
+    /**
+     * Get error flag button in error log and modal
+     * @param $id               problem id
+     * @param $error            type of button
+     * @param bool $default     active flag of this problem
+     * @param $classes          addtional html classes
+     * @return string
+     */
     private function getErrorButton($id, $error, $default = false, $classes)
     {
         $class = ' '.$classes;

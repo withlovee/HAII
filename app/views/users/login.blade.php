@@ -24,9 +24,11 @@
             <input class="form-control" tabindex="2" placeholder="{{{ Lang::get('confide::confide.password') }}}" type="password" name="password" id="password">
         </div>
         <div class="form-group">
-            <label for="remember" class="checkbox">{{{ Lang::get('confide::confide.login.remember') }}}
+            <label for="remember" class="checkbox">
+                
                 <input type="hidden" name="remember" value="0">
                 <input tabindex="4" type="checkbox" name="remember" id="remember" value="1">
+                {{{ Lang::get('confide::confide.login.remember') }}}
             </label>
         </div>
         <button tabindex="3" type="submit" class="btn btn-lg btn-primary btn-block"><span class="glyphicon glyphicon-ok"></span> {{{ Lang::get('confide::confide.login.submit') }}}</button>

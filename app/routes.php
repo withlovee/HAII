@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
-
 Route::get('/', 'HomeController@index')->before('auth');
 
 Route::get('/test', 'TestController@test');
@@ -29,7 +18,6 @@ Route::get('dailyop/{status}/{data_type}', 'DailyOpController@index')->before('a
 
 Route::get('api/problems/all', 'APIProblemsController@all')->before('auth');
 Route::get('api/problems/get', 'APIProblemsController@get')->before('auth');
-// Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('auth');
 Route::post('api/problems/update_status', 'APIProblemsController@updateStatus')->before('admin-auth');
 Route::get('api/problems/get_problem', 'APIProblemsController@getProblem')->before('auth');
 Route::get('api/problems/get_map', 'APIProblemsController@getMap')->before('auth');
@@ -42,19 +30,12 @@ Route::post('api/telestation/basin/province', 'APITeleStationController@province
 Route::post('api/telestation/province/station', 'APITeleStationController@stationCodeByProvince')->before('auth');
 
 Route::post('api/email/send_alert/{type}', 'APIEmailController@sendAlert');
-
 Route::get('api/email/send_report/daily', 'DailyReportController@generateDailyReport');
 
 // Batch Processing
 Route::get('batch', 'BatchController@index')->before('auth');
 Route::post('batch/create', 'BatchController@create')->before('auth');
 Route::get('batch/cancel/{id}', 'BatchController@cancel')->before('auth');
-
-// Route::get('/', function()
-// {
-// 	return View::make('hello');
-// });
-//
 
 // Confide routes
 Route::get('users', 'UsersController@index')->before('admin-auth');

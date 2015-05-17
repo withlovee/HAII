@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ErrorLogController
+ * Page for viewing all problems found
+ */
 class ErrorLogController extends BaseController
 {
     protected $params_defaults = array(
@@ -17,6 +21,12 @@ class ErrorLogController extends BaseController
         'orderby' => 'start_datetime',
     );
 
+    /**
+     * View all problems
+     * @param string    $status     status of problem ("all", "marked", "unmarked")
+     * @param string    $data_type  WATER / RAIN
+     * @return mixed
+     */
     public function index($status, $data_type)
     {
         $params = $this->getParams($status, $data_type);
@@ -31,6 +41,11 @@ class ErrorLogController extends BaseController
         return View::make('errorlog/index', $data);
     }
 
+    /**
+     * filtered page by mark / unmark
+     * @param string    $status     status of problem ("all", "marked", "unmarked")
+     * @return string
+     */
     protected function getMarked($status)
     {
         if ($status == 'marked') {
@@ -42,6 +57,12 @@ class ErrorLogController extends BaseController
         }
     }
 
+    /**
+     * Retrieve all POST input
+     * @param $status
+     * @param $data_type
+     * @return mixed
+     */
     protected function getParams($status, $data_type)
     {
         $params = Input::all();
@@ -51,6 +72,12 @@ class ErrorLogController extends BaseController
         return $params;
     }
 
+    /**
+     * Initial data for error_log filter
+     * string    $status     status of problem ("all", "marked", "unmarked")
+     * @param $data_type
+     * @return array
+     */
     protected function dataForForm($status, $data_type)
     {
         $params = Input::all();
@@ -82,6 +109,10 @@ class ErrorLogController extends BaseController
         return $data;
     }
 
+    /** merge data from html form of water/rain to one parameter array
+     * @param array     $params     POST input from view
+     * @return array
+     */
     protected function getSelectedValues($params)
     {
         $data = array();

@@ -28,18 +28,7 @@
 --}}
 <script>
 $(document).ready(function() {
-	// function HAIIWATable(divName, params){
-	// 	mainElement = $(divName);
-	// 	args = {};
-	// 	function getFormObj(inputs) {
-	// 		var formObj = {};
-	// 		$.each(inputs, function (i, input) {
-	// 			formObj[input.name] = input.value;
-	// 		});
-	// 		return formObj;
-	// 	}
-	// }
-	
+=
 	/* -- Clicking status buttons (Error/ Not Error) -- */
 	$('body').on('click', '.update', function(e){
 		e.preventDefault();
@@ -61,20 +50,7 @@ $(document).ready(function() {
 				}
 			});
 	});
-	// new HAIIWATable("#div1", {
-	// 	data_type: 'WATER', 
-	// 	marked: '{{ $status }}',
-	// 	start_date: '{{ $start_date }}',
-	// 	start_time: '{{ $start_time }}'
-	// });
-	// new HAIIWATable("#div2", {
-	// 	data_type: 'RAIN', 
-	// 	marked: '{{ $status }}',
-	// 	start_date: '{{ $start_date }}',
-	// 	start_time: '{{ $start_time }}'
-	// });
-
-
+=
 	/*----- Update provice, stationcode dropdown -----*/
 
 	$('select[name="province"]').chosen({

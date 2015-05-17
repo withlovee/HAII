@@ -1,47 +1,59 @@
 <?php
 
+/**
+ * Class APIEmailController
+ * Sample POST Input:
+ * {
+ *     "key": "HAIIEMAILKEY",
+ *     "num": 6,
+ *     "date": "2014-10-14 20:43",
+ *     "rain": [
+ *         {
+ *             "name": "Out of Ranges",
+ *             "stations": [
+ *                 "TPTN",
+ *                 "PUAA",
+ *                 "PPCH"
+ *             ]
+ *         },
+ *         {
+ *             "name": "Missing Pattern",
+ *             "stations": [
+ *                 "ABCD"
+ *             ]
+ *         }
+ *     ],
+ *     "water": [
+ *         {
+ *             "name": "Out of Ranges",
+ *             "stations": [
+ *                 "WATER"
+ *             ]
+ *         }
+ *     ]
+ * }
+ */
 class APIEmailController extends BaseController
 {
+    /**
+     * Retrive POST input from R
+     * @param string    $type   email type (instantly, daily, monthly)
+     * @return mixed
+     */
     public function sendAlert($type)
     {
-        /*
-        Sample Input:
-        {
-            "key": "HAIIEMAILKEY",
-            "num": 6,
-            "date": "2014-10-14 20:43",
-            "rain": [
-                {
-                    "name": "Out of Ranges",
-                    "stations": [
-                        "TPTN",
-                        "PUAA",
-                        "PPCH"
-                    ]
-                },
-                {
-                    "name": "Missing Pattern",
-                    "stations": [
-                        "ABCD"
-                    ]
-                }
-            ],
-            "water": [
-                {
-                    "name": "Out of Ranges",
-                    "stations": [
-                        "WATER"
-                    ]
-                }
-            ]
-        }
-        */
-        //return Response::json(Input::all());
         $data = Input::all();
 
         return APIEmailController::sendEmail($data, $type);
     }
 
+
+    /**
+     * Send email using MailGun
+     * @param array     $data   email data in json format
+     * @param string    $type   email type (instantly, daily, monthly)
+     * @return mixed            response
+     */
     public static function sendEmail($data, $type)
     {
         $emailTypes = ['instantly', 'daily', 'monthly'];
