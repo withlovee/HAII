@@ -5,6 +5,10 @@ class TeleStation extends \Eloquent
     protected $table = 'tele_station';
     protected $fillable = [];
 
+    /**
+     * @param bool $form
+     * @return array
+     */
     public static function basins($form = false)
     {
         $results = DB::table('tele_station')
@@ -30,6 +34,10 @@ class TeleStation extends \Eloquent
         return $output;
     }
 
+    /**
+     * @param bool $form
+     * @return array
+     */
     public static function provinces($form = false)
     {
         $results = DB::table('tele_station')
@@ -55,6 +63,10 @@ class TeleStation extends \Eloquent
         return $output;
     }
 
+    /**
+     * @param $basin
+     * @return array
+     */
     public static function provincesByBasin($basin)
     {
         $result = null;
@@ -82,6 +94,10 @@ class TeleStation extends \Eloquent
         return $output;
     }
 
+    /**
+     * @param $province
+     * @return array
+     */
     public static function stationCodeByProvince($province)
     {
         $result = null;
@@ -109,6 +125,10 @@ class TeleStation extends \Eloquent
         return $output;
     }
 
+    /**
+     * @param bool $form
+     * @return array
+     */
     public static function parts($form = false)
     {
         $results = DB::table('tele_station')
@@ -134,6 +154,10 @@ class TeleStation extends \Eloquent
         return $output;
     }
 
+    /**
+     * @param bool $form
+     * @return array
+     */
     public static function codes($form = false)
     {
         $results = DB::table('tele_station')

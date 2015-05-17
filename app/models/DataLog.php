@@ -1,10 +1,19 @@
 <?php
 
+/**
+ * Class DataLog
+ */
 class DataLog extends \Eloquent
 {
     protected $table = 'data_log';
     protected $fillable = [];
 
+    /**
+     * Filter by telestation code
+     * @param query  $query     Query object
+     * @param string $code      Telestation Code
+     * @return mixed            New query object
+     */
     public function scopeCode($query, $code)
     {
         if ($code) {
@@ -14,6 +23,12 @@ class DataLog extends \Eloquent
         return $query;
     }
 
+    /**
+     * Scope only not-null data
+     * @param query     $query  Query object
+     * @param string    $type   Data type ("WATER", "RAIN")
+     * @return mixed            New query object
+     */
     public function scopeValid($query, $type)
     {
         if ($type == 'WATER') {
@@ -25,6 +40,12 @@ class DataLog extends \Eloquent
         return $query;
     }
 
+    /**
+     * Scope only data without machine error and without data marked as real error (-9999)
+     * @param query     $query  Query Object
+     * @param string    $type   Data type ("WATER", "RAIN")
+     * @return mixed            new query object
+     */
     public function scopeClean($query, $type)
     {
         if ($type == 'WATER') {
@@ -36,6 +57,12 @@ class DataLog extends \Eloquent
         }
     }
 
+    /**
+     * Scope only original data without machine error and without data marked as real error (-9999)
+     * @param query     $query  Query Object
+     * @param string    $type   Data type ("WATER", "RAIN")
+     * @return mixed            new query object
+     */
     public function scopeCleanOrigin($query, $type)
     {
         if ($type == 'WATER') {
@@ -47,11 +74,23 @@ class DataLog extends \Eloquent
         }
     }
 
+    /**
+     * Scope only data at the start of the hour
+     * @param query     $query  Query Object
+     * @return mixed            new query object
+     */
     public function scopeHourly($query)
     {
         return $query->whereRaw("EXTRACT(MINUTE FROM time) = 0");
     }
 
+    /**
+     * Scope only data from datetime
+     * @param query     $query      Query object
+     * @param date      $datetime   Start datetime
+     * @param int       $offset     Time offset before start datetime
+     * @return mixed                New query object
+     */
     public function scopeFrom($query, $datetime, $offset = 7200)
     {
         if ($datetime) {
@@ -69,6 +108,13 @@ class DataLog extends \Eloquent
         return $query;
     }
 
+    /**
+     * Scope only data before datetime
+     * @param query     $query      Query object
+     * @param date      $datetime   End datetime
+     * @param int       $offset     Time offset after end datetime
+     * @return mixed                New query object
+     */
     public function scopeTo($query, $datetime, $offset = 7200)
     {
         if ($datetime) {
@@ -86,6 +132,10 @@ class DataLog extends \Eloquent
         return $query;
     }
 
+    /**
+     * Set value of data to -9999 to mark as error
+     * @param Problem   $problem    problem that is defined as real error
+     */
     public static function setValToNull($problem)
     {
         $nullVal = -9999;
@@ -124,6 +174,10 @@ class DataLog extends \Eloquent
         }
     }
 
+    /**
+     * Set value of data to its original value to mark as not-error or undefined
+     * @param Problem   $problem    problem that is defined as not error or undefined
+     */
     public static function restoreVal($problem)
     {
         $start_unix_timestamp = strtotime($problem->start_datetime);
@@ -160,6 +214,11 @@ class DataLog extends \Eloquent
         }
     }
 
+    /**
+     * check if data type is "WATER" or "RAIN"
+     * @param string    $type     type of data
+     * @return bool               is valid data type
+     */
     public static function validDataType($type)
     {
         return $type == 'WATER' || $type == "RAIN";

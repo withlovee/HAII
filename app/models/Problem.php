@@ -4,6 +4,12 @@ class Problem extends \Eloquent
 {
     protected $fillable = [];
 
+    /**
+     * Score by data type
+     * @param query  $query query object
+     * @param string $type  data type (water, rain)
+     * @return mixed        new query object
+     */
     public function scopeDataType($query, $type)
     {
         $query->join('tele_station', 'problems.station_code', '=', 'tele_station.code')
@@ -29,6 +35,11 @@ class Problem extends \Eloquent
         return $query;
     }
 
+    /**
+     * scope by detail to be used by google maps in dashboard
+     * @param  query    $query      query object
+     * @return mixed                new query object
+     */
     public function scopeMap($query)
     {
         $attrs = ['data_type', 'problem_type', 'code', 'name', 'lat', 'lng', 'tambon_name', 'amphoe_name', 'province_name', 'part', 'basin'];
@@ -39,6 +50,13 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /**
+     * Scope by basin name
+     * @param $query
+     * @param $basin
+     * @return mixed
+     */
     public function scopeBasin($query, $basin)
     {
         if ($basin) {
@@ -47,6 +65,13 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /**
+     * Scope by province name
+     * @param $query
+     * @param $province
+     * @return mixed
+     */
     public function scopeProvince($query, $province)
     {
         if ($province) {
@@ -55,6 +80,13 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /**
+     * Scope by part of river
+     * @param $query
+     * @param $part
+     * @return mixed
+     */
     public function scopePart($query, $part)
     {
         if ($part) {
@@ -63,6 +95,13 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /**
+     * Scope by station code
+     * @param $query
+     * @param $code
+     * @return mixed
+     */
     public function scopeCode($query, $code)
     {
         if ($code) {
@@ -71,6 +110,13 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /**
+     * Scope by problem type (OR, MG, FV, OL, HM, MP)
+     * @param $query
+     * @param $problem_type
+     * @return mixed
+     */
     public function scopeProblem($query, $problem_type)
     {
         if ($problem_type) {
@@ -79,6 +125,13 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /**
+     * Scope by problem flag (real error or not)
+     * @param $query
+     * @param string    $marked     "undefined", "true", "false"
+     * @return mixed
+     */
     public function scopeMarked($query, $marked)
     {
         if ($marked == 'true') {
@@ -89,6 +142,12 @@ class Problem extends \Eloquent
 
         return $query;
     }
+
+    /** Scope problems that occur after startdatetime
+     * @param $query
+     * @param $datetime
+     * @return mixed
+     */
     public function scopeStartDatetime($query, $datetime)
     {
         if ($datetime) {
@@ -97,6 +156,13 @@ class Problem extends \Eloquent
             return $query;
         }
     }
+
+    /**
+     * Scope problems that occur before enddatetime
+     * @param $query
+     * @param $datetime
+     * @return mixed
+     */
     public function scopeEndDatetime($query, $datetime)
     {
         if ($datetime) {
@@ -106,6 +172,12 @@ class Problem extends \Eloquent
         }
     }
 
+    /**
+     * Scope problems that end after datetime
+     * @param $query
+     * @param $datetime
+     * @return mixed
+     */
     public function scopeEndDatetimeAfter($query, $datetime)
     {
         if ($datetime) {
@@ -115,6 +187,12 @@ class Problem extends \Eloquent
         }
     }
 
+    /**
+     * get recent OR problem and group by basin to be used at OR dashboard
+     * @param string    $data_type  "WATER", "RAIN"
+     * @param string $problem_type  "OR"
+     * @return array                Array of problems detail
+     */
     public static function recentByBasin($data_type, $problem_type = 'OR')
     {
         /*-- Query latest problems with tele_station information --*/
@@ -123,7 +201,7 @@ class Problem extends \Eloquent
             ->marked('false')
             ->endDatetimeAfter(self::getStartDate('Y-m-d 07:01'))
             ->get()->toArray();
-        // return self::getStartDate('Y-m-d 07:01');
+
         /*-- Group the data by basins --*/
         $grouped_problems = array();
         foreach ($problems as $problem) {
@@ -141,6 +219,10 @@ class Problem extends \Eloquent
         return $grouped_problems;
     }
 
+    /**
+     * Get recent problem to be showed in dashboard map
+     * @return mixed
+     */
     public static function recentMap()
     {
         /*-- Query telestations that has recent problems --*/
@@ -158,6 +240,11 @@ class Problem extends \Eloquent
         return $problems;
     }
 
+    /**
+     * get problems list to show in Error Log and Daily Operation page
+     * @param $params
+     * @return mixed
+     */
     public static function allForTable($params)
     {
         $defaults = array(
@@ -208,6 +295,12 @@ class Problem extends \Eloquent
         return $problems;
     }
 
+    /**
+     * Utility Function to prettify datetime
+     * @param $date
+     * @param $time
+     * @return string
+     */
     private static function renderDate($date, $time)
     {
         if (!$date) {
@@ -220,6 +313,11 @@ class Problem extends \Eloquent
         return $date.' '.str_replace("%3A", ":", $time);
     }
 
+    /**
+     * Convert abbrviated problem name into full name
+     * @param string    $name   OR, FV, MG, Ol, HM, MP
+     * @return string   mixed   Full Name
+     */
     public static function getTypeName($name)
     {
         $nameMap = array(
@@ -232,19 +330,12 @@ class Problem extends \Eloquent
             );
 
         return $nameMap[$name];
-
-        /*
-        switch($name){
-            case 'OR':
-                return 'Out-of-Range';
-            case 'MG':
-                return 'Missing Gap';
-            case 'FV':
-                return
-            default:
-        } */
     }
 
+    /**
+     * Summarize yesterday problem num
+     * @return array    Array of problem num
+     */
     public static function yesterdayReport()
     {
         $result_rain = DB::table('problems')
@@ -310,6 +401,10 @@ class Problem extends \Eloquent
         return array("rain" => $report_rain, "water" => $report_water);
     }
 
+    /**
+     * Summarize today problem num
+     * @return array    Array of problem num
+     */
     public static function todayStat()
     {
         $results['RAIN'] = DB::table('problems')
@@ -358,6 +453,12 @@ class Problem extends \Eloquent
         return $output;
     }
 
+    /**
+     * Get 7AM date of given date, and formatted printing
+     * @param $format
+     * @param int $offset   day offset to be added
+     * @return string
+     */
     private static function getStartDate($format, $offset = 0)
     {
         if (intval(date('G')) < 7 || (intval(date('G')) == 7) && intval(date('i')) == 0) {
@@ -367,16 +468,29 @@ class Problem extends \Eloquent
         return date($format, time()+($offset*24*60*60));
     }
 
+    /**
+     * Laravel Model Relation
+     * @return mixed
+     */
     public function station()
     {
         return $this->hasOne('TeleStation', 'code', 'station_code');
     }
 
+    /**
+     * Create full station name
+     * @param $data     Array of name, tambon_name, amphoe_name, province_name
+     * @return string   Full name in Thai format
+     */
     private static function buildFullStationName($data)
     {
         return $data['name'].' ต.'.$data['tambon_name'].' อ.'.$data['amphoe_name'].' จ.'.$data['province_name'];
     }
 
+    /**
+     * Full station name getter
+     * @return string
+     */
     public function fullStationName()
     {
         $station = $this->station;
@@ -384,11 +498,20 @@ class Problem extends \Eloquent
         return self::buildFullStationName((array) $station);
     }
 
+    /**
+     * Render enddatetime in pretty string format
+     * @param $end_datetime
+     * @return bool|string
+     */
     private static function buildEndTime($end_datetime)
     {
         return date('H:i', strtotime($end_datetime));
     }
 
+    /**
+     * Get end_datetime in pretty string format
+     * @return bool|string
+     */
     public function getEndTime()
     {
         return self::buildEndTime($this->end_datetime);
