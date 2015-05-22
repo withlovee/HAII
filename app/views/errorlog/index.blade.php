@@ -28,7 +28,7 @@
 --}}
 <script>
 $(document).ready(function() {
-=
+
 	/* -- Clicking status buttons (Error/ Not Error) -- */
 	$('body').on('click', '.update', function(e){
 		e.preventDefault();
@@ -50,7 +50,7 @@ $(document).ready(function() {
 				}
 			});
 	});
-=
+
 	/*----- Update provice, stationcode dropdown -----*/
 
 	$('select[name="province"]').chosen({
